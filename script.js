@@ -543,61 +543,70 @@ if (window.stopZenModeGlobally) window.stopZenModeGlobally();
         const container = document.getElementById("toast-container"); const toast = document.createElement("div"); toast.className = "toast"; toast.innerText = msg; container.appendChild(toast); setTimeout(() => toast.remove(), 3500);
     }
     /* ======================================================
-       📜 ZEN MODE (SMOOTH AUTO-SCROLL ENGINE)
-       ====================================================== */
-    let zenScrollId; // RequestAnimationFrame ID store karne ke liye
+   📜 ZEN MODE (OPTIMIZED AUTO-SCROLL ENGINE)
+   ====================================================== */
+let zenScrollId; 
 
-    function initZenMode() {
-        const zenBtn = document.getElementById("zen-mode-toggle");
-        if (!zenBtn) return;
+function initZenMode() {
+    const zenBtn = document.getElementById("zen-mode-toggle");
+    if (!zenBtn) return;
 
-        function smoothScroll() {
-            if (!globalState.zenActive) return;
-            
-            // Scroll speed: 0.6 pixels per frame (smooth and readable)
-            window.scrollBy(0, 0.6); 
-
-            // Agar page bilkul niche pahunch jaye, toh Zen Mode auto-off kar do
-            if (Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
-                toggleZenMode();
-                return;
-            }
-            zenScrollId = requestAnimationFrame(smoothScroll);
-        }
-
-        function toggleZenMode() {
-            globalState.zenActive = !globalState.zenActive;
-            
-            if (globalState.zenActive) {
-                zenBtn.innerText = "🛑 Stop Zen";
-                zenBtn.style.color = "var(--bg-base)";
-                zenBtn.style.backgroundColor = "var(--gold)";
-                showToast("📜 Zen Mode Active: Sit back and read...");
-                
-                // Scroll animation start karo
-                zenScrollId = requestAnimationFrame(smoothScroll);
-            } else {
-                zenBtn.innerText = "📜 Zen Mode";
-                zenBtn.style.color = "";
-                zenBtn.style.backgroundColor = "";
-                showToast("🛑 Zen Mode Paused.");
-                
-                // Scroll animation stop karo
-                cancelAnimationFrame(zenScrollId);
-            }
-        }
-
-        // Button par click listener lagao
-        zenBtn.addEventListener("click", toggleZenMode);
+    function smoothScroll() {
+        if (!globalState.zenActive) return;
         
-        // Agar koi manual touch ya wheel use kare toh zen mode pause karne ka option (Optional but good for UX)
-        window.addEventListener("wheel", () => {
-            if(globalState.zenActive) toggleZenMode();
-        });
-        window.addEventListener("touchstart", () => {
-            if(globalState.zenActive) toggleZenMode();
-        }, { passive: true });
+        // Scroll speed: 0.6 pixels per frame
+        window.scrollBy(0, 0.6); 
+
+        // Agar page end par pahunch gaya
+        if (Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
+            toggleZenMode(false); // Normal stop with toast
+            return;
+        }
+        zenScrollId = requestAnimationFrame(smoothScroll);
     }
+
+    // silent parameter lagaya taaki manual scroll par toast spam na ho
+    function toggleZenMode(silent = false) {
+        globalState.zenActive = !globalState.zenActive;
+        
+        if (globalState.zenActive) {
+            zenBtn.innerText = "🛑 Stop Zen";
+            zenBtn.style.color = "var(--bg-base)";
+            zenBtn.style.backgroundColor = "var(--gold)";
+            if(!silent) showToast("🧘 Zen Mode Active: Sit back and read...");
+            
+            zenScrollId = requestAnimationFrame(smoothScroll);
+        } else {
+            zenBtn.innerText = "🧘 Zen Mode";
+            zenBtn.style.color = "";
+            zenBtn.style.backgroundColor = "";
+            cancelAnimationFrame(zenScrollId);
+            if(!silent) showToast("🛑 Zen Mode Paused.");
+        }
+    }
+
+    // Button click listener
+    zenBtn.addEventListener("click", () => toggleZenMode(false));
+    
+    // Global function taaki executePageFlip isko access kar sake
+    window.stopZenModeGlobally = function() {
+        if (globalState.zenActive) {
+            toggleZenMode(true); // Chupchaap band karo
+        }
+    };
+
+    // User ke manual scroll karne par silent pause
+    const handleManualScroll = () => {
+        if (globalState.zenActive) {
+            toggleZenMode(true); // true = bina toast ke pause
+            showToast("🖐️ Manual scroll detected. Zen Mode paused.");
+        }
+    };
+
+    window.addEventListener("wheel", handleManualScroll);
+    window.addEventListener("touchstart", handleManualScroll, { passive: true });
+}
+
 
    
    });
