@@ -161,7 +161,15 @@ fetch('poem.json')
         });
 
         nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;
-        document.getElementById("btn-explore").setAttribute("data-target", "poem-page-1"); document.getElementById("btn-frag-prev").setAttribute("data-target", `poem-page-${POEM_DATABASE.length}`);
+        const btnExplore = document.getElementById("btn-explore");
+if (btnExplore) {
+    btnExplore.setAttribute("data-target", "poem-page-1");
+}
+
+const btnFragPrev = document.getElementById("btn-frag-prev");
+if (btnFragPrev) {
+    btnFragPrev.setAttribute("data-target", `poem-page-${POEM_DATABASE.length}`);
+}
         bookshelf.innerHTML += `<div class="book-spine spine-locked interactive-locked" title="Some stories are still being lived."><div class="spine-text">${UPCOMING_CHAPTER.title}</div><div class="spine-subtext" style="position: absolute; bottom: 10px; width: 100%; text-align: center; font-size: 8px; color: rgba(255,255,255,0.4);">UNAVAILABLE</div></div>`;
 
         let svgLines = ''; let starsHtml = '';
