@@ -162,80 +162,112 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function buildLibrarySystem() {
-        const nav = findSafeElement("library-nav"); 
-        const bookshelf = findSafeElement("dynamic-bookshelf"); 
-        const starMap = findSafeElement("star-map"); 
-        const authorScripting = findSafeElement("author-scripting-status"); 
-        const secretPage = findSafeElement("page-secret");
+    const nav = findSafeElement("library-nav"); 
+    const bookshelf = findSafeElement("dynamic-bookshelf"); 
+    const starMap = findSafeElement("star-map"); 
+    const authorScripting = findSafeElement("author-scripting-status"); 
+    const secretPage = findSafeElement("page-secret");
 
-        if(nav) nav.innerHTML = `<button class="nav-link active-nav" data-target="page1">Library Entrance</button>`; 
-        if(bookshelf) bookshelf.innerHTML = ""; 
-        let prevPageId = "page1";
+    if(nav) nav.innerHTML = `<button class="nav-link active-nav" data-target="page1">Library Entrance</button>`; 
+    if(bookshelf) {
+        bookshelf.innerHTML = ""; 
+        // Horizontal slide enforce karne ke liye direct inline styles (taaki CSS crash na ho)
+        bookshelf.style.display = "flex";
+        bookshelf.style.overflowX = "auto";
+        bookshelf.style.scrollBehavior = "smooth";
+        bookshelf.style.whiteSpace = "nowrap";
+        bookshelf.style.padding = "15px";
+        bookshelf.style.gap = "20px";
+    }
+    let prevPageId = "page1";
 
-        POEM_DATABASE.forEach((poem, i) => {
-            const pageId = `poem-page-${i + 1}`; 
-            const nextPageId = i < POEM_DATABASE.length - 1 ? `poem-page-${i + 2}` : `page-fragments`;
-            if(nav) nav.innerHTML += `<button class="nav-link" data-target="${pageId}">${poem.chapterLabel}</button>`;
-            const cleanTitle = poem.title.replace('<br>', ' '); 
-            const safeText = poem.text.replace(/\n/g, '\\n');
+    POEM_DATABASE.forEach((poem, i) => {
+        const pageId = `poem-page-${i + 1}`; 
+        const nextPageId = i < POEM_DATABASE.length - 1 ? `poem-page-${i + 2}` : `page-fragments`;
+        
+        if(nav) nav.innerHTML += `<button class="nav-link" data-target="${pageId}">${poem.chapterLabel}</button>`;
+        
+        const cleanTitle = poem.title.replace('<br>', ' '); 
+        const safeText = poem.text.replace(/\n/g, '\\n');
 
-            const sectionHtml = `
-            <section id="${pageId}" class="page" data-poem-index="${i}">
-              <div class="top-deco">✧ ─ ❦ ─ ✧</div>
-              <span class="chapter-badge">${poem.chapterLabel}</span>
-              <div class="heading-wrapper"><h2 class="page1-heading moon-glow">${poem.title}</h2></div>
-              <p class="poem-subtitle">${poem.subtitle}</p>
-              <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">
-                <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>
-                <span class="read-time">⏱️ 1 Min Read</span>
-                <button class="bookmark-btn btn-utility" data-poem="${poem.spineLabel}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>
-              </div>
-              <div class="poetry-box antique-parchment dynamic-shadow" id="card-${pageId}">
-                <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>
-                <p class="royal-poem-text typewriter-poem" data-lines="${safeText}"></p><br>
-                <p class="poem-date">${poem.dateText}</p>
-                <span class="poem-greatvibes sign-animate">${poem.signature}</span>
-                <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
-                    <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>
-                    <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
+        const sectionHtml = `
+        <section id="${pageId}" class="page" data-poem-index="${i}">
+          <div class="top-deco">✧ ─ ❦ ─ ✧</div>
+          <span class="chapter-badge">${poem.chapterLabel}</span>
+          <div class="heading-wrapper"><h2 class="page1-heading moon-glow">${poem.title}</h2></div>
+          <p class="poem-subtitle">${poem.subtitle}</p>
+          <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">
+            <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>
+            <span class="read-time">⏱️ 1 Min Read</span>
+            <button class="bookmark-btn btn-utility" data-poem="${poem.spineLabel}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>
+          </div>
+          <div class="poetry-box antique-parchment dynamic-shadow" id="card-${pageId}">
+            <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>
+            <p class="royal-poem-text typewriter-poem" data-lines="${safeText}"></p><br>
+            <p class="poem-date">${poem.dateText}</p>
+            <span class="poem-greatvibes sign-animate">${poem.signature}</span>
+            <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
+                <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>
+                <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
+            </div>
+          </div>
+          <div class="button-row" style="margin-top: 15px;">
+            <button class="btn-utility download-poem-btn" data-target="card-${pageId}" data-poem-index="${i}">📸 Save As A Memory</button>
+            <button class="btn-utility share-poem-btn" data-poem-title="${cleanTitle}">🔗 Share Verse</button>
+          </div>
+          <div class="button-row mt-20"><button class="btn-outline trigger-nav" data-target="${prevPageId}">❮ Previous</button><button class="btn-solid trigger-nav" data-target="${nextPageId}">Next ❯</button></div>
+        </section>`;
+        
+        if(secretPage) secretPage.insertAdjacentHTML('beforebegin', sectionHtml);
+        
+        // Horizontal Card Style for Bookshelf Slide
+        if(bookshelf) {
+            bookshelf.innerHTML += `
+                <div class="book-spine trigger-nav" data-target="${pageId}" style="display:inline-block; min-width:140px; height:180px; background:linear-gradient(45deg, #1a1a24, #2c2c3b); border:1px solid var(--gold); border-radius:8px; padding:15px; position:relative; cursor:pointer; flex-shrink:0; text-align:center;">
+                    <span style="font-size:10px; color:var(--gold); display:block; margin-bottom:10px;">${poem.chapterLabel}</span>
+                    <strong style="font-size:14px; white-space:normal; display:block; color:#f2eee9; font-family:'Cinzel', serif;">${cleanTitle}</strong>
+                    <span style="font-size:9px; position:absolute; bottom:15px; left:0; width:100%; color:rgba(255,255,255,0.4);">${poem.spineLabel}</span>
                 </div>
-              </div>
-              <div class="button-row" style="margin-top: 15px;">
-                <button class="btn-utility download-poem-btn" data-target="card-${pageId}" data-poem-index="${i}">📸 Save As A Memory</button>
-                <button class="btn-utility share-poem-btn" data-poem-title="${cleanTitle}">🔗 Share Verse</button>
-              </div>
-              <div class="button-row mt-20"><button class="btn-outline trigger-nav" data-target="${prevPageId}">❮ Previous</button><button class="btn-solid trigger-nav" data-target="${nextPageId}">Next ❯</button></div>
-            </section>`;
-            
-            if(secretPage) secretPage.insertAdjacentHTML('beforebegin', sectionHtml);
-            if(bookshelf) bookshelf.innerHTML += `<div class="book-spine ${i % 2 !== 0 ? 'spine-gold' : ''} trigger-nav" data-target="${pageId}"><div class="spine-text">${poem.spineLabel}</div></div>`;
-            prevPageId = pageId;
-        });
-
-        if(nav) nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;
-        
-        const btnExplore = findSafeElement("btn-explore", "EXPLORE");
-        if (btnExplore) btnExplore.setAttribute("data-target", "poem-page-1");
-
-        const btnFragPrev = findSafeElement("btn-frag-prev");
-        if (btnFragPrev) btnFragPrev.setAttribute("data-target", `poem-page-${POEM_DATABASE.length}`);
-        
-        if(bookshelf) bookshelf.innerHTML += `<div class="book-spine spine-locked interactive-locked" title="Some stories are still being lived."><div class="spine-text">${UPCOMING_CHAPTER.title}</div><div class="spine-subtext" style="position: absolute; bottom: 10px; width: 100%; text-align: center; font-size: 8px; color: rgba(255,255,255,0.4);">UNAVAILABLE</div></div>`;
-
-        let svgLines = ''; let starsHtml = '';
-        for (let i = 0; i < POEM_DATABASE.length; i++) {
-            let p1 = starCoords[i]; starsHtml += `<div class="star-node active-star trigger-nav" data-target="poem-page-${i+1}" title="${POEM_DATABASE[i].dateText} - ${POEM_DATABASE[i].title.replace('<br>',' ')}" style="position:absolute; width:12px; height:12px; background:var(--gold); border-radius:50%; box-shadow:0 0 10px var(--gold); cursor:pointer; top: ${p1.top}%; left: ${p1.left}%;"></div>`;
-            if (i < POEM_DATABASE.length - 1) { let p2 = starCoords[i+1]; svgLines += `<line x1="${p1.left}%" y1="${p1.top}%" x2="${p2.left}%" y2="${p2.top}%" stroke="rgba(191,164,111,0.4)" stroke-width="1" stroke-dasharray="4" />`; }
+            `;
         }
-        if (POEM_DATABASE.length > 0 && starMap) {
-            let lastStar = starCoords[POEM_DATABASE.length - 1]; let lockedStar = starCoords[POEM_DATABASE.length];
-            svgLines += `<line x1="${lastStar.left}%" y1="${lastStar.top}%" x2="${lockedStar.left}%" y2="${lockedStar.top}%" stroke="rgba(191,164,111,0.1)" stroke-width="1" stroke-dasharray="4" />`;
-            starsHtml += `<div class="star-node pulse-star interactive-locked" title="Awaiting Completion..." style="position:absolute; width:12px; height:12px; background:rgba(255,255,255,0.2); border-radius:50%; top: ${lockedStar.top}%; left: ${lockedStar.left}%;"></div>`;
-            starMap.innerHTML = `<svg width="100%" height="100%" style="position: absolute; top:0; left:0; z-index: 1;">${svgLines}</svg>${starsHtml}`;
-        }
-        if(authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter ${UPCOMING_CHAPTER.chapterNum}: ${UPCOMING_CHAPTER.title}`;
+        prevPageId = pageId;
+    });
+
+    if(nav) nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;
+    
+    // Explicit Targets for Global Buttons (Fixing the broken triggers)
+    const btnExplore = document.getElementById("btn-explore");
+    if (btnExplore) btnExplore.setAttribute("data-target", "poem-page-1");
+
+    const btnFragPrev = document.getElementById("btn-frag-prev");
+    if (btnFragPrev) btnFragPrev.setAttribute("data-target", `poem-page-${POEM_DATABASE.length}`);
+    
+    if(bookshelf) {
+        bookshelf.innerHTML += `
+            <div class="book-spine spine-locked interactive-locked" title="Some stories are still being lived." style="display:inline-block; min-width:140px; height:180px; background:rgba(255,255,255,0.02); border:1px dashed rgba(191,164,111,0.3); border-radius:8px; padding:15px; position:relative; flex-shrink:0; text-align:center; opacity:0.6;">
+                <span style="font-size:10px; display:block; margin-bottom:10px;">CHAPTER III</span>
+                <strong style="font-size:12px; white-space:normal; display:block; color:var(--text-muted);">${UPCOMING_CHAPTER.title}</strong>
+                <span style="font-size:9px; position: absolute; bottom: 15px; width: 100%; left:0; text-align: center; color: rgba(255,255,255,0.3);">COMING SOON</span>
+            </div>`;
     }
 
+    // Constellation rendering
+    let svgLines = ''; let starsHtml = '';
+    for (let i = 0; i < POEM_DATABASE.length; i++) {
+        let p1 = starCoords[i]; starsHtml += `<div class="star-node active-star trigger-nav" data-target="poem-page-${i+1}" title="${POEM_DATABASE[i].dateText} - ${POEM_DATABASE[i].title.replace('<br>',' ')}" style="position:absolute; width:12px; height:12px; background:var(--gold); border-radius:50%; box-shadow:0 0 10px var(--gold); cursor:pointer; top: ${p1.top}%; left: ${p1.left}%;"></div>`;
+        if (i < POEM_DATABASE.length - 1) { let p2 = starCoords[i+1]; svgLines += `<line x1="${p1.left}%" y1="${p1.top}%" x2="${p2.left}%" y2="${p2.top}%" stroke="rgba(191,164,111,0.4)" stroke-width="1" stroke-dasharray="4" />`; }
+    }
+    if (POEM_DATABASE.length > 0 && starMap) {
+        let lastStar = starCoords[POEM_DATABASE.length - 1]; let lockedStar = starCoords[POEM_DATABASE.length];
+        svgLines += `<line x1="${lastStar.left}%" y1="${lastStar.top}%" x2="${lockedStar.left}%" y2="${lockedStar.top}%" stroke="rgba(191,164,111,0.1)" stroke-width="1" stroke-dasharray="4" />`;
+        starsHtml += `<div class="star-node pulse-star interactive-locked" title="Awaiting Completion..." style="position:absolute; width:12px; height:12px; background:rgba(255,255,255,0.2); border-radius:50%; top: ${lockedStar.top}%; left: ${lockedStar.left}%;"></div>`;
+        starMap.innerHTML = `<svg width="100%" height="100%" style="position: absolute; top:0; left:0; z-index: 1;">${svgLines}</svg>${starsHtml}`;
+    }
+    if(authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter ${UPCOMING_CHAPTER.chapterNum}: ${UPCOMING_CHAPTER.title}`;
+}
+
+    
+        
     const thoughtBtn = findSafeElement("reveal-thought-btn", "THOUGHT");
     const thoughtDisplay = findSafeElement("midnight-thought-display");
     if(thoughtBtn && thoughtDisplay) {
