@@ -125,9 +125,13 @@ document.addEventListener("DOMContentLoaded", () => {
             initCosmicNavigation(); 
             initLibraryFeatures(); 
         })
-        .catch(error => {
-            console.error("Critical Error inside Library Fetch: ", error);
-        });
+        
+         // Isko dhoondo apne code mein aur aise badal do:
+    .catch(error => {
+        alert("🔴 JSON LOAD ERROR: " + error.message + "\nYaani poem.json file nahi mil rahi!");
+        console.error("Critical Error inside Library Fetch: ", error);
+    });
+           });
 
     function initTouchRipple() {
         document.body.addEventListener('click', (e) => {
