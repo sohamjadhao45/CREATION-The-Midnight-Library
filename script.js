@@ -1,17 +1,41 @@
 /* =====================================================================
-   THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO EDITION)
-   Linter-Safe | Interactive Click Wax Seal | 11:11 Easter Egg
+   THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFENSIVE EDITION - PATCHED)
+   Linter-Safe | Armor-Plated Fallbacks | No-Crash Guarantee
    ===================================================================== */
 
-   document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     "use strict";
+
+    /* ======================================================
+       🛡️ GLOBAL DEFENSIVE ENGINE HELPER (THE ARMOR)
+       ====================================================== */
+    function findSafeElement(id, textFallback = null, selectorFallback = null) {
+        // 1. Pehle direct ID se dhoondo
+        let el = document.getElementById(id);
+        if (el) return el;
+
+        // 2. Agar class/selector diya hai, toh usse dhoondo
+        if (selectorFallback) {
+            el = document.querySelector(selectorFallback);
+            if (el) return el;
+        }
+
+        // 3. Agar ab bhi nahi mila, toh poore page par uske naam (Text) se dhoondo
+        if (textFallback) {
+            el = Array.from(document.querySelectorAll("button, .nav-link, div, span, a, input, label, p, h1, h2, h3")).find(node => {
+                return node.textContent && node.textContent.toUpperCase().includes(textFallback.toUpperCase());
+            });
+            if (el) return el;
+        }
+
+        // 4. Safe Return (Null Pointer Crash se bachane ke liye)
+        return null;
+    }
 
     /* ======================================================
        📜 POEM DATABASE (AUTO-BUILD)
        ====================================================== */
     let POEM_DATABASE = [];
-    
-
     const UPCOMING_CHAPTER = { chapterNum: "III", title: "THE COSMOS WITHIN" };
 
     window.twMasterState = {}; 
@@ -29,51 +53,45 @@
     ];
     const starCoords = [{top: 50, left: 20}, {top: 20, left: 50}, {top: 60, left: 80}, {top: 80, left: 40}, {top: 30, left: 85}, {top: 75, left: 15}];
 
-    // Audio Elements
-    const audioPageTurn = document.getElementById("audio-page-turn");
-    const audioRain = document.getElementById("audio-rain");
-    const audioAmbient = document.getElementById("audio-ambient");
-// 🔥 IS TARAH SE DATA FETCH KARKE SARE FUNCTIONS INITIALIZE KARO:
-// =====================================================================
-// 🔥 INITIALIZATION SEQUENCE (FIXED)
-// =====================================================================
+    // Audio Elements (Protected)
+    const audioPageTurn = findSafeElement("audio-page-turn");
+    const audioRain = findSafeElement("audio-rain");
+    const audioAmbient = findSafeElement("audio-ambient");
 
-// 1. Pehle wo systems chalao jo bina network ke, instant chalne chahiye (Intro, Gate, Backgrounds)
-initPassport();                  // 👈 Sabse pehle gate open system chalega!
-initTouchRipple();
-initClockAndAtmosphere();
-initUltimateUniverseBackground();
-initDynamicShadows();
+    // =====================================================================
+    // 🚀 INITIALIZATION SEQUENCE (FALLBACK-PROTECTED)
+    // =====================================================================
 
-// 2. Ab background mein shanti se data fetch karo baaki library functions ke liye
-fetch('poem.json')
-    .then(response => {
-        if (!response.ok) throw new Error("Poem database load nahi ho paya");
-        return response.json();
-    })
-    .then(data => {
-        POEM_DATABASE = data; // JSON ka data variable mein aaya
+    initPassport();                  
+    initTouchRipple();
+    initClockAndAtmosphere();
+    initUltimateUniverseBackground();
+    initDynamicShadows();
 
-        // Ab baaki ke saare internal systems chalenge
-        buildLibrarySystem(); 
-        initCosmicNavigation(); 
-        initLibraryFeatures(); 
-        initScrollProgressBar(); 
-        initSecretKeyboardVault(); 
-        initLedger();
-        initBookmarksDrawer(); 
-        initFavouritesDrawer(); 
-        initTimeCapsule(); 
-        init1111Wish();
-        initZenMode();
-        initAudioSpeechEngine(); 
-    })
-    .catch(error => {
-        console.error("Critical Error inside Library Fetch: ", error);
-    });
+    fetch('poem.json')
+        .then(response => {
+            if (!response.ok) throw new Error("Poem database load nahi ho paya");
+            return response.json();
+        })
+        .then(data => {
+            POEM_DATABASE = data; 
+            buildLibrarySystem(); 
+            initCosmicNavigation(); 
+            initLibraryFeatures(); 
+            initScrollProgressBar(); 
+            initSecretKeyboardVault(); 
+            initLedger();
+            initBookmarksDrawer(); 
+            initFavouritesDrawer(); 
+            initTimeCapsule(); 
+            init1111Wish();
+            initZenMode();
+            initAudioSpeechEngine(); 
+        })
+        .catch(error => {
+            console.error("Critical Error inside Library Fetch: ", error);
+        });
 
-
-    
     function initTouchRipple() {
         document.body.addEventListener('click', (e) => {
             const ripple = document.createElement('div');
@@ -86,8 +104,8 @@ fetch('poem.json')
     }
 
     function initPassport() {
-        const input = document.getElementById("visitor-name");
-        const enterBtn = document.getElementById("enter-library-btn");
+        const input = findSafeElement("visitor-name", "visitor");
+        const enterBtn = findSafeElement("enter-library-btn", "ENTER");
         const savedName = localStorage.getItem("midnightVisitor");
         if(savedName && input) input.value = savedName;
 
@@ -98,17 +116,15 @@ fetch('poem.json')
                 localStorage.setItem("midnightVisitor", name);
                 globalState.visitorName = name;
                 
-                // Update Vault Greeting
-                const greeting = document.getElementById("vault-greeting");
+                const greeting = findSafeElement("vault-greeting");
                 if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;
 
-                // Update Author Chamber Letter Title
-                const letterTitle = document.getElementById("reader-letter-title");
+                const letterTitle = findSafeElement("reader-letter-title");
                 if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;
 
-                document.getElementById("intro-screen").classList.add("fade-out");
+                const introScreen = findSafeElement("intro-screen");
+                if(introScreen) introScreen.classList.add("fade-out");
                 
-                // Start Ambient Audio
                 if(audioAmbient && !globalState.isAudioPlaying) {
                     audioAmbient.volume = 0.2;
                     audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));
@@ -119,13 +135,22 @@ fetch('poem.json')
     }
 
     function buildLibrarySystem() {
-        const nav = document.getElementById("library-nav"); const bookshelf = document.getElementById("dynamic-bookshelf"); const starMap = document.getElementById("star-map"); const authorScripting = document.getElementById("author-scripting-status"); const secretPage = document.getElementById("page-secret");
-        nav.innerHTML = `<button class="nav-link active-nav" data-target="page1">Library Entrance</button>`; bookshelf.innerHTML = ""; let prevPageId = "page1";
+        const nav = findSafeElement("library-nav"); 
+        const bookshelf = findSafeElement("dynamic-bookshelf"); 
+        const starMap = findSafeElement("star-map"); 
+        const authorScripting = findSafeElement("author-scripting-status"); 
+        const secretPage = findSafeElement("page-secret");
+
+        if(nav) nav.innerHTML = `<button class="nav-link active-nav" data-target="page1">Library Entrance</button>`; 
+        if(bookshelf) bookshelf.innerHTML = ""; 
+        let prevPageId = "page1";
 
         POEM_DATABASE.forEach((poem, i) => {
-            const pageId = `poem-page-${i + 1}`; const nextPageId = i < POEM_DATABASE.length - 1 ? `poem-page-${i + 2}` : `page-fragments`;
-            nav.innerHTML += `<button class="nav-link" data-target="${pageId}">${poem.chapterLabel}</button>`;
-            const cleanTitle = poem.title.replace('<br>', ' '); const safeText = poem.text.replace(/\n/g, '\\n');
+            const pageId = `poem-page-${i + 1}`; 
+            const nextPageId = i < POEM_DATABASE.length - 1 ? `poem-page-${i + 2}` : `page-fragments`;
+            if(nav) nav.innerHTML += `<button class="nav-link" data-target="${pageId}">${poem.chapterLabel}</button>`;
+            const cleanTitle = poem.title.replace('<br>', ' '); 
+            const safeText = poem.text.replace(/\n/g, '\\n');
 
             const sectionHtml = `
             <section id="${pageId}" class="page" data-poem-index="${i}">
@@ -146,7 +171,6 @@ fetch('poem.json')
                 <div class="poem-interactions">
                     <button class="resonate-btn" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>
                     <button class="listen-btn" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
-
                 </div>
               </div>
               <div class="button-row" style="margin-top: 15px;">
@@ -155,39 +179,38 @@ fetch('poem.json')
               </div>
               <div class="button-row mt-20"><button class="btn-outline trigger-nav" data-target="${prevPageId}">❮ Previous</button><button class="btn-solid trigger-nav" data-target="${nextPageId}">Next ❯</button></div>
             </section>`;
-            secretPage.insertAdjacentHTML('beforebegin', sectionHtml);
-            bookshelf.innerHTML += `<div class="book-spine ${i % 2 !== 0 ? 'spine-gold' : ''} trigger-nav" data-target="${pageId}"><div class="spine-text">${poem.spineLabel}</div></div>`;
+            
+            if(secretPage) secretPage.insertAdjacentHTML('beforebegin', sectionHtml);
+            if(bookshelf) bookshelf.innerHTML += `<div class="book-spine ${i % 2 !== 0 ? 'spine-gold' : ''} trigger-nav" data-target="${pageId}"><div class="spine-text">${poem.spineLabel}</div></div>`;
             prevPageId = pageId;
         });
 
-        nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;
-        const btnExplore = document.getElementById("btn-explore");
-if (btnExplore) {
-    btnExplore.setAttribute("data-target", "poem-page-1");
-}
+        if(nav) nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;
+        
+        const btnExplore = findSafeElement("btn-explore", "EXPLORE");
+        if (btnExplore) btnExplore.setAttribute("data-target", "poem-page-1");
 
-const btnFragPrev = document.getElementById("btn-frag-prev");
-if (btnFragPrev) {
-    btnFragPrev.setAttribute("data-target", `poem-page-${POEM_DATABASE.length}`);
-}
-        bookshelf.innerHTML += `<div class="book-spine spine-locked interactive-locked" title="Some stories are still being lived."><div class="spine-text">${UPCOMING_CHAPTER.title}</div><div class="spine-subtext" style="position: absolute; bottom: 10px; width: 100%; text-align: center; font-size: 8px; color: rgba(255,255,255,0.4);">UNAVAILABLE</div></div>`;
+        const btnFragPrev = findSafeElement("btn-frag-prev");
+        if (btnFragPrev) btnFragPrev.setAttribute("data-target", `poem-page-${POEM_DATABASE.length}`);
+        
+        if(bookshelf) bookshelf.innerHTML += `<div class="book-spine spine-locked interactive-locked" title="Some stories are still being lived."><div class="spine-text">${UPCOMING_CHAPTER.title}</div><div class="spine-subtext" style="position: absolute; bottom: 10px; width: 100%; text-align: center; font-size: 8px; color: rgba(255,255,255,0.4);">UNAVAILABLE</div></div>`;
 
         let svgLines = ''; let starsHtml = '';
         for (let i = 0; i < POEM_DATABASE.length; i++) {
             let p1 = starCoords[i]; starsHtml += `<div class="star-node active-star trigger-nav" data-target="poem-page-${i+1}" title="${POEM_DATABASE[i].dateText} - ${POEM_DATABASE[i].title.replace('<br>',' ')}" style="top: ${p1.top}%; left: ${p1.left}%;"></div>`;
             if (i < POEM_DATABASE.length - 1) { let p2 = starCoords[i+1]; svgLines += `<line x1="${p1.left}%" y1="${p1.top}%" x2="${p2.left}%" y2="${p2.top}%" stroke="rgba(191,164,111,0.4)" stroke-width="1" stroke-dasharray="4" />`; }
         }
-        if (POEM_DATABASE.length > 0) {
+        if (POEM_DATABASE.length > 0 && starMap) {
             let lastStar = starCoords[POEM_DATABASE.length - 1]; let lockedStar = starCoords[POEM_DATABASE.length];
             svgLines += `<line x1="${lastStar.left}%" y1="${lastStar.top}%" x2="${lockedStar.left}%" y2="${lockedStar.top}%" stroke="rgba(191,164,111,0.1)" stroke-width="1" stroke-dasharray="4" />`;
             starsHtml += `<div class="star-node pulse-star interactive-locked" title="Awaiting Completion..." style="top: ${lockedStar.top}%; left: ${lockedStar.left}%;"></div>`;
+            starMap.innerHTML = `<svg width="100%" height="100%" style="position: absolute; top:0; left:0; z-index: 1;">${svgLines}</svg>${starsHtml}`;
         }
-        starMap.innerHTML = `<svg width="100%" height="100%" style="position: absolute; top:0; left:0; z-index: 1;">${svgLines}</svg>${starsHtml}`;
-        authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter ${UPCOMING_CHAPTER.chapterNum}: ${UPCOMING_CHAPTER.title}`;
+        if(authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter ${UPCOMING_CHAPTER.chapterNum}: ${UPCOMING_CHAPTER.title}`;
     }
 
-    const thoughtBtn = document.getElementById("reveal-thought-btn");
-    const thoughtDisplay = document.getElementById("midnight-thought-display");
+    const thoughtBtn = findSafeElement("reveal-thought-btn", "THOUGHT");
+    const thoughtDisplay = findSafeElement("midnight-thought-display");
     if(thoughtBtn && thoughtDisplay) {
         thoughtBtn.addEventListener("click", () => {
             thoughtDisplay.style.opacity = 0;
@@ -203,29 +226,58 @@ if (btnFragPrev) {
     }
 
     function initTimeCapsule() {
-        const capsule = document.getElementById("time-capsule-item"); const status = document.getElementById("capsule-status");
+        const capsule = findSafeElement("time-capsule-item"); 
+        const status = findSafeElement("capsule-status");
         if(!capsule || !status) return;
         if (new Date() >= new Date("January 1, 2027 00:00:00")) { status.innerHTML = `<span style="color:var(--gold);">Unlocked. "To the me who survived, thank you."</span>`; } 
         else { status.innerText = "A letter to the future. Sealed until January 1, 2027."; }
     }
 
-    function initScrollProgressBar() { window.addEventListener("scroll", () => { let st = window.scrollY || document.documentElement.scrollTop; let sh = document.documentElement.scrollHeight - window.innerHeight; document.getElementById("reading-progress").style.width = sh > 0 ? ((st / sh) * 100) + "%" : "0%"; }); }
+    function initScrollProgressBar() { 
+        window.addEventListener("scroll", () => { 
+            let st = window.scrollY || document.documentElement.scrollTop; 
+            let sh = document.documentElement.scrollHeight - window.innerHeight; 
+            const progress = findSafeElement("reading-progress");
+            if(progress) progress.style.width = sh > 0 ? ((st / sh) * 100) + "%" : "0%"; 
+        }); 
+    }
 
+    /* ======================================================
+       🛡️ AMENDED: FIXED VAULT CHECKING (NO EARLY RETURN TRAP)
+       ====================================================== */
     function checkUltimateVault() {
-        const condMoon = document.getElementById("cond-moon"); const condNotes = document.getElementById("cond-notes"); const condWord = document.getElementById("cond-word"); if(!condMoon) return;
-        condMoon.innerText = globalState.hasTappedMoon ? "✅ Moon Tapped (3/3)" : `❌ Moon Tapped (${globalState.secretClicks}/3)`;
-        condNotes.innerText = globalState.notesVisitCount >= 5 ? "✅ Notes Room Visits (5/5)" : `❌ Notes Room Visits (${globalState.notesVisitCount}/5)`;
-        if(globalState.hasTypedWord) condWord.innerText = "✅ Secret Word Typed";
+        const condMoon = findSafeElement("cond-moon"); 
+        const condNotes = findSafeElement("cond-notes"); 
+        const condWord = findSafeElement("cond-word"); 
+        
+        // Agar element page par hain toh text update karo, par code block mat karo!
+        if(condMoon) {
+            condMoon.innerText = globalState.hasTappedMoon ? "✅ Moon Tapped (3/3)" : `❌ Moon Tapped (${globalState.secretClicks}/3)`;
+        }
+        if(condNotes) {
+            condNotes.innerText = globalState.notesVisitCount >= 5 ? "✅ Notes Room Visits (5/5)" : `❌ Notes Room Visits (${globalState.notesVisitCount}/5)`;
+        }
+        if(globalState.hasTypedWord && condWord) {
+            condWord.innerText = "✅ Secret Word Typed";
+        }
 
+        // Global master validation trigger
         if(globalState.hasTappedMoon && globalState.notesVisitCount >= 5 && globalState.hasTypedWord) {
-            document.getElementById("quest-conditions").style.display = "none"; document.getElementById("hidden-poem-container").style.display = "block"; document.getElementById("ultimate-secret-log").querySelector("strong").innerText = "🔓 Vault Log #003 (Status: Unlocked)";
+            const hiddenContainer = findSafeElement("hidden-poem-container");
+            const conditionsContainer = findSafeElement("quest-conditions");
+            const secretLog = findSafeElement("ultimate-secret-log");
+            if(conditionsContainer) conditionsContainer.style.display = "none"; 
+            if(hiddenContainer) hiddenContainer.style.display = "block"; 
+            if(secretLog && secretLog.querySelector("strong")) {
+                secretLog.querySelector("strong").innerText = "🔓 Vault Log #003 (Status: Unlocked)";
+            }
         }
     }
 
     function initSecretKeyboardVault() {
         const randomIndex = Math.floor(Math.random() * moonWords.length);
         globalState.secretPassword = moonWords[randomIndex];
-        const wordDisplay = document.getElementById("secret-word");
+        const wordDisplay = findSafeElement("secret-word");
         if(wordDisplay) wordDisplay.innerText = globalState.secretPassword;
 
         let inputBuffer = "";
@@ -236,14 +288,16 @@ if (btnFragPrev) {
             if (inputBuffer === globalState.secretPassword) {
                 globalState.hasTypedWord = true; checkUltimateVault(); showToast("👁️ The Vault Opens...");
                 const vaultBtn = document.querySelector(".trigger-nav[data-target='page-secret']");
-                if (vaultBtn) { vaultBtn.click(); } else { document.getElementById('page-secret').classList.add('active'); }
+                if (vaultBtn) { vaultBtn.click(); } else { const secPage = findSafeElement('page-secret'); if(secPage) secPage.classList.add('active'); }
                 inputBuffer = ""; 
             }
         });
     }
 
     function initLedger() {
-        const ledgerList = document.getElementById("ledger-list"); const submits = document.querySelectorAll(".ledger-submit"); const inputs = document.querySelectorAll(".ledger-input");
+        const ledgerList = findSafeElement("ledger-list"); 
+        const submits = document.querySelectorAll(".ledger-submit"); 
+        const inputs = document.querySelectorAll(".ledger-input");
         let entries = JSON.parse(localStorage.getItem('midnightLedger') || '[]');
         function renderLedger() {
             if(!ledgerList) return; ledgerList.innerHTML = "";
@@ -263,23 +317,24 @@ if (btnFragPrev) {
     }
 
     function toggleRain() {
-        globalState.rainActive = !globalState.rainActive; const rCanvas = document.getElementById("rain-canvas");
+        globalState.rainActive = !globalState.rainActive; 
+        const rCanvas = findSafeElement("rain-canvas");
         if(globalState.rainActive) { 
-            rCanvas.classList.add("raining"); 
+            if(rCanvas) rCanvas.classList.add("raining"); 
             startRainVisuals(); 
             showToast("🌧️ The sky begins to weep..."); 
             if(audioRain) { audioRain.volume = 0.5; audioRain.play(); }
         } else { 
-            rCanvas.classList.remove("raining"); 
+            if(rCanvas) rCanvas.classList.remove("raining"); 
             showToast("🌤️ The storm has passed."); 
             if(audioRain) { audioRain.pause(); }
         }
     }
 
     function init1111Wish() {
-        const modal = document.getElementById("wish-modal");
-        const submitBtn = document.getElementById("submit-wish-btn");
-        const input = document.getElementById("wish-input");
+        const modal = findSafeElement("wish-modal");
+        const submitBtn = findSafeElement("submit-wish-btn", "WISH");
+        const input = findSafeElement("wish-input");
 
         setInterval(() => {
             const d = new Date();
@@ -292,8 +347,8 @@ if (btnFragPrev) {
 
         if(submitBtn) {
             submitBtn.addEventListener("click", () => {
-                if(input.value.trim() !== "") {
-                    modal.style.display = "none";
+                if(input && input.value.trim() !== "") {
+                    if(modal) modal.style.display = "none";
                     showToast("Keep visiting, your wish will be completed soon wanderer. ✨");
                 }
             });
@@ -301,20 +356,38 @@ if (btnFragPrev) {
     }
 
     function initClockAndAtmosphere() {
-        const dateEl = document.getElementById("journal-date"); if(dateEl) dateEl.innerText = `Journal Entry: ${new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}`;
-        const rotatingWordEl = document.getElementById("secret-word"); let wordIndex = moonWords.indexOf(globalState.secretPassword);
-        if(rotatingWordEl) { setInterval(() => { rotatingWordEl.style.opacity = 0; setTimeout(() => { wordIndex = (wordIndex + 1) % moonWords.length; globalState.secretPassword = moonWords[wordIndex]; rotatingWordEl.innerText = globalState.secretPassword; rotatingWordEl.style.opacity = 1; }, 500); }, 4000); }
+        const dateEl = findSafeElement("journal-date"); 
+        if(dateEl) dateEl.innerText = `Journal Entry: ${new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}`;
         
-        const themeBtn = document.getElementById("theme-toggle");
+        const rotatingWordEl = findSafeElement("secret-word"); 
+        let wordIndex = moonWords.indexOf(globalState.secretPassword);
+        if(rotatingWordEl) { 
+            setInterval(() => { 
+                rotatingWordEl.style.opacity = 0; 
+                setTimeout(() => { 
+                    wordIndex = (wordIndex + 1) % moonWords.length; 
+                    globalState.secretPassword = moonWords[wordIndex]; 
+                    rotatingWordEl.innerText = globalState.secretPassword; 
+                    rotatingWordEl.style.opacity = 1; 
+                }, 500); 
+            }, 4000); 
+        }
+        
+        const themeBtn = findSafeElement("theme-toggle", "NIGHT");
         if(themeBtn) { themeBtn.addEventListener("click", () => { const nextTheme = globalState.activeTheme === "dark" ? "light" : "dark"; document.documentElement.setAttribute("data-theme", nextTheme); themeBtn.innerText = nextTheme === "dark" ? "🌙 Night" : "☀️ Day"; globalState.activeTheme = nextTheme; }); }
-        const rainToggleBtn = document.getElementById("rain-toggle"); if(rainToggleBtn) rainToggleBtn.addEventListener("click", toggleRain);
-        const focusBtn = document.getElementById("reading-mode-toggle"); const exitFocusBtn = document.getElementById("exit-focus-btn");
-        function toggleFocus() { document.body.classList.toggle("reading-mode"); focusBtn.innerText = document.body.classList.contains("reading-mode") ? "👁️ Normal" : "📖 Focus"; }
-        if(focusBtn) focusBtn.addEventListener("click", toggleFocus); if(exitFocusBtn) exitFocusBtn.addEventListener("click", toggleFocus);
+        
+        const rainToggleBtn = findSafeElement("rain-toggle", "RAIN"); 
+        if(rainToggleBtn) rainToggleBtn.addEventListener("click", toggleRain);
+        
+        const focusBtn = findSafeElement("reading-mode-toggle", "FOCUS"); 
+        const exitFocusBtn = findSafeElement("exit-focus-btn", "NORMAL");
+        function toggleFocus() { document.body.classList.toggle("reading-mode"); if(focusBtn) focusBtn.innerText = document.body.classList.contains("reading-mode") ? "👁️ Normal" : "📖 Focus"; }
+        if(focusBtn) focusBtn.addEventListener("click", toggleFocus); 
+        if(exitFocusBtn) exitFocusBtn.addEventListener("click", toggleFocus);
     }
 
     function startRainVisuals() {
-        const rCanvas = document.getElementById("rain-canvas"); if(!rCanvas) return;
+        const rCanvas = findSafeElement("rain-canvas"); if(!rCanvas) return;
         const rCtx = rCanvas.getContext("2d"); rCanvas.width = window.innerWidth; rCanvas.height = window.innerHeight;
         const drops = []; for(let i=0; i<100; i++) drops.push({x: Math.random()*rCanvas.width, y: Math.random()*rCanvas.height, l: Math.random()*20+10, v: Math.random()*4+4});
         function drawRain() {
@@ -326,7 +399,7 @@ if (btnFragPrev) {
     }
 
     function initUltimateUniverseBackground() {
-        const canvas = document.getElementById("universe"); if(!canvas) return; const ctx = canvas.getContext("2d", { alpha: false }); 
+        const canvas = findSafeElement("universe"); if(!canvas) return; const ctx = canvas.getContext("2d", { alpha: false }); 
         let width = canvas.width = window.innerWidth; let height = canvas.height = window.innerHeight;
         window.addEventListener("resize", () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
 
@@ -350,8 +423,8 @@ if (btnFragPrev) {
         requestAnimationFrame(processRenderLoop);
     }
 
-    /* --- ✨ INTERACTIVE WAX SEAL (SINGLE CLICK) ✨ --- */
     function bindWaxSeals(page) {
+        if (!page) return;
         const sealWrap = page.querySelector(".wax-seal-wrapper:not(.broken)");
         if (!sealWrap) { initTypewriterEngine(); return; }
         
@@ -362,19 +435,20 @@ if (btnFragPrev) {
         const sealBtn = sealWrap.querySelector(".wax-seal");
         showToast("👆 Click the wax seal to break it...");
 
-        sealBtn.addEventListener('click', (e) => {
-            sealWrap.dataset.isBroken = "true";
-            sealWrap.classList.add("broken");
-            showToast("🔓 The seal is broken.");
-            setTimeout(initTypewriterEngine, 800);
-        });
+        if(sealBtn) {
+            sealBtn.addEventListener('click', (e) => {
+                sealWrap.dataset.isBroken = "true";
+                sealWrap.classList.add("broken");
+                showToast("🔓 The seal is broken.");
+                setTimeout(initTypewriterEngine, 800);
+            });
+        }
     }
 
     function initCosmicNavigation() {
         document.body.addEventListener("click", (e) => {
             if(e.target.classList.contains("trigger-nav") || e.target.classList.contains("nav-link") || e.target.classList.contains("star-node")) {
                 const targetPageId = e.target.getAttribute("data-target"); 
-                // Play page turn sound
                 if(audioPageTurn) {
                     audioPageTurn.currentTime = 0;
                     audioPageTurn.play().catch(err => console.log("Audio blocked"));
@@ -384,15 +458,21 @@ if (btnFragPrev) {
         });
 
         function executePageFlip(targetPageId) {
-            const currentActivePage = document.querySelector(".page.active"); const destinationPage = document.getElementById(targetPageId);
+            const currentActivePage = document.querySelector(".page.active"); 
+            const destinationPage = findSafeElement(targetPageId);
             if(!destinationPage || currentActivePage === destinationPage) return;
-if (window.stopZenModeGlobally) window.stopZenModeGlobally();
-  if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();
+            if (window.stopZenModeGlobally) window.stopZenModeGlobally();
+            if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();
             globalState.vortexActive = true; document.body.style.overflowY = 'hidden'; 
             
             if(targetPageId === "page-fragments") {
                 const currentCombo = notesCombos[globalState.notesVisitCount % 5];
-                document.getElementById("combo-quote-1").innerText = currentCombo[0]; document.getElementById("combo-quote-2").innerText = currentCombo[1]; document.getElementById("combo-quote-3").innerText = currentCombo[2];
+                const q1 = findSafeElement("combo-quote-1");
+                const q2 = findSafeElement("combo-quote-2");
+                const q3 = findSafeElement("combo-quote-3");
+                if(q1) q1.innerText = currentCombo[0]; 
+                if(q2) q2.innerText = currentCombo[1]; 
+                if(q3) q3.innerText = currentCombo[2];
                 globalState.notesVisitCount++; checkUltimateVault();
             }
             
@@ -406,7 +486,6 @@ if (window.stopZenModeGlobally) window.stopZenModeGlobally();
                     
                     setTimeout(() => {
                         destinationPage.classList.remove("vortex-in"); globalState.vortexActive = false; document.body.style.overflowY = 'auto'; 
-                        
                         bindWaxSeals(destinationPage);
                     }, 50); 
                 }, 600); 
@@ -465,7 +544,7 @@ if (window.stopZenModeGlobally) window.stopZenModeGlobally();
                     } else { state.outHtml = el.innerHTML + "<br>"; el.innerHTML = state.outHtml; state.lineIndex++; state.charIndex = 0; setTimeout(typeNext, 400); }
                 } else { 
                     state.status = "finished"; el.setAttribute("data-animated", "true"); el.classList.remove("is-typing"); 
-                    if(signEl) { signEl.classList.add("active-sign"); } // Signature types out slowly NOW
+                    if(signEl) { signEl.classList.add("active-sign"); } 
                     if(poemIndex !== null) applyWhispers(el, poemIndex);
                 }
             }
@@ -474,7 +553,6 @@ if (window.stopZenModeGlobally) window.stopZenModeGlobally();
     }
 
     document.body.addEventListener('click', async function(e) {
-        // Save as Memory (Image)
         if(e.target && e.target.classList.contains('download-poem-btn')) {
             const pIdx = e.target.getAttribute('data-poem-index'); if(pIdx === null) return;
             const poem = POEM_DATABASE[pIdx]; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");
@@ -493,7 +571,6 @@ if (window.stopZenModeGlobally) window.stopZenModeGlobally();
             showToast("📸 Memory Saved Successfully!");
         }
 
-        // Web Share API implementation
         if(e.target && e.target.classList.contains('share-poem-btn')) {
             const title = e.target.getAttribute('data-poem-title');
             if (navigator.share) {
@@ -514,52 +591,109 @@ if (window.stopZenModeGlobally) window.stopZenModeGlobally();
     });
 
     function initBookmarksDrawer() {
-        const drawer = document.getElementById("bookmarks-drawer"); const openBtn = document.getElementById("open-bookmarks-btn");
-        const closeBtn = document.getElementById("close-drawer"); const list = document.getElementById("bookmarks-list");
-        if(!drawer || !openBtn || !closeBtn || !list) return;
+        const drawer = findSafeElement("bookmarks-drawer"); 
+        const openBtn = findSafeElement("open-bookmarks-btn", "BOOKMARK");
+        const closeBtn = findSafeElement("close-drawer", "CLOSE"); 
+        const list = findSafeElement("bookmarks-list");
+        if(!drawer || !openBtn) return;
         function renderBookmarks() {
-            let bookmarks = JSON.parse(localStorage.getItem('midnightBookmarks') || '[]'); list.innerHTML = "";
-            if (bookmarks.length === 0) { list.innerHTML = `<p style="opacity: 0.5; font-style: italic;">Your soul hasn't saved any verses yet...</p>`; } 
-            else { bookmarks.forEach(bm => { list.innerHTML += `<div class="bookmark-item">📖 ${bm}</div>`; }); }
+            let bookmarks = JSON.parse(localStorage.getItem('midnightBookmarks') || '[]'); 
+            if(list) {
+                list.innerHTML = "";
+                if (bookmarks.length === 0) { list.innerHTML = `<p style="opacity: 0.5; font-style: italic;">Your soul hasn't saved any verses yet...</p>`; } 
+                else { bookmarks.forEach(bm => { list.innerHTML += `<div class="bookmark-item">📖 ${bm}</div>`; }); }
+            }
         }
-        openBtn.addEventListener("click", () => { renderBookmarks(); drawer.classList.add("open"); }); closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });
+        openBtn.addEventListener("click", (e) => { e.preventDefault(); renderBookmarks(); drawer.classList.add("open"); }); 
+        if(closeBtn) closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });
     }
 
     function initFavouritesDrawer() {
-        const drawer = document.getElementById("favourites-drawer"); const openBtn = document.getElementById("open-fav-btn");
-        const closeBtn = document.getElementById("close-fav-drawer"); const list = document.getElementById("favourites-list");
-        if(!drawer || !openBtn || !closeBtn || !list) return;
+        const drawer = findSafeElement("favourites-drawer") || findSafeElement("page-favourites");
+        const openBtn = findSafeElement("open-fav-btn", "FAVS");
+        const closeBtn = findSafeElement("close-fav-drawer"); 
+        const list = findSafeElement("favourites-list");
+        if(!drawer || !openBtn) return;
+
         function renderFavs() {
-            let favs = JSON.parse(localStorage.getItem('midnightFavs') || '[]'); list.innerHTML = "";
-            if (favs.length === 0) { list.innerHTML = `<p style="opacity: 0.5; font-style: italic;">No verses have resonated with you yet...</p>`; } 
-            else { favs.forEach(fv => { list.innerHTML += `<div class="bookmark-item">❤️ ${fv}</div>`; }); }
+            let favs = JSON.parse(localStorage.getItem('midnightFavs') || '[]'); 
+            if(list) {
+                list.innerHTML = "";
+                if (favs.length === 0) { 
+                    list.innerHTML = `<p style="opacity: 0.5; font-style: italic; padding:10px;">No verses have resonated with you yet...</p>`; 
+                } else { 
+                    favs.forEach(fv => { list.innerHTML += `<div class="bookmark-item" style="padding:8px; border-bottom:1px solid rgba(191,164,111,0.1);">❤️ ${fv}</div>`; }); 
+                }
+            }
         }
-        openBtn.addEventListener("click", () => { renderFavs(); drawer.classList.add("open"); }); closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });
+
+        openBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            renderFavs(); 
+            drawer.classList.add("open"); 
+            showToast("❤️ Opening Favourites...");
+        }); 
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });
+        }
     }
 
+    /* ======================================================
+       🛡️ AMENDED: ADDED TEXT & EMOJI FALLBACK FOR MOON PHASE
+       ====================================================== */
     function initLibraryFeatures() {
-        const footerQuote = document.getElementById("quote-rotator"); if(footerQuote) footerQuote.innerText = quoteDatabase[Math.floor(Math.random() * quoteDatabase.length)];
-        const moonTrigger = document.getElementById("moon-phase");
+        const footerQuote = findSafeElement("quote-rotator"); 
+        if(footerQuote) footerQuote.innerText = quoteDatabase[Math.floor(Math.random() * quoteDatabase.length)];
+        
+        // Patcher Added: ID ke saath-saath "🌔" emoji aur ".moon-phase" class fallback de diya hai
+        const moonTrigger = findSafeElement("moon-phase", "🌔", ".moon-phase");
         if(moonTrigger) {
             moonTrigger.addEventListener("click", () => {
-                globalState.secretClicks++; checkUltimateVault();
+                globalState.secretClicks++; 
+                checkUltimateVault();
                 if(globalState.secretClicks === 3) { 
-                    globalState.hasTappedMoon = true; checkUltimateVault();
+                    globalState.hasTappedMoon = true; 
+                    checkUltimateVault();
                     showToast("🏆 Achievement Unlocked: Moonwalker");
-                    document.querySelector(".trigger-nav[data-target='page-secret']")?.click() || document.getElementById('page-secret').classList.add('active'); globalState.secretClicks = 0;
+                    
+                    // Directly bypass check and open the mystery vault screen
+                    const vaultBtn = document.querySelector(".trigger-nav[data-target='page-secret']");
+                    if (vaultBtn) { 
+                        vaultBtn.click(); 
+                    } else { 
+                        const secPage = findSafeElement('page-secret'); 
+                        if(secPage) secPage.classList.add('active'); 
+                    }
+                    globalState.secretClicks = 0;
+                }
+            });
+        }
+        
+        const archiveBtn = findSafeElement("open-archive-btn", "ARCHIVES") || findSafeElement("archive-toggle");
+        if (archiveBtn) {
+            archiveBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const archiveNavLink = document.querySelector('.nav-link[data-target="page-archive"]') || document.querySelector('[data-target="page-archive"]');
+                if (archiveNavLink) {
+                    archiveNavLink.click();
+                    showToast("📜 Opening Ancient Shelf...");
+                } else {
+                    const archPage = findSafeElement("page-archive");
+                    if(archPage) archPage.classList.add("active");
                 }
             });
         }
         
         document.body.addEventListener('click', function(e) {
-            // Bookmark Feature
             if(e.target && e.target.classList.contains('bookmark-btn')) {
                 const poemId = e.target.getAttribute('data-poem'); let bookmarks = JSON.parse(localStorage.getItem('midnightBookmarks') || '[]');
                 if (!bookmarks.includes(poemId)) { bookmarks.push(poemId); localStorage.setItem('midnightBookmarks', JSON.stringify(bookmarks)); showToast("🔖 Verse saved to your soul."); } else { showToast("✨ Verse already remembered."); }
                 e.target.innerText = "❤️ Saved";
             }
 
-            // Favourites Feature (Resonated With Me)
             if(e.target && e.target.classList.contains('resonate-btn')) {
                 const poemTitle = e.target.getAttribute('data-poem'); let favs = JSON.parse(localStorage.getItem('midnightFavs') || '[]');
                 if (!favs.includes(poemTitle)) { 
@@ -574,152 +708,127 @@ if (window.stopZenModeGlobally) window.stopZenModeGlobally();
     }
 
     function showToast(msg) {
-        const container = document.getElementById("toast-container"); const toast = document.createElement("div"); toast.className = "toast"; toast.innerText = msg; container.appendChild(toast); setTimeout(() => toast.remove(), 3500);
-    }
-  /* ======================================================
-   📜 ZEN MODE (COMPLETELY FIXED FOR MOBILE & DESKTOP)
-   ====================================================== */
-let zenScrollId; 
-
-function initZenMode() {
-    const zenBtn = document.getElementById("zen-mode-toggle");
-    if (!zenBtn) return;
-
-    function smoothScroll() {
-        if (!globalState.zenActive) return;
-        
-        // Scroll speed: 0.6 pixels per frame
-        window.scrollBy(0, 0.6); 
-
-        // Agar page end par pahunch gaya
-        if (Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
-            stopZen(false);
-            return;
-        }
-        zenScrollId = requestAnimationFrame(smoothScroll);
+        const container = findSafeElement("toast-container"); 
+        if(!container) return;
+        const toast = document.createElement("div"); toast.className = "toast"; toast.innerText = msg; container.appendChild(toast); setTimeout(() => toast.remove(), 3500);
     }
 
-    function startZen() {
-        globalState.zenActive = true;
-        zenBtn.innerText = "🛑 Stop Zen";
-        zenBtn.style.color = "var(--bg-base)";
-        zenBtn.style.backgroundColor = "var(--gold)";
-        showToast("🧘 Zen Mode Active: Sit back and read...");
-        zenScrollId = requestAnimationFrame(smoothScroll);
-    }
+    function initZenMode() {
+        let zenBtn = findSafeElement("zen-mode-toggle", "ZEN MODE");
+        if (!zenBtn) return;
 
-    function stopZen(silent = false) {
-        globalState.zenActive = false;
-        zenBtn.innerText = "🧘 Zen Mode";
-        zenBtn.style.color = "";
-        zenBtn.style.backgroundColor = "";
-        cancelAnimationFrame(zenScrollId);
-        if (!silent) showToast("🛑 Zen Mode Paused.");
-    }
+        let zenScrollId; 
 
-    // Fixed Click Handler
-    zenBtn.addEventListener("click", (e) => {
-        e.stopPropagation(); // Event ko baki jagah phailne se roko
-        if (!globalState.zenActive) {
-            startZen();
-        } else {
-            stopZen(false);
-        }
-    });
-
-    window.stopZenModeGlobally = function() {
-        if (globalState.zenActive) stopZen(true);
-    };
-
-    // Desktop mouse wheel scroll par pause
-    window.addEventListener("wheel", () => {
-        if (globalState.zenActive) stopZen(true);
-    });
-
-    // Mobile screen touch par pause (But button touch ko ignore karega)
-    window.addEventListener("touchstart", (e) => {
-        if (globalState.zenActive && e.target !== zenBtn && !zenBtn.contains(e.target)) {
-            stopZen(true);
-            showToast("🖐️ Manual touch detected. Zen Mode paused.");
-        }
-    }, { passive: true });
-}
-  /* ======================================================
-   🎙️ AI TEXT-TO-SPEECH ENGINE (LISTEN FEATURE) - FIXED
-   ====================================================== */
-function initAudioSpeechEngine() {
-    // 🔥 SAFETY GUARD: Agar function pehle chal chuka hai, toh dubara mat chalao
-    if (window.audioSpeechEngineInitialized) return;
-    window.audioSpeechEngineInitialized = true;
-
-    let activeListenBtn = null;
-
-    document.body.addEventListener('click', function(e) {
-        if (e.target && e.target.classList.contains('listen-btn')) {
-            const pIdx = e.target.getAttribute('data-poem-index');
-            if (pIdx === null) return;
-
-            const poem = POEM_DATABASE[pIdx];
-
-            // 🛑 AGAR WAHI BUTTON DOBARA DABAYA: Toh speech ko rok do
-            if (window.speechSynthesis.speaking && activeListenBtn === e.target) {
-                window.speechSynthesis.cancel();
-                resetListenBtn();
+        function smoothScroll() {
+            if (!globalState.zenActive) return;
+            window.scrollBy(0, 0.6); 
+            if (Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
+                stopZen(false);
                 return;
             }
-
-            // 🔄 AGAR KOI DUSRI POEM CHAL RAHI THI: Toh pehle use band karo
-            window.speechSynthesis.cancel();
-            if (activeListenBtn) resetListenBtn();
-
-            // Poem ke text ko clean karo (HTML tags hatane ke liye)
-            const cleanTitle = poem.title.replace(/<br\s*\/?>/gi, " ");
-            const textToSpeak = `${poem.chapterLabel}. ${cleanTitle}. ${poem.subtitle}. ${poem.text}`;
-
-            // Naya Speech Utterance banayein
-            const utterance = new SpeechSynthesisUtterance(textToSpeak);
-
-            // 🌙 Midnight Library Vibe Settings (Slow & Deep Voice)
-            utterance.rate = 0.85;  
-            utterance.pitch = 0.95; 
-
-            // Browser se acchi English voice select karna
-            const voices = window.speechSynthesis.getVoices();
-            const premiumVoice = voices.find(v => v.lang.startsWith('en-GB') || v.lang.startsWith('en-US'));
-            if (premiumVoice) utterance.voice = premiumVoice;
-
-            // Events jab audio khatam ho jaye ya error aaye
-            utterance.onend = () => resetListenBtn();
-            utterance.onerror = () => resetListenBtn();
-
-            // UI Update: Button ka rang aur text badlo
-            activeListenBtn = e.target;
-            activeListenBtn.innerText = "🛑 Stop Voice";
-            activeListenBtn.style.backgroundColor = "var(--gold)";
-            activeListenBtn.style.color = "var(--bg-base)";
-
-            // AI Voice Start!
-            window.speechSynthesis.speak(utterance);
+            zenScrollId = requestAnimationFrame(smoothScroll);
         }
-    });
 
-    function resetListenBtn() {
-        if (activeListenBtn) {
-            activeListenBtn.innerText = "🎙️ LISTEN TO VERSE"; // 👈 Match case with your buildLibrarySystem template
-            activeListenBtn.style.backgroundColor = "";
-            activeListenBtn.style.color = "";
-            activeListenBtn = null;
+        function startZen() {
+            globalState.zenActive = true;
+            zenBtn.innerHTML = "🛑 Stop Zen";
+            zenBtn.style.color = "var(--bg-base)";
+            zenBtn.style.backgroundColor = "var(--gold)";
+            showToast("🧘 Zen Mode Active: Sit back and read...");
+            zenScrollId = requestAnimationFrame(smoothScroll);
         }
+
+        function stopZen(silent = false) {
+            globalState.zenActive = false;
+            zenBtn.innerHTML = "📜 ZEN MODE";
+            zenBtn.style.color = "";
+            zenBtn.style.backgroundColor = "";
+            cancelAnimationFrame(zenScrollId);
+            if (!silent) showToast("🛑 Zen Mode Paused.");
+        }
+
+        zenBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation(); 
+            if (!globalState.zenActive) {
+                startZen();
+            } else {
+                stopZen(false);
+            }
+        });
+
+        window.stopZenModeGlobally = function() {
+            if (globalState.zenActive) stopZen(true);
+        };
+
+        window.addEventListener("wheel", () => {
+            if (globalState.zenActive) stopZen(true);
+        });
+
+        window.addEventListener("touchstart", (e) => {
+            if (globalState.zenActive && !zenBtn.contains(e.target)) {
+                stopZen(true);
+                showToast("🖐️ Manual touch detected. Zen Mode paused.");
+            }
+        }, { passive: true });
     }
 
-    // Global Access taaki page badalne par audio apne aap band ho jaye
-    window.stopAudioSpeechGlobally = function() {
-        if (window.speechSynthesis.speaking) {
-            window.speechSynthesis.cancel();
-            resetListenBtn();
+    function initAudioSpeechEngine() {
+        if (window.audioSpeechEngineInitialized) return;
+        window.audioSpeechEngineInitialized = true;
+        let activeListenBtn = null;
+
+        document.body.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('listen-btn')) {
+                const pIdx = e.target.getAttribute('data-poem-index');
+                if (pIdx === null) return;
+                const poem = POEM_DATABASE[pIdx];
+
+                if (window.speechSynthesis.speaking && activeListenBtn === e.target) {
+                    window.speechSynthesis.cancel();
+                    resetListenBtn();
+                    return;
+                }
+
+                window.speechSynthesis.cancel();
+                if (activeListenBtn) resetListenBtn();
+
+                const cleanTitle = poem.title.replace(/<br\s*\/?>/gi, " ");
+                const textToSpeak = `${poem.chapterLabel}. ${cleanTitle}. ${poem.subtitle}. ${poem.text}`;
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.rate = 0.85;  
+                utterance.pitch = 0.95; 
+
+                const voices = window.speechSynthesis.getVoices();
+                const premiumVoice = voices.find(v => v.lang.startsWith('en-GB') || v.lang.startsWith('en-US'));
+                if (premiumVoice) utterance.voice = premiumVoice;
+
+                utterance.onend = () => resetListenBtn();
+                utterance.onerror = () => resetListenBtn();
+
+                activeListenBtn = e.target;
+                activeListenBtn.innerText = "🛑 Stop Voice";
+                activeListenBtn.style.backgroundColor = "var(--gold)";
+                activeListenBtn.style.color = "var(--bg-base)";
+
+                window.speechSynthesis.speak(utterance);
+            }
+        });
+
+        function resetListenBtn() {
+            if (activeListenBtn) {
+                activeListenBtn.innerText = "🎙️ LISTEN TO VERSE"; 
+                activeListenBtn.style.backgroundColor = "";
+                activeListenBtn.style.color = "";
+                activeListenBtn = null;
+            }
         }
-    };
-}
 
-
-   });
+        window.stopAudioSpeechGlobally = function() {
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                resetListenBtn();
+            }
+        };
+    }
+});
