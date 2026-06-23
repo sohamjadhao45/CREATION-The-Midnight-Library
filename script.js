@@ -354,7 +354,7 @@
             const currentActivePage = document.querySelector(".page.active"); const destinationPage = document.getElementById(targetPageId);
             if(!destinationPage || currentActivePage === destinationPage) return;
 if (window.stopZenModeGlobally) window.stopZenModeGlobally();
-
+  if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();
             globalState.vortexActive = true; document.body.style.overflowY = 'hidden'; 
             
             if(targetPageId === "page-fragments") {
