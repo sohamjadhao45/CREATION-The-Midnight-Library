@@ -233,4 +233,75 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     box-shadow: 0 0 15px rgba(191, 164, 111, 0.6);
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
+/* Bookshelf Container styling */
+#dynamic-bookshelf {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: flex-end;
+  min-height: 200px;
+  padding: 20px;
+}
+
+/* Individual vertical book spine styling */
+.book-spine {
+  width: 45px;
+  height: 180px;
+  background: linear-gradient(90deg, #4a1525, #2b0b14); /* Dynamic dynamic color deep red/gothic */
+  border: 1px solid var(--gold);
+  border-radius: 3px 3px 0 0;
+  cursor: pointer;
+  writing-mode: vertical-rl; /* Turns text vertical */
+  text-orient: mixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 5px;
+  color: #f1ebd9;
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+  box-shadow: 3px 0 5px rgba(0,0,0,0.5);
+}
+
+.book-spine:hover {
+  transform: translateY(-15px) scale(1.05);
+  box-shadow: 10px 10px 20px rgba(0,0,0,0.7);
+}
+
+/* Whisper Words Interactivity */
+.whisper-word {
+  border-bottom: 1px dotted var(--gold);
+  color: #a48b56;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.whisper-word:hover {
+  background: rgba(191,164,111,0.15);
+}
+.whisper-word.revealed {
+  color: #6b8cce;
+  font-style: italic;
+  font-weight: bold;
+  border-bottom: none;
+}
+
+/* Global Reader Overlay */
+.reader-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 10000;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+}
+.close-reader-btn {
+  position: absolute;
+  top: 15px; right: 20px;
+  background: none; border: none; color: var(--gold);
+  font-family: 'Cinzel'; cursor: pointer;
+}
 
