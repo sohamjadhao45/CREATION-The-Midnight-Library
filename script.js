@@ -47,7 +47,7 @@
     buildLibrarySystem(); 
     initClockAndAtmosphere(); initUltimateUniverseBackground(); initCosmicNavigation(); 
     initLibraryFeatures(); initScrollProgressBar(); initSecretKeyboardVault(); initLedger();
-    initDynamicShadows(); initBookmarksDrawer(); initFavouritesDrawer(); initTimeCapsule(); initPassport(); initTouchRipple(); init1111Wish();
+    initDynamicShadows(); initBookmarksDrawer(); initFavouritesDrawer(); initTimeCapsule(); initPassport(); initTouchRipple(); init1111Wish();initZenMode();
 
     function initTouchRipple() {
         document.body.addEventListener('click', (e) => {
