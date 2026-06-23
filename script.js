@@ -34,36 +34,44 @@
     const audioRain = document.getElementById("audio-rain");
     const audioAmbient = document.getElementById("audio-ambient");
 // 🔥 IS TARAH SE DATA FETCH KARKE SARE FUNCTIONS INITIALIZE KARO:
+// =====================================================================
+// 🔥 INITIALIZATION SEQUENCE (FIXED)
+// =====================================================================
+
+// 1. Pehle wo systems chalao jo bina network ke, instant chalne chahiye (Intro, Gate, Backgrounds)
+initPassport();                  // 👈 Sabse pehle gate open system chalega!
+initTouchRipple();
+initClockAndAtmosphere();
+initUltimateUniverseBackground();
+initDynamicShadows();
+
+// 2. Ab background mein shanti se data fetch karo baaki library functions ke liye
 fetch('poem.json')
     .then(response => {
         if (!response.ok) throw new Error("Poem database load nahi ho paya");
         return response.json();
     })
     .then(data => {
-        POEM_DATABASE = data; // JSON ka sara data variable mein aa gaya
+        POEM_DATABASE = data; // JSON ka data variable mein aaya
 
-        // Ab tumhare saare systems makkhan ki tarah chalenge
+        // Ab baaki ke saare internal systems chalenge
         buildLibrarySystem(); 
-        initClockAndAtmosphere(); 
-        initUltimateUniverseBackground(); 
         initCosmicNavigation(); 
         initLibraryFeatures(); 
         initScrollProgressBar(); 
         initSecretKeyboardVault(); 
         initLedger();
-        initDynamicShadows(); 
         initBookmarksDrawer(); 
         initFavouritesDrawer(); 
         initTimeCapsule(); 
-        initPassport(); 
-        initTouchRipple(); 
         init1111Wish();
         initZenMode();
-        initAudioSpeechEngine(); // Tumhara naya listen engine
+        initAudioSpeechEngine(); 
     })
     .catch(error => {
-        console.error("Critical Error: ", error);
+        console.error("Critical Error inside Library Fetch: ", error);
     });
+
 
     
     function initTouchRipple() {
