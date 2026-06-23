@@ -2,6 +2,10 @@
    THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFINITIVE EDITION)
    Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
    ===================================================================== */
+window.onerror = function(message, source, lineno, colno, error) {
+    alert("🔴 CRITICAL ERROR DETECTED!\n\nMessage: " + message + "\nLine: " + lineno);
+    return false;
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     "use strict";
