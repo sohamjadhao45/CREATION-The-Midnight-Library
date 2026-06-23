@@ -1,6 +1,6 @@
 /* =====================================================================
-   THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFENSIVE EDITION - PATCHED)
-   Linter-Safe | Armor-Plated Fallbacks | No-Crash Guarantee
+   THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFINITIVE EDITION)
+   Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
    ===================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -10,40 +10,60 @@ document.addEventListener("DOMContentLoaded", () => {
        🛡️ GLOBAL DEFENSIVE ENGINE HELPER (THE ARMOR)
        ====================================================== */
     function findSafeElement(id, textFallback = null, selectorFallback = null) {
-        // 1. Pehle direct ID se dhoondo
         let el = document.getElementById(id);
         if (el) return el;
 
-        // 2. Agar class/selector diya hai, toh usse dhoondo
         if (selectorFallback) {
             el = document.querySelector(selectorFallback);
             if (el) return el;
         }
 
-        // 3. Agar ab bhi nahi mila, toh poore page par uske naam (Text) se dhoondo
         if (textFallback) {
             el = Array.from(document.querySelectorAll("button, .nav-link, div, span, a, input, label, p, h1, h2, h3")).find(node => {
                 return node.textContent && node.textContent.toUpperCase().includes(textFallback.toUpperCase());
             });
             if (el) return el;
         }
-
-        // 4. Safe Return (Null Pointer Crash se bachane ke liye)
         return null;
     }
 
     /* ======================================================
-       📜 POEM DATABASE (AUTO-BUILD)
+       📜 POEM ENGINE & ATMOSPHERE STATES
        ====================================================== */
     let POEM_DATABASE = [];
     const UPCOMING_CHAPTER = { chapterNum: "III", title: "THE COSMOS WITHIN" };
 
     window.twMasterState = {}; 
-    const globalState = { activeTheme: "dark", isAudioPlaying: false, vortexActive: false, secretClicks: 0, notesVisitCount: 0, secretPassword: "", hasTappedMoon: false, hasTypedWord: false, rainActive: false, visitorName: "Wanderer", elevenElevenTriggered: false, zenActive: false};
+    const globalState = { 
+        activeTheme: "dark", 
+        isAudioPlaying: false, 
+        vortexActive: false, 
+        secretClicks: 0, 
+        notesVisitCount: 0, 
+        secretPassword: "silence", 
+        hasTappedMoon: false, 
+        hasTypedWord: false, 
+        rainActive: false, 
+        visitorName: "Wanderer", 
+        elevenElevenTriggered: false, 
+        zenActive: false
+    };
 
-    const quoteDatabase = ['"Every silence contains a poem."', '"The moon remembers what we choose to forget."', '"Ink writes the history of spirits navigating the dark."', '"A library is a hospital for the mind."', '"Words are the architecture of fleeting emotions."'];
+    const quoteDatabase = [
+        '"Every silence contains a poem."', 
+        '"The moon remembers what we choose to forget."', 
+        '"Ink writes the history of spirits navigating the dark."', 
+        '"A library is a hospital for the mind."', 
+        '"Words are the architecture of fleeting emotions."'
+    ];
     const moonWords = ["silence", "poetry", "creation", "memories", "love", "solitude", "eternity"];
-    const midnightThoughts = ["The moon has seen every version of you.", "Not every chapter deserves a sequel.", "Some memories glow brighter after they're gone.", "The hardest part of moving forward is not looking back.", "We bury our loudest screams in the quietest poetry."];
+    const midnightThoughts = [
+        "The moon has seen every version of you.", 
+        "Not every chapter deserves a sequel.", 
+        "Some memories glow brighter after they're gone.", 
+        "The hardest part of moving forward is not looking back.", 
+        "We bury our loudest screams in the quietest poetry."
+    ];
     const notesCombos = [
         ["The hardest goodbyes are the ones that happen quietly.", "Some people become memories before they leave.", "Happiness often arrives disguised as ordinary moments."],
         ["Words are the shadows of deep hidden emotions.", "The moon remembers everything we choose to forget.", "Ink writes the history of spirits navigating the dark."],
@@ -53,21 +73,30 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
     const starCoords = [{top: 50, left: 20}, {top: 20, left: 50}, {top: 60, left: 80}, {top: 80, left: 40}, {top: 30, left: 85}, {top: 75, left: 15}];
 
-    // Audio Elements (Protected)
+    // Protected Audio Elements
     const audioPageTurn = findSafeElement("audio-page-turn");
     const audioRain = findSafeElement("audio-rain");
     const audioAmbient = findSafeElement("audio-ambient");
 
     // =====================================================================
-    // 🚀 INITIALIZATION SEQUENCE (FALLBACK-PROTECTED)
+    // 🚀 INITIALIZATION SEQUENCE
     // =====================================================================
-
     initPassport();                  
     initTouchRipple();
     initClockAndAtmosphere();
     initUltimateUniverseBackground();
     initDynamicShadows();
+    initScrollProgressBar(); 
+    initSecretKeyboardVault(); 
+    initLedger();
+    initBookmarksDrawer(); 
+    initFavouritesDrawer(); 
+    initTimeCapsule(); 
+    init1111Wish();
+    initZenMode();
+    initAudioSpeechEngine(); 
 
+    // Fetch dynamic database from poem.json
     fetch('poem.json')
         .then(response => {
             if (!response.ok) throw new Error("Poem database load nahi ho paya");
@@ -78,15 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
             buildLibrarySystem(); 
             initCosmicNavigation(); 
             initLibraryFeatures(); 
-            initScrollProgressBar(); 
-            initSecretKeyboardVault(); 
-            initLedger();
-            initBookmarksDrawer(); 
-            initFavouritesDrawer(); 
-            initTimeCapsule(); 
-            init1111Wish();
-            initZenMode();
-            initAudioSpeechEngine(); 
         })
         .catch(error => {
             console.error("Critical Error inside Library Fetch: ", error);
@@ -105,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function initPassport() {
         const input = findSafeElement("visitor-name", "visitor");
-        const enterBtn = findSafeElement("enter-library-btn", "ENTER");
+        const enterBtn = findSafeElement("enter-library-btn", "OPEN THE GATES");
         const savedName = localStorage.getItem("midnightVisitor");
         if(savedName && input) input.value = savedName;
 
@@ -113,6 +133,13 @@ document.addEventListener("DOMContentLoaded", () => {
             enterBtn.addEventListener("click", () => {
                 let name = input ? input.value.trim() : "";
                 if(!name) name = "Wanderer";
+                
+                // Secret logic matching your exact word condition
+                if(name.toLowerCase() === "silence") {
+                    globalState.hasTypedWord = true;
+                    checkUltimateVault();
+                }
+
                 localStorage.setItem("midnightVisitor", name);
                 globalState.visitorName = name;
                 
@@ -158,8 +185,8 @@ document.addEventListener("DOMContentLoaded", () => {
               <span class="chapter-badge">${poem.chapterLabel}</span>
               <div class="heading-wrapper"><h2 class="page1-heading moon-glow">${poem.title}</h2></div>
               <p class="poem-subtitle">${poem.subtitle}</p>
-              <div class="meta-strip" style="margin: 15px 0;">
-                <span class="mood-tag tag-motivation">${poem.themeTag}</span>
+              <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">
+                <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>
                 <span class="read-time">⏱️ 1 Min Read</span>
                 <button class="bookmark-btn btn-utility" data-poem="${poem.spineLabel}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>
               </div>
@@ -168,9 +195,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p class="royal-poem-text typewriter-poem" data-lines="${safeText}"></p><br>
                 <p class="poem-date">${poem.dateText}</p>
                 <span class="poem-greatvibes sign-animate">${poem.signature}</span>
-                <div class="poem-interactions">
-                    <button class="resonate-btn" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>
-                    <button class="listen-btn" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
+                <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
+                    <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>
+                    <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
                 </div>
               </div>
               <div class="button-row" style="margin-top: 15px;">
@@ -197,13 +224,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let svgLines = ''; let starsHtml = '';
         for (let i = 0; i < POEM_DATABASE.length; i++) {
-            let p1 = starCoords[i]; starsHtml += `<div class="star-node active-star trigger-nav" data-target="poem-page-${i+1}" title="${POEM_DATABASE[i].dateText} - ${POEM_DATABASE[i].title.replace('<br>',' ')}" style="top: ${p1.top}%; left: ${p1.left}%;"></div>`;
+            let p1 = starCoords[i]; starsHtml += `<div class="star-node active-star trigger-nav" data-target="poem-page-${i+1}" title="${POEM_DATABASE[i].dateText} - ${POEM_DATABASE[i].title.replace('<br>',' ')}" style="position:absolute; width:12px; height:12px; background:var(--gold); border-radius:50%; box-shadow:0 0 10px var(--gold); cursor:pointer; top: ${p1.top}%; left: ${p1.left}%;"></div>`;
             if (i < POEM_DATABASE.length - 1) { let p2 = starCoords[i+1]; svgLines += `<line x1="${p1.left}%" y1="${p1.top}%" x2="${p2.left}%" y2="${p2.top}%" stroke="rgba(191,164,111,0.4)" stroke-width="1" stroke-dasharray="4" />`; }
         }
         if (POEM_DATABASE.length > 0 && starMap) {
             let lastStar = starCoords[POEM_DATABASE.length - 1]; let lockedStar = starCoords[POEM_DATABASE.length];
             svgLines += `<line x1="${lastStar.left}%" y1="${lastStar.top}%" x2="${lockedStar.left}%" y2="${lockedStar.top}%" stroke="rgba(191,164,111,0.1)" stroke-width="1" stroke-dasharray="4" />`;
-            starsHtml += `<div class="star-node pulse-star interactive-locked" title="Awaiting Completion..." style="top: ${lockedStar.top}%; left: ${lockedStar.left}%;"></div>`;
+            starsHtml += `<div class="star-node pulse-star interactive-locked" title="Awaiting Completion..." style="position:absolute; width:12px; height:12px; background:rgba(255,255,255,0.2); border-radius:50%; top: ${lockedStar.top}%; left: ${lockedStar.left}%;"></div>`;
             starMap.innerHTML = `<svg width="100%" height="100%" style="position: absolute; top:0; left:0; z-index: 1;">${svgLines}</svg>${starsHtml}`;
         }
         if(authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter ${UPCOMING_CHAPTER.chapterNum}: ${UPCOMING_CHAPTER.title}`;
@@ -214,7 +241,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if(thoughtBtn && thoughtDisplay) {
         thoughtBtn.addEventListener("click", () => {
             thoughtDisplay.style.opacity = 0;
-            setTimeout(() => { thoughtDisplay.innerText = `"${midnightThoughts[Math.floor(Math.random() * midnightThoughts.length)]}"`; thoughtDisplay.style.opacity = 0.8; }, 300);
+            setTimeout(() => { 
+                thoughtDisplay.innerText = `"${midnightThoughts[Math.floor(Math.random() * midnightThoughts.length)]}"`; 
+                thoughtDisplay.style.opacity = 0.8; 
+            }, 300);
         });
     }
 
@@ -229,8 +259,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const capsule = findSafeElement("time-capsule-item"); 
         const status = findSafeElement("capsule-status");
         if(!capsule || !status) return;
-        if (new Date() >= new Date("January 1, 2027 00:00:00")) { status.innerHTML = `<span style="color:var(--gold);">Unlocked. "To the me who survived, thank you."</span>`; } 
-        else { status.innerText = "A letter to the future. Sealed until January 1, 2027."; }
+        if (new Date() >= new Date("January 1, 2027 00:00:00")) { 
+            status.innerHTML = `<span style="color:var(--gold);">Unlocked. "To the me who survived, thank you."</span>`; 
+        } else { 
+            status.innerText = "A letter to the future. Sealed until January 1, 2027."; 
+        }
     }
 
     function initScrollProgressBar() { 
@@ -242,15 +275,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }); 
     }
 
-    /* ======================================================
-       🛡️ AMENDED: FIXED VAULT CHECKING (NO EARLY RETURN TRAP)
-       ====================================================== */
     function checkUltimateVault() {
         const condMoon = findSafeElement("cond-moon"); 
         const condNotes = findSafeElement("cond-notes"); 
         const condWord = findSafeElement("cond-word"); 
         
-        // Agar element page par hain toh text update karo, par code block mat karo!
         if(condMoon) {
             condMoon.innerText = globalState.hasTappedMoon ? "✅ Moon Tapped (3/3)" : `❌ Moon Tapped (${globalState.secretClicks}/3)`;
         }
@@ -261,7 +290,6 @@ document.addEventListener("DOMContentLoaded", () => {
             condWord.innerText = "✅ Secret Word Typed";
         }
 
-        // Global master validation trigger
         if(globalState.hasTappedMoon && globalState.notesVisitCount >= 5 && globalState.hasTypedWord) {
             const hiddenContainer = findSafeElement("hidden-poem-container");
             const conditionsContainer = findSafeElement("quest-conditions");
@@ -286,7 +314,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (inputBuffer.endsWith("rain") && !globalState.rainActive) toggleRain();
             if (inputBuffer.length > globalState.secretPassword.length) inputBuffer = inputBuffer.substring(inputBuffer.length - globalState.secretPassword.length);
             if (inputBuffer === globalState.secretPassword) {
-                globalState.hasTypedWord = true; checkUltimateVault(); showToast("👁️ The Vault Opens...");
+                globalState.hasTypedWord = true; 
+                checkUltimateVault(); 
+                showToast("👁️ The Vault Opens...");
                 const vaultBtn = document.querySelector(".trigger-nav[data-target='page-secret']");
                 if (vaultBtn) { vaultBtn.click(); } else { const secPage = findSafeElement('page-secret'); if(secPage) secPage.classList.add('active'); }
                 inputBuffer = ""; 
@@ -299,33 +329,50 @@ document.addEventListener("DOMContentLoaded", () => {
         const submits = document.querySelectorAll(".ledger-submit"); 
         const inputs = document.querySelectorAll(".ledger-input");
         let entries = JSON.parse(localStorage.getItem('midnightLedger') || '[]');
+        
         function renderLedger() {
             if(!ledgerList) return; ledgerList.innerHTML = "";
-            if(entries.length === 0) { ledgerList.innerHTML = `<p style="margin-bottom: 8px; font-style: italic; opacity:0.5;">No wandering souls have left a mark yet...</p>`; } 
-            else { entries.forEach(e => { ledgerList.innerHTML += `<p style="margin-bottom: 8px; font-style: italic;">"${e.text}" <span style="font-size:11px; opacity:0.5;">— ${e.date}</span></p>`; }); }
+            if(entries.length === 0) { 
+                ledgerList.innerHTML = `<p style="margin-bottom: 8px; font-style: italic; opacity:0.5;">No wandering souls have left a mark yet...</p>`; 
+            } else { 
+                entries.forEach(e => { ledgerList.innerHTML += `<p style="margin-bottom: 8px; font-style: italic;">"${e.text}" <span style="font-size:11px; opacity:0.5;">— ${e.date}</span></p>`; }); 
+            }
         }
+        
         renderLedger();
+        
         submits.forEach((btn, index) => {
-            btn.addEventListener("click", () => {
-                const input = inputs[index];
+            const input = inputs[index];
+            const handleLedgerSubmission = () => {
                 if(input && input.value.trim() !== "") {
                     entries.unshift({ text: input.value.trim(), date: new Date().toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' }) });
-                    if(entries.length > 10) entries.pop(); localStorage.setItem('midnightLedger', JSON.stringify(entries)); input.value = ""; showToast("🖋️ Your silence has been recorded."); renderLedger();
+                    if(entries.length > 10) entries.pop(); 
+                    localStorage.setItem('midnightLedger', JSON.stringify(entries)); 
+                    input.value = ""; 
+                    showToast("🖋️ Your silence has been recorded."); 
+                    renderLedger();
                 }
-            });
+            };
+            btn.addEventListener("click", handleLedgerSubmission);
+            if(input) {
+                input.addEventListener("keypress", (e) => { if(e.key === 'Enter') handleLedgerSubmission(); });
+            }
         });
     }
 
     function toggleRain() {
         globalState.rainActive = !globalState.rainActive; 
         const rCanvas = findSafeElement("rain-canvas");
+        const rainToggleBtn = findSafeElement("rain-toggle");
         if(globalState.rainActive) { 
             if(rCanvas) rCanvas.classList.add("raining"); 
+            if(rainToggleBtn) rainToggleBtn.innerHTML = "🌧️ Stop Rain";
             startRainVisuals(); 
             showToast("🌧️ The sky begins to weep..."); 
-            if(audioRain) { audioRain.volume = 0.5; audioRain.play(); }
+            if(audioRain) { audioRain.volume = 0.5; audioRain.play().catch(()=>{}); }
         } else { 
             if(rCanvas) rCanvas.classList.remove("raining"); 
+            if(rainToggleBtn) rainToggleBtn.innerHTML = "🌧️ Rain";
             showToast("🌤️ The storm has passed."); 
             if(audioRain) { audioRain.pause(); }
         }
@@ -433,10 +480,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const sealBtn = sealWrap.querySelector(".wax-seal");
-        showToast("👆 Click the wax seal to break it...");
+        showToast("👆 Break the wax seal to view verse...");
 
         if(sealBtn) {
-            sealBtn.addEventListener('click', (e) => {
+            sealBtn.addEventListener('click', () => {
                 sealWrap.dataset.isBroken = "true";
                 sealWrap.classList.add("broken");
                 showToast("🔓 The seal is broken.");
@@ -451,7 +498,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const targetPageId = e.target.getAttribute("data-target"); 
                 if(audioPageTurn) {
                     audioPageTurn.currentTime = 0;
-                    audioPageTurn.play().catch(err => console.log("Audio blocked"));
+                    audioPageTurn.play().catch(() => {});
                 }
                 executePageFlip(targetPageId);
             }
@@ -498,13 +545,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const pData = POEM_DATABASE[poemIndex];
         if(!pData || !pData.whispers || el.dataset.whispersApplied === "true") return;
         let html = el.innerHTML;
-        pData.whispers.forEach(w => { const regex = new RegExp(`\\b${w.word}\\b`, 'gi'); html = html.replace(regex, `<span class="whisper-word" data-original="${w.word}" data-hidden="${w.hidden}">${w.word}</span>`); });
+        pData.whispers.forEach(w => { const regex = new RegExp(`\\b${w.word}\\b`, 'gi'); html = html.replace(regex, `<span class="whisper-word" style="border-bottom:1px dotted var(--gold); color:#bfa46f; cursor:pointer;" data-original="${w.word}" data-hidden="${w.hidden}">${w.word}</span>`); });
         el.innerHTML = html; el.dataset.whispersApplied = "true";
 
         el.querySelectorAll('.whisper-word').forEach(span => {
             span.addEventListener('click', function() {
                 let curr = this.innerText; this.style.opacity = 0;
-                setTimeout(() => { this.innerText = (curr.toLowerCase() === this.dataset.original.toLowerCase()) ? this.dataset.hidden : this.dataset.original; this.style.opacity = 1; this.classList.toggle('whispered'); }, 300);
+                setTimeout(() => { 
+                    this.innerText = (curr.toLowerCase() === this.dataset.original.toLowerCase()) ? this.dataset.hidden : this.dataset.original; 
+                    this.style.opacity = 1; 
+                    this.classList.toggle('whispered'); 
+                }, 300);
             });
         });
     }
@@ -537,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     let currentLine = lines[state.lineIndex];
                     if (currentLine === "") { state.outHtml += "<br><br>"; el.innerHTML = state.outHtml; state.lineIndex++; state.charIndex = 0; setTimeout(typeNext, 200); return; }
                     if (state.charIndex === 0 && state.lineIndex === 0) {
-                        let char = currentLine.charAt(0); state.outHtml += `<span class="drop-cap-antique">${char}</span>`; el.innerHTML = state.outHtml; state.charIndex++; setTimeout(typeNext, 40);
+                        let char = currentLine.charAt(0); state.outHtml += `<span class="drop-cap-antique" style="font-size:42px; font-family:'Cinzel',serif; color:var(--gold); float:left; line-height:1; margin-right:6px;">${char}</span>`; el.innerHTML = state.outHtml; state.charIndex++; setTimeout(typeNext, 40);
                     } else if (state.charIndex < currentLine.length) {
                         let isFirstChar = (state.charIndex === 0 && state.lineIndex === 0);
                         el.innerHTML = state.outHtml + currentLine.substring(isFirstChar ? 1 : 0, state.charIndex + 1); state.charIndex++; setTimeout(typeNext, 35); 
@@ -560,13 +611,13 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fillStyle = globalState.activeTheme === "dark" ? "#0b0b0f" : "#e8dcc7"; ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.strokeStyle = "#bfa46f"; ctx.lineWidth = 4; ctx.strokeRect(50, 50, canvas.width - 100, canvas.height - 100);
             ctx.fillStyle = "#bfa46f"; ctx.textAlign = "center"; ctx.font = "bold 60px Cinzel, serif"; ctx.fillText("THE MIDNIGHT LIBRARY", canvas.width / 2, 180);
-            ctx.font = "30px Urbanist, sans-serif"; ctx.fillText("✦  ✦  ✦", canvas.width / 2, 240);
+            ctx.font = "30px sans-serif"; ctx.fillText("✦  ✦  ✦", canvas.width / 2, 240);
             ctx.font = "bold 80px Cinzel, serif"; ctx.fillText(poem.title.replace('<br>', ' '), canvas.width / 2, 400);
             ctx.font = "35px Cinzel, serif"; ctx.fillStyle = globalState.activeTheme === "dark" ? "rgba(242,238,233,0.6)" : "rgba(59,34,16,0.6)"; ctx.fillText(poem.subtitle, canvas.width / 2, 460);
-            ctx.fillStyle = globalState.activeTheme === "dark" ? "#f2eee9" : "#3B2210"; ctx.font = "40px Playfair Display, serif";
+            ctx.fillStyle = globalState.activeTheme === "dark" ? "#f2eee9" : "#3B2210"; ctx.font = "40px 'Playfair Display', serif";
             let y = 600; const lines = poem.text.split('\n');
             lines.forEach(line => { if(line === "") y += 40; else { ctx.fillText(line.trim(), canvas.width / 2, y); y += 60; } });
-            ctx.fillStyle = "#bfa46f"; ctx.font = "italic 60px Great Vibes, cursive"; ctx.fillText("— Soham Madan Jadhao", canvas.width / 2, canvas.height - 200);
+            ctx.fillStyle = "#bfa46f"; ctx.font = "italic 60px cursive"; ctx.fillText("— Soham Madan Jadhao", canvas.width / 2, canvas.height - 200);
             const link = document.createElement("a"); link.download = `${poem.title.replace('<br>','')}-Memory.png`; link.href = canvas.toDataURL("image/png"); link.click();
             showToast("📸 Memory Saved Successfully!");
         }
@@ -581,9 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         url: window.location.href
                     });
                     showToast("✨ Shared with the world.");
-                } catch (err) {
-                    console.log("Sharing cancelled.");
-                }
+                } catch (err) { console.log("Sharing cancelled."); }
             } else {
                 showToast("Sharing is not supported on this browser.");
             }
@@ -592,16 +641,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function initBookmarksDrawer() {
         const drawer = findSafeElement("bookmarks-drawer"); 
-        const openBtn = findSafeElement("open-bookmarks-btn", "BOOKMARK");
-        const closeBtn = findSafeElement("close-drawer", "CLOSE"); 
+        const openBtn = findSafeElement("open-bookmarks-btn");
+        const closeBtn = findSafeElement("close-drawer"); 
         const list = findSafeElement("bookmarks-list");
         if(!drawer || !openBtn) return;
+        
         function renderBookmarks() {
             let bookmarks = JSON.parse(localStorage.getItem('midnightBookmarks') || '[]'); 
             if(list) {
                 list.innerHTML = "";
-                if (bookmarks.length === 0) { list.innerHTML = `<p style="opacity: 0.5; font-style: italic;">Your soul hasn't saved any verses yet...</p>`; } 
-                else { bookmarks.forEach(bm => { list.innerHTML += `<div class="bookmark-item">📖 ${bm}</div>`; }); }
+                if (bookmarks.length === 0) { 
+                    list.innerHTML = `<p style="opacity: 0.5; font-style: italic;">Your soul hasn't saved any verses yet...</p>`; 
+                } else { 
+                    bookmarks.forEach(bm => { list.innerHTML += `<div class="bookmark-item" style="padding:8px; border-bottom:1px solid rgba(191,164,111,0.1);">📖 ${bm}</div>`; }); 
+                }
             }
         }
         openBtn.addEventListener("click", (e) => { e.preventDefault(); renderBookmarks(); drawer.classList.add("open"); }); 
@@ -609,8 +662,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function initFavouritesDrawer() {
-        const drawer = findSafeElement("favourites-drawer") || findSafeElement("page-favourites");
-        const openBtn = findSafeElement("open-fav-btn", "FAVS");
+        const drawer = findSafeElement("favourites-drawer");
+        const openBtn = findSafeElement("open-fav-btn");
         const closeBtn = findSafeElement("close-fav-drawer"); 
         const list = findSafeElement("favourites-list");
         if(!drawer || !openBtn) return;
@@ -629,26 +682,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         openBtn.addEventListener("click", (e) => {
             e.preventDefault();
-            e.stopPropagation();
             renderFavs(); 
             drawer.classList.add("open"); 
-            showToast("❤️ Opening Favourites...");
         }); 
 
-        if (closeBtn) {
-            closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });
-        }
+        if (closeBtn) closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });
     }
 
-    /* ======================================================
-       🛡️ AMENDED: ADDED TEXT & EMOJI FALLBACK FOR MOON PHASE
-       ====================================================== */
     function initLibraryFeatures() {
         const footerQuote = findSafeElement("quote-rotator"); 
         if(footerQuote) footerQuote.innerText = quoteDatabase[Math.floor(Math.random() * quoteDatabase.length)];
         
-        // Patcher Added: ID ke saath-saath "🌔" emoji aur ".moon-phase" class fallback de diya hai
-        const moonTrigger = findSafeElement("moon-phase", "🌔", ".moon-phase");
+        const moonTrigger = findSafeElement("moon-phase", "🌙", ".moon-phase");
         if(moonTrigger) {
             moonTrigger.addEventListener("click", () => {
                 globalState.secretClicks++; 
@@ -658,31 +703,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     checkUltimateVault();
                     showToast("🏆 Achievement Unlocked: Moonwalker");
                     
-                    // Directly bypass check and open the mystery vault screen
                     const vaultBtn = document.querySelector(".trigger-nav[data-target='page-secret']");
-                    if (vaultBtn) { 
-                        vaultBtn.click(); 
-                    } else { 
-                        const secPage = findSafeElement('page-secret'); 
-                        if(secPage) secPage.classList.add('active'); 
-                    }
+                    if (vaultBtn) { vaultBtn.click(); } else { const secPage = findSafeElement('page-secret'); if(secPage) secPage.classList.add('active'); }
                     globalState.secretClicks = 0;
-                }
-            });
-        }
-        
-        const archiveBtn = findSafeElement("open-archive-btn", "ARCHIVES") || findSafeElement("archive-toggle");
-        if (archiveBtn) {
-            archiveBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const archiveNavLink = document.querySelector('.nav-link[data-target="page-archive"]') || document.querySelector('[data-target="page-archive"]');
-                if (archiveNavLink) {
-                    archiveNavLink.click();
-                    showToast("📜 Opening Ancient Shelf...");
-                } else {
-                    const archPage = findSafeElement("page-archive");
-                    if(archPage) archPage.classList.add("active");
                 }
             });
         }
@@ -690,7 +713,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.addEventListener('click', function(e) {
             if(e.target && e.target.classList.contains('bookmark-btn')) {
                 const poemId = e.target.getAttribute('data-poem'); let bookmarks = JSON.parse(localStorage.getItem('midnightBookmarks') || '[]');
-                if (!bookmarks.includes(poemId)) { bookmarks.push(poemId); localStorage.setItem('midnightBookmarks', JSON.stringify(bookmarks)); showToast("🔖 Verse saved to your soul."); } else { showToast("✨ Verse already remembered."); }
+                if (!bookmarks.includes(poemId)) { 
+                    bookmarks.push(poemId); localStorage.setItem('midnightBookmarks', JSON.stringify(bookmarks)); showToast("🔖 Verse saved to your soul."); 
+                } else { showToast("✨ Verse already remembered."); }
                 e.target.innerText = "❤️ Saved";
             }
 
@@ -699,10 +724,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!favs.includes(poemTitle)) { 
                     favs.push(poemTitle); localStorage.setItem('midnightFavs', JSON.stringify(favs)); 
                     showToast("❤️ Added to your Favourites."); 
-                    e.target.classList.add('active-fav');
-                } else { 
-                    showToast("✨ Already in your Favourites."); 
-                }
+                } else { showToast("✨ Already in your Favourites."); }
             }
         });
     }
@@ -710,21 +732,21 @@ document.addEventListener("DOMContentLoaded", () => {
     function showToast(msg) {
         const container = findSafeElement("toast-container"); 
         if(!container) return;
-        const toast = document.createElement("div"); toast.className = "toast"; toast.innerText = msg; container.appendChild(toast); setTimeout(() => toast.remove(), 3500);
+        const toast = document.createElement("div"); toast.className = "toast"; toast.innerText = msg; 
+        toast.style.cssText = "background:rgba(15,15,25,0.95); color:var(--gold); border:1px solid var(--gold); padding:10px 20px; border-radius:4px; margin-top:10px; font-family:'Cinzel',serif; box-shadow:0 4px 15px rgba(0,0,0,0.5);";
+        container.appendChild(toast); setTimeout(() => toast.remove(), 3500);
     }
 
     function initZenMode() {
         let zenBtn = findSafeElement("zen-mode-toggle", "ZEN MODE");
         if (!zenBtn) return;
-
         let zenScrollId; 
 
         function smoothScroll() {
             if (!globalState.zenActive) return;
             window.scrollBy(0, 0.6); 
             if (Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
-                stopZen(false);
-                return;
+                stopZen(false); return;
             }
             zenScrollId = requestAnimationFrame(smoothScroll);
         }
@@ -732,44 +754,26 @@ document.addEventListener("DOMContentLoaded", () => {
         function startZen() {
             globalState.zenActive = true;
             zenBtn.innerHTML = "🛑 Stop Zen";
-            zenBtn.style.color = "var(--bg-base)";
-            zenBtn.style.backgroundColor = "var(--gold)";
-            showToast("🧘 Zen Mode Active: Sit back and read...");
+            showToast("🧘 Zen Mode Active...");
             zenScrollId = requestAnimationFrame(smoothScroll);
         }
 
         function stopZen(silent = false) {
             globalState.zenActive = false;
-            zenBtn.innerHTML = "📜 ZEN MODE";
-            zenBtn.style.color = "";
-            zenBtn.style.backgroundColor = "";
+            zenBtn.innerHTML = "📜 Zen Mode";
             cancelAnimationFrame(zenScrollId);
             if (!silent) showToast("🛑 Zen Mode Paused.");
         }
 
         zenBtn.addEventListener("click", (e) => {
             e.preventDefault();
-            e.stopPropagation(); 
-            if (!globalState.zenActive) {
-                startZen();
-            } else {
-                stopZen(false);
-            }
+            if (!globalState.zenActive) { startZen(); } else { stopZen(false); }
         });
 
-        window.stopZenModeGlobally = function() {
-            if (globalState.zenActive) stopZen(true);
-        };
-
-        window.addEventListener("wheel", () => {
-            if (globalState.zenActive) stopZen(true);
-        });
-
+        window.stopZenModeGlobally = function() { if (globalState.zenActive) stopZen(true); };
+        window.addEventListener("wheel", () => { if (globalState.zenActive) stopZen(true); });
         window.addEventListener("touchstart", (e) => {
-            if (globalState.zenActive && !zenBtn.contains(e.target)) {
-                stopZen(true);
-                showToast("🖐️ Manual touch detected. Zen Mode paused.");
-            }
+            if (globalState.zenActive && !zenBtn.contains(e.target)) { stopZen(true); showToast("🖐️ Manual interaction detected."); }
         }, { passive: true });
     }
 
@@ -785,9 +789,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const poem = POEM_DATABASE[pIdx];
 
                 if (window.speechSynthesis.speaking && activeListenBtn === e.target) {
-                    window.speechSynthesis.cancel();
-                    resetListenBtn();
-                    return;
+                    window.speechSynthesis.cancel(); resetListenBtn(); return;
                 }
 
                 window.speechSynthesis.cancel();
@@ -796,8 +798,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const cleanTitle = poem.title.replace(/<br\s*\/?>/gi, " ");
                 const textToSpeak = `${poem.chapterLabel}. ${cleanTitle}. ${poem.subtitle}. ${poem.text}`;
                 const utterance = new SpeechSynthesisUtterance(textToSpeak);
-                utterance.rate = 0.85;  
-                utterance.pitch = 0.95; 
+                utterance.rate = 0.85; utterance.pitch = 0.95; 
 
                 const voices = window.speechSynthesis.getVoices();
                 const premiumVoice = voices.find(v => v.lang.startsWith('en-GB') || v.lang.startsWith('en-US'));
@@ -807,28 +808,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 utterance.onerror = () => resetListenBtn();
 
                 activeListenBtn = e.target;
-                activeListenBtn.innerText = "🛑 Stop Voice";
-                activeListenBtn.style.backgroundColor = "var(--gold)";
-                activeListenBtn.style.color = "var(--bg-base)";
+                activeListenBtn.innerText = "🛑 STOP VOICE";
 
                 window.speechSynthesis.speak(utterance);
             }
         });
 
         function resetListenBtn() {
-            if (activeListenBtn) {
-                activeListenBtn.innerText = "🎙️ LISTEN TO VERSE"; 
-                activeListenBtn.style.backgroundColor = "";
-                activeListenBtn.style.color = "";
-                activeListenBtn = null;
-            }
+            if (activeListenBtn) { activeListenBtn.innerText = "🎙️ LISTEN TO VERSE"; activeListenBtn = null; }
         }
 
         window.stopAudioSpeechGlobally = function() {
-            if (window.speechSynthesis.speaking) {
-                window.speechSynthesis.cancel();
-                resetListenBtn();
-            }
+            if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); resetListenBtn(); }
         };
     }
 });
