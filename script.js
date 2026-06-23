@@ -25,7 +25,7 @@
     const UPCOMING_CHAPTER = { chapterNum: "III", title: "THE COSMOS WITHIN" };
 
     window.twMasterState = {}; 
-    const globalState = { activeTheme: "dark", isAudioPlaying: false, vortexActive: false, secretClicks: 0, notesVisitCount: 0, secretPassword: "", hasTappedMoon: false, hasTypedWord: false, rainActive: false, visitorName: "Wanderer", elevenElevenTriggered: false };
+    const globalState = { activeTheme: "dark", isAudioPlaying: false, vortexActive: false, secretClicks: 0, notesVisitCount: 0, secretPassword: "", hasTappedMoon: false, hasTypedWord: false, rainActive: false, visitorName: "Wanderer", elevenElevenTriggered: false, zenActive: false};
 
     const quoteDatabase = ['"Every silence contains a poem."', '"The moon remembers what we choose to forget."', '"Ink writes the history of spirits navigating the dark."', '"A library is a hospital for the mind."', '"Words are the architecture of fleeting emotions."'];
     const moonWords = ["silence", "poetry", "creation", "memories", "love", "solitude", "eternity"];
