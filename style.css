@@ -216,7 +216,21 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     .poem-interactions { flex-direction: column; align-items: center; }
 }
 /* Jab Zen mode active hoga toh button halka sa glow karega */
+
+
+/* ======================================================
+   ✨ ZEN MODE BUTTON GLOW EFFECTS
+   ====================================================== */
+/* ======================================================
+   ✨ ZEN MODE BUTTON GLOW EFFECTS
+   ====================================================== */
 #zen-mode-toggle {
     transition: all 0.4s ease;
+}
+
+/* Jab Zen Mode active hoga aur background gold hoga, tab halka sa glow background mein dikhega */
+#zen-mode-toggle[style*="background-color"] {
+    box-shadow: 0 0 15px rgba(191, 164, 111, 0.6);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
