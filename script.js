@@ -352,6 +352,7 @@
         function executePageFlip(targetPageId) {
             const currentActivePage = document.querySelector(".page.active"); const destinationPage = document.getElementById(targetPageId);
             if(!destinationPage || currentActivePage === destinationPage) return;
+if (window.stopZenModeGlobally) window.stopZenModeGlobally();
 
             globalState.vortexActive = true; document.body.style.overflowY = 'hidden'; 
             
