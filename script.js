@@ -119,8 +119,9 @@
                 <p class="poem-date">${poem.dateText}</p>
                 <span class="poem-greatvibes sign-animate">${poem.signature}</span>
                 <div class="poem-interactions">
-                    <button class="resonate-btn" data-poem="${cleanTitle}">⭐ Resonated With Me</button>
-                    <button class="listen-btn" title="Future Feature">🎙️ Listen: SOON</button>
+                    <button class="resonate-btn" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>
+                    <button class="listen-btn" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
+
                 </div>
               </div>
               <div class="button-row" style="margin-top: 15px;">
