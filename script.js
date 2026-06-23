@@ -628,11 +628,14 @@ function initZenMode() {
         }
     }, { passive: true });
 }
-  
-/* ======================================================
-   🎙️ AI TEXT-TO-SPEECH ENGINE (LISTEN FEATURE)
+  /* ======================================================
+   🎙️ AI TEXT-TO-SPEECH ENGINE (LISTEN FEATURE) - FIXED
    ====================================================== */
 function initAudioSpeechEngine() {
+    // 🔥 SAFETY GUARD: Agar function pehle chal chuka hai, toh dubara mat chalao
+    if (window.audioSpeechEngineInitialized) return;
+    window.audioSpeechEngineInitialized = true;
+
     let activeListenBtn = null;
 
     document.body.addEventListener('click', function(e) {
@@ -661,8 +664,8 @@ function initAudioSpeechEngine() {
             const utterance = new SpeechSynthesisUtterance(textToSpeak);
 
             // 🌙 Midnight Library Vibe Settings (Slow & Deep Voice)
-            utterance.rate = 0.85;  // Speed: 1.0 se kam yani thoda dheere aur clear
-            utterance.pitch = 0.95; // Pitch: Halka sa deep base tone
+            utterance.rate = 0.85;  
+            utterance.pitch = 0.95; 
 
             // Browser se acchi English voice select karna
             const voices = window.speechSynthesis.getVoices();
@@ -686,7 +689,7 @@ function initAudioSpeechEngine() {
 
     function resetListenBtn() {
         if (activeListenBtn) {
-            activeListenBtn.innerText = "🎙️ Listen Verse";
+            activeListenBtn.innerText = "🎙️ LISTEN TO VERSE"; // 👈 Match case with your buildLibrarySystem template
             activeListenBtn.style.backgroundColor = "";
             activeListenBtn.style.color = "";
             activeListenBtn = null;
@@ -702,13 +705,5 @@ function initAudioSpeechEngine() {
     };
 }
 
-// Browser voices load hone mein time leta hai, isliye isko backup support dete hain
-if (typeof window !== 'undefined' && window.speechSynthesis) {
-    if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = initAudioSpeechEngine;
-    }
-}
 
-
-   
    });
