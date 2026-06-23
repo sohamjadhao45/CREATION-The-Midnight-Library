@@ -2,10 +2,23 @@
    THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFINITIVE EDITION)
    Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
    ===================================================================== */
+/* =====================================================================
+   💥 EMERGENY MOBILE DEBUGGER (Sabse Upar Paste Karein)
+   ===================================================================== */
+// 1. Script load hote hi check karne ke liye (Cache Test)
+alert("🔄 System Check: script.js tumhaare phone mein load ho gayi hai!");
+
+// 2. Normal code crash pakadne ke liye
 window.onerror = function(message, source, lineno, colno, error) {
-    alert("🔴 CRITICAL ERROR DETECTED!\n\nMessage: " + message + "\nLine: " + lineno);
+    alert("🔴 CRITICAL CODE ERROR!\n\nMessage: " + message + "\nLine: " + lineno);
     return false;
 };
+
+// 3. Network/Fetch/Promises fail pakadne ke liye
+window.onunhandledrejection = function(event) {
+    alert("🔴 NETWORK/FETCH ERROR!\n\nReason: " + event.reason);
+};
+
 
 document.addEventListener("DOMContentLoaded", () => {
     "use strict";
