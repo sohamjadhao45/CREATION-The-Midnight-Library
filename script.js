@@ -33,12 +33,39 @@
     const audioPageTurn = document.getElementById("audio-page-turn");
     const audioRain = document.getElementById("audio-rain");
     const audioAmbient = document.getElementById("audio-ambient");
+// 🔥 IS TARAH SE DATA FETCH KARKE SARE FUNCTIONS INITIALIZE KARO:
+fetch('poem.json')
+    .then(response => {
+        if (!response.ok) throw new Error("Poem database load nahi ho paya");
+        return response.json();
+    })
+    .then(data => {
+        POEM_DATABASE = data; // JSON ka sara data variable mein aa gaya
 
-    buildLibrarySystem(); 
-    initClockAndAtmosphere(); initUltimateUniverseBackground(); initCosmicNavigation(); 
-    initLibraryFeatures(); initScrollProgressBar(); initSecretKeyboardVault(); initLedger();
-    initDynamicShadows(); initBookmarksDrawer(); initFavouritesDrawer(); initTimeCapsule(); initPassport(); initTouchRipple(); init1111Wish();initZenMode();initAudioSpeechEngine();
+        // Ab tumhare saare systems makkhan ki tarah chalenge
+        buildLibrarySystem(); 
+        initClockAndAtmosphere(); 
+        initUltimateUniverseBackground(); 
+        initCosmicNavigation(); 
+        initLibraryFeatures(); 
+        initScrollProgressBar(); 
+        initSecretKeyboardVault(); 
+        initLedger();
+        initDynamicShadows(); 
+        initBookmarksDrawer(); 
+        initFavouritesDrawer(); 
+        initTimeCapsule(); 
+        initPassport(); 
+        initTouchRipple(); 
+        init1111Wish();
+        initZenMode();
+        initAudioSpeechEngine(); // Tumhara naya listen engine
+    })
+    .catch(error => {
+        console.error("Critical Error: ", error);
+    });
 
+    
     function initTouchRipple() {
         document.body.addEventListener('click', (e) => {
             const ripple = document.createElement('div');
