@@ -524,54 +524,92 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function initCosmicNavigation() {
-        document.body.addEventListener("click", (e) => {
-            if(e.target.classList.contains("trigger-nav") || e.target.classList.contains("nav-link") || e.target.classList.contains("star-node")) {
-                const targetPageId = e.target.getAttribute("data-target"); 
-                if(audioPageTurn) {
-                    audioPageTurn.currentTime = 0;
-                    audioPageTurn.play().catch(() => {});
-                }
-                executePageFlip(targetPageId);
-            }
-        });
+   function initCosmicNavigation() {
+    document.body.addEventListener("click", (e) => {
+        // Universal collector for navigation triggers
+        let targetBtn = e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node");
+        if (!targetBtn) return;
 
-        function executePageFlip(targetPageId) {
-            const currentActivePage = document.querySelector(".page.active"); 
-            const destinationPage = findSafeElement(targetPageId);
-            if(!destinationPage || currentActivePage === destinationPage) return;
-            if (window.stopZenModeGlobally) window.stopZenModeGlobally();
-            if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();
-            globalState.vortexActive = true; document.body.style.overflowY = 'hidden'; 
-            
-            if(targetPageId === "page-fragments") {
-                const currentCombo = notesCombos[globalState.notesVisitCount % 5];
-                const q1 = findSafeElement("combo-quote-1");
-                const q2 = findSafeElement("combo-quote-2");
-                const q3 = findSafeElement("combo-quote-3");
-                if(q1) q1.innerText = currentCombo[0]; 
-                if(q2) q2.innerText = currentCombo[1]; 
-                if(q3) q3.innerText = currentCombo[2];
-                globalState.notesVisitCount++; checkUltimateVault();
+        let targetPageId = targetBtn.getAttribute("data-target");
+        
+        // Fallback checks for hardcoded structural buttons
+        if (!targetPageId) {
+            if (targetBtn.id === "btn-explore") {
+                targetPageId = "poem-page-1";
+            } else if (targetBtn.textContent.toUpperCase().includes("AUTHOR") || targetBtn.textContent.toUpperCase().includes("CHAMBER")) {
+                targetPageId = "page-about";
             }
+        }
+
+        if (targetPageId) {
+            if(audioPageTurn) {
+                audioPageTurn.currentTime = 0;
+                audioPageTurn.play().catch(() => {});
+            }
+            executePageFlip(targetPageId);
+        }
+    });
+
+    function executePageFlip(targetPageId) {
+        const currentActivePage = document.querySelector(".page.active"); 
+        let destinationPage = document.getElementById(targetPageId);
+        
+        // Secondary fallback if ID naming mismatched with page-about / author section
+        if (!destinationPage && targetPageId === "page-about") {
+            destinationPage = document.getElementById("author-chamber") || document.querySelector(".page-about");
+        }
+
+        if(!destinationPage || currentActivePage === destinationPage) return;
+        
+        if (window.stopZenModeGlobally) window.stopZenModeGlobally();
+        if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();
+        
+        globalState.vortexActive = true; 
+        document.body.style.overflowY = 'hidden'; 
+        
+        if(targetPageId === "page-fragments") {
+            const currentCombo = notesCombos[globalState.notesVisitCount % 5];
+            const q1 = findSafeElement("combo-quote-1");
+            const q2 = findSafeElement("combo-quote-2");
+            const q3 = findSafeElement("combo-quote-3");
+            if(q1) q1.innerText = currentCombo[0]; 
+            if(q2) q2.innerText = currentCombo[1]; 
+            if(q3) q3.innerText = currentCombo[2];
+            globalState.notesVisitCount++; 
+            checkUltimateVault();
+        }
+        
+        if(currentActivePage) {
+            const sign = currentActivePage.querySelector('.sign-animate'); 
+            if (sign) sign.classList.remove('active-sign');
+            currentActivePage.classList.remove("active"); 
+            currentActivePage.classList.add("vortex-out");
             
-            if(currentActivePage) {
-                const sign = currentActivePage.querySelector('.sign-animate'); if (sign) sign.classList.remove('active-sign');
-                currentActivePage.classList.remove("active"); currentActivePage.classList.add("vortex-out");
+            setTimeout(() => {
+                currentActivePage.classList.remove("vortex-out"); 
+                destinationPage.classList.add("vortex-in"); 
+                destinationPage.classList.add("active");
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 
                 setTimeout(() => {
-                    currentActivePage.classList.remove("vortex-out"); destinationPage.classList.add("vortex-in"); destinationPage.classList.add("active");
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                    
-                    setTimeout(() => {
-                        destinationPage.classList.remove("vortex-in"); globalState.vortexActive = false; document.body.style.overflowY = 'auto'; 
-                        bindWaxSeals(destinationPage);
-                    }, 50); 
-                }, 600); 
-            } else { destinationPage.classList.add("active"); initTypewriterEngine(); }
-            document.querySelectorAll(".nav-link").forEach(lnk => { lnk.classList.toggle("active-nav", lnk.getAttribute("data-target") === targetPageId); });
+                    destinationPage.classList.remove("vortex-in"); 
+                    globalState.vortexActive = false; 
+                    document.body.style.overflowY = 'auto'; 
+                    bindWaxSeals(destinationPage);
+                }, 50); 
+            }, 600); 
+        } else { 
+            destinationPage.classList.add("active"); 
+            initTypewriterEngine(); 
         }
+        
+        document.querySelectorAll(".nav-link").forEach(lnk => { 
+            lnk.classList.toggle("active-nav", lnk.getAttribute("data-target") === targetPageId); 
+        });
     }
+}
+ 
+        
 
     function applyWhispers(el, poemIndex) {
         const pData = POEM_DATABASE[poemIndex];
