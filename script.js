@@ -542,8 +542,8 @@ if (window.stopZenModeGlobally) window.stopZenModeGlobally();
     function showToast(msg) {
         const container = document.getElementById("toast-container"); const toast = document.createElement("div"); toast.className = "toast"; toast.innerText = msg; container.appendChild(toast); setTimeout(() => toast.remove(), 3500);
     }
-    /* ======================================================
-   📜 ZEN MODE (OPTIMIZED AUTO-SCROLL ENGINE)
+  /* ======================================================
+   📜 ZEN MODE (COMPLETELY FIXED FOR MOBILE & DESKTOP)
    ====================================================== */
 let zenScrollId; 
 
@@ -559,53 +559,58 @@ function initZenMode() {
 
         // Agar page end par pahunch gaya
         if (Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
-            toggleZenMode(false); // Normal stop with toast
+            stopZen(false);
             return;
         }
         zenScrollId = requestAnimationFrame(smoothScroll);
     }
 
-    // silent parameter lagaya taaki manual scroll par toast spam na ho
-    function toggleZenMode(silent = false) {
-        globalState.zenActive = !globalState.zenActive;
-        
-        if (globalState.zenActive) {
-            zenBtn.innerText = "🛑 Stop Zen";
-            zenBtn.style.color = "var(--bg-base)";
-            zenBtn.style.backgroundColor = "var(--gold)";
-            if(!silent) showToast("🧘 Zen Mode Active: Sit back and read...");
-            
-            zenScrollId = requestAnimationFrame(smoothScroll);
-        } else {
-            zenBtn.innerText = "🧘 Zen Mode";
-            zenBtn.style.color = "";
-            zenBtn.style.backgroundColor = "";
-            cancelAnimationFrame(zenScrollId);
-            if(!silent) showToast("🛑 Zen Mode Paused.");
-        }
+    function startZen() {
+        globalState.zenActive = true;
+        zenBtn.innerText = "🛑 Stop Zen";
+        zenBtn.style.color = "var(--bg-base)";
+        zenBtn.style.backgroundColor = "var(--gold)";
+        showToast("🧘 Zen Mode Active: Sit back and read...");
+        zenScrollId = requestAnimationFrame(smoothScroll);
     }
 
-    // Button click listener
-    zenBtn.addEventListener("click", () => toggleZenMode(false));
-    
-    // Global function taaki executePageFlip isko access kar sake
+    function stopZen(silent = false) {
+        globalState.zenActive = false;
+        zenBtn.innerText = "🧘 Zen Mode";
+        zenBtn.style.color = "";
+        zenBtn.style.backgroundColor = "";
+        cancelAnimationFrame(zenScrollId);
+        if (!silent) showToast("🛑 Zen Mode Paused.");
+    }
+
+    // Fixed Click Handler
+    zenBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); // Event ko baki jagah phailne se roko
+        if (!globalState.zenActive) {
+            startZen();
+        } else {
+            stopZen(false);
+        }
+    });
+
     window.stopZenModeGlobally = function() {
-        if (globalState.zenActive) {
-            toggleZenMode(true); // Chupchaap band karo
-        }
+        if (globalState.zenActive) stopZen(true);
     };
 
-    // User ke manual scroll karne par silent pause
-    const handleManualScroll = () => {
-        if (globalState.zenActive) {
-            toggleZenMode(true); // true = bina toast ke pause
-            showToast("🖐️ Manual scroll detected. Zen Mode paused.");
-        }
-    };
+    // Desktop mouse wheel scroll par pause
+    window.addEventListener("wheel", () => {
+        if (globalState.zenActive) stopZen(true);
+    });
 
-    window.addEventListener("wheel", handleManualScroll);
-    window.addEventListener("touchstart", handleManualScroll, { passive: true });
+    // Mobile screen touch par pause (But button touch ko ignore karega)
+    window.addEventListener("touchstart", (e) => {
+        if (globalState.zenActive && e.target !== zenBtn && !zenBtn.contains(e.target)) {
+            stopZen(true);
+            showToast("🖐️ Manual touch detected. Zen Mode paused.");
+        }
+    }, { passive: true });
 }
+  
 
 
    
