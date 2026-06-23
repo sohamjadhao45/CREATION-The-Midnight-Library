@@ -612,6 +612,85 @@ function initZenMode() {
     }, { passive: true });
 }
   
+/* ======================================================
+   🎙️ AI TEXT-TO-SPEECH ENGINE (LISTEN FEATURE)
+   ====================================================== */
+function initAudioSpeechEngine() {
+    let activeListenBtn = null;
+
+    document.body.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('listen-btn')) {
+            const pIdx = e.target.getAttribute('data-poem-index');
+            if (pIdx === null) return;
+
+            const poem = POEM_DATABASE[pIdx];
+
+            // 🛑 AGAR WAHI BUTTON DOBARA DABAYA: Toh speech ko rok do
+            if (window.speechSynthesis.speaking && activeListenBtn === e.target) {
+                window.speechSynthesis.cancel();
+                resetListenBtn();
+                return;
+            }
+
+            // 🔄 AGAR KOI DUSRI POEM CHAL RAHI THI: Toh pehle use band karo
+            window.speechSynthesis.cancel();
+            if (activeListenBtn) resetListenBtn();
+
+            // Poem ke text ko clean karo (HTML tags hatane ke liye)
+            const cleanTitle = poem.title.replace(/<br\s*\/?>/gi, " ");
+            const textToSpeak = `${poem.chapterLabel}. ${cleanTitle}. ${poem.subtitle}. ${poem.text}`;
+
+            // Naya Speech Utterance banayein
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+
+            // 🌙 Midnight Library Vibe Settings (Slow & Deep Voice)
+            utterance.rate = 0.85;  // Speed: 1.0 se kam yani thoda dheere aur clear
+            utterance.pitch = 0.95; // Pitch: Halka sa deep base tone
+
+            // Browser se acchi English voice select karna
+            const voices = window.speechSynthesis.getVoices();
+            const premiumVoice = voices.find(v => v.lang.startsWith('en-GB') || v.lang.startsWith('en-US'));
+            if (premiumVoice) utterance.voice = premiumVoice;
+
+            // Events jab audio khatam ho jaye ya error aaye
+            utterance.onend = () => resetListenBtn();
+            utterance.onerror = () => resetListenBtn();
+
+            // UI Update: Button ka rang aur text badlo
+            activeListenBtn = e.target;
+            activeListenBtn.innerText = "🛑 Stop Voice";
+            activeListenBtn.style.backgroundColor = "var(--gold)";
+            activeListenBtn.style.color = "var(--bg-base)";
+
+            // AI Voice Start!
+            window.speechSynthesis.speak(utterance);
+        }
+    });
+
+    function resetListenBtn() {
+        if (activeListenBtn) {
+            activeListenBtn.innerText = "🎙️ Listen Verse";
+            activeListenBtn.style.backgroundColor = "";
+            activeListenBtn.style.color = "";
+            activeListenBtn = null;
+        }
+    }
+
+    // Global Access taaki page badalne par audio apne aap band ho jaye
+    window.stopAudioSpeechGlobally = function() {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+            resetListenBtn();
+        }
+    };
+}
+
+// Browser voices load hone mein time leta hai, isliye isko backup support dete hain
+if (typeof window !== 'undefined' && window.speechSynthesis) {
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = initAudioSpeechEngine;
+    }
+}
 
 
    
