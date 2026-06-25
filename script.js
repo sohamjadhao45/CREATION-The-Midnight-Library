@@ -142,43 +142,87 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function initPassport() {
-        const input = findSafeElement("visitor-name", "visitor");
-        const enterBtn = findSafeElement("enter-library-btn", "OPEN THE GATES");
-        const savedName = localStorage.getItem("midnightVisitor");
-        if(savedName && input) input.value = savedName;
+        function initPassport() {
+        const input = document.getElementById("visitor-name");
+        const enterBtn = document.getElementById("enter-library-btn");
+        
+        // 1. Saved name wapas laana
+        if (input && localStorage.getItem("midnightVisitor")) {
+            input.value = localStorage.getItem("midnightVisitor");
+        }
 
-        if(enterBtn) {
-            enterBtn.addEventListener("click", () => {
-                let name = input ? input.value.trim() : "";
-                if(!name) name = "Wanderer";
+        if (enterBtn) {
+            enterBtn.addEventListener("click", function(e) {
+                e.preventDefault(); // Kisi bhi unwanted page refresh ko rokega
                 
-                // Secret logic matching your exact word condition
-                if(name.toLowerCase() === "silence") {
+                let name = input && input.value.trim() !== "" ? input.value.trim() : "Wanderer";
+                
+                // Secret logic
+                if (name.toLowerCase() === "silence") {
                     globalState.hasTypedWord = true;
-                    checkUltimateVault();
+                    if(typeof checkUltimateVault === "function") checkUltimateVault();
                 }
 
                 localStorage.setItem("midnightVisitor", name);
                 globalState.visitorName = name;
                 
-                const greeting = findSafeElement("vault-greeting");
-                if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;
+                // Vault letter updates
+                const greeting = document.getElementById("vault-greeting");
+                if (greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;
 
-                const letterTitle = findSafeElement("reader-letter-title");
-                if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;
+                const letterTitle = document.getElementById("reader-letter-title");
+                if (letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;
 
-                const introScreen = findSafeElement("intro-screen");
-                if(introScreen) introScreen.classList.add("fade-out");
+                /* ======================================================
+                   🛡️ THE ABSOLUTE FORCE-OPEN FIX 🛡️
+                   ====================================================== */
                 
-                if(audioAmbient && !globalState.isAudioPlaying) {
+                // STEP A: Intro screen ko forcibly gayab aur disable karna
+                const introScreen = document.getElementById("intro-screen") || document.querySelector(".intro-screen");
+                if (introScreen) {
+                    introScreen.style.transition = "opacity 0.5s ease";
+                    introScreen.style.opacity = "0";
+                    introScreen.style.pointerEvents = "none"; // INVISIBLE WALL DESTROYED 💥
+                    setTimeout(() => {
+                        introScreen.style.display = "none"; // DOM se completely out
+                    }, 500);
+                }
+
+                // STEP B: Page 1 (Library) ko forcibly display karna
+                const page1 = document.getElementById("page1");
+                if (page1) {
+                    // Baaki sabhi pages ko hide karo ensure karne ke liye
+                    document.querySelectorAll(".page").forEach(p => {
+                        p.classList.remove("active");
+                        p.style.display = "none";
+                    });
+                    
+                    page1.style.display = "block"; // Zinda kiya
+                    
+                    // Thoda delay taaki browser render kar le
+                    setTimeout(() => {
+                        page1.classList.add("active");
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                    }, 50);
+                } else {
+                    alert("🔴 CRITICAL WARNING: 'page1' ID wala section tumhare HTML mein nahi hai!");
+                }
+
+                // STEP C: Audio safely play karna
+                if (typeof audioAmbient !== 'undefined' && audioAmbient && !globalState.isAudioPlaying) {
                     audioAmbient.volume = 0.2;
-                    audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));
+                    let playPromise = audioAmbient.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(err => console.log("Browser ne autoplay block kiya (Safe Ignore)."));
+                    }
                     globalState.isAudioPlaying = true;
                 }
             });
+        } else {
+            console.error("🔴 CRITICAL ERROR: 'enter-library-btn' naam ka button HTML mein nahi mila.");
         }
     }
+
 
     /* =====================================================================
        🛡️ UNIVERSAL GOD-MODE ENGINE: BUILD SYSTEM
