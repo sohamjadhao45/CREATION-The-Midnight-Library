@@ -140,53 +140,45 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.appendChild(ripple);
             setTimeout(() => ripple.remove(), 800);
         });
-      // 🛑 ULTRA-STABLE GATE OPENER (Paste this at the very top of your script.js)
-document.addEventListener("DOMContentLoaded", () => {
-    
-    // Body par click monitor karo (Delegation)
-    document.body.addEventListener("click", (e) => {
-        
-        // Check karo ki click "OPEN THE GATES" button par hua hai ya nahi
-        if (e.target && e.target.id === "enter-library-btn") {
-            e.preventDefault();
-            
-            console.log("Gate unlocking initiated...");
+    }
 
-            // 1. Name capture
-            const input = document.getElementById("visitor-name");
-            const name = (input && input.value.trim() !== "") ? input.value.trim() : "Wanderer";
-            localStorage.setItem("midnightVisitor", name);
+    function initPassport() {
+        const input = findSafeElement("visitor-name", "visitor");
+        const enterBtn = findSafeElement("enter-library-btn", "OPEN THE GATES");
+        const savedName = localStorage.getItem("midnightVisitor");
+        if(savedName && input) input.value = savedName;
 
-            // 2. Intro Screen ko permanently khatam karo
-            const intro = document.getElementById("intro-screen");
-            if (intro) {
-                intro.style.transition = "opacity 0.5s ease";
-                intro.style.opacity = "0";
-                intro.style.pointerEvents = "none";
-                setTimeout(() => intro.style.display = "none", 500);
-            }
+        if(enterBtn) {
+            enterBtn.addEventListener("click", () => {
+                let name = input ? input.value.trim() : "";
+                if(!name) name = "Wanderer";
+                
+                // Secret logic matching your exact word condition
+                if(name.toLowerCase() === "silence") {
+                    globalState.hasTypedWord = true;
+                    checkUltimateVault();
+                }
 
-            // 3. Page 1 ko forcefully display karo
-            const page1 = document.getElementById("page1");
-            if (page1) {
-                page1.style.display = "block";
-                // Delay taaki transition smoothly ho
-                setTimeout(() => {
-                    page1.classList.add("active");
-                }, 100);
-            } else {
-                alert("Critical Error: Page1 not found in DOM!");
-            }
+                localStorage.setItem("midnightVisitor", name);
+                globalState.visitorName = name;
+                
+                const greeting = findSafeElement("vault-greeting");
+                if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;
 
-            // 4. Audio trigger (Safe check)
-            const ambient = document.getElementById("audio-ambient");
-            if (ambient) ambient.play().catch(e => console.log("Audio waiting for interaction."));
+                const letterTitle = findSafeElement("reader-letter-title");
+                if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;
+
+                const introScreen = findSafeElement("intro-screen");
+                if(introScreen) introScreen.classList.add("fade-out");
+                
+                if(audioAmbient && !globalState.isAudioPlaying) {
+                    audioAmbient.volume = 0.2;
+                    audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));
+                    globalState.isAudioPlaying = true;
+                }
+            });
         }
-    });
-});
- 
-       
-
+    }
 
     /* =====================================================================
        🛡️ UNIVERSAL GOD-MODE ENGINE: BUILD SYSTEM
@@ -589,16 +581,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-               function executePageFlip(targetPageId) {
-            // 🛡️ NEW SAFETY CATCH: Agar user kisi aur page par ja raha hai, toh Vault band kar do
-            if (targetPageId !== "page-secret") {
-                const secretPage = document.getElementById("page-secret") || document.querySelector(".page-secret");
-                if (secretPage && secretPage.classList.contains("active")) {
-                    secretPage.classList.remove("active");
-                    secretPage.style.display = "none";
-                }
-            }
-
+        function executePageFlip(targetPageId) {
             let currentActivePage = document.querySelector(".page.active") || document.querySelector(".page[style*='display: block']") || document.getElementById("page1");
             let destinationPage = document.getElementById(targetPageId);
             
@@ -667,7 +650,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 lnk.classList.toggle("active-nav", target === targetPageId); 
             });
         }
- 
+    }
 
     function applyWhispers(el, poemIndex) {
         const pData = POEM_DATABASE[poemIndex];
