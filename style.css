@@ -324,4 +324,37 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
         border-right: none !important; /* Agar desktop pe beech me koi line thi, toh mobile par hata dega */
     }
 }
+/* =====================================================================
+   🔮 MYSTERY VAULT FULL-SCREEN POP-UP (SIRF MOBILE KE LIYE)
+   ===================================================================== */
+@media screen and (max-width: 768px) {
+    #page-secret, .page-secret {
+        /* Ise normal column se nikal kar Pop-up (overlay) bana dega */
+        position: fixed !important; 
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 99999 !important; /* Sabse upar rakhega, baaki sab iske peeche */
+        
+        /* Peeche ka content chupane ke liye solid dark background */
+        background-color: #050507 !important; 
+        
+        overflow-y: auto !important; /* Agar vault lamba ho toh scroll allow karega */
+        padding: 30px 15px !important;
+        box-sizing: border-box !important;
+        
+        /* Content ko center aur ek ke niche ek arrange karne ke liye */
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    /* Vault ke andar ka content screen se bahar na jaaye */
+    #page-secret > div, .page-secret > div, 
+    #page-secret p, .page-secret p {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
 
