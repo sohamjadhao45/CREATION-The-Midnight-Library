@@ -81,8 +81,17 @@ body.reading-mode .exit-focus-btn { display: block; }
 .nav-link:hover, .nav-link.active-nav { color: #050507 !important; background: var(--gold); box-shadow: 0 4px 12px var(--gold-glow); }
 
 .content { position: relative; z-index: 2; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 20px 160px; }
-.page { display: none; flex-direction: column; align-items: center; width: min(850px, 100%); text-align: center; opacity: 0; pointer-events: none; transform: scale(0.9) translateZ(-100px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); will-change: opacity, transform; }
-.page.active { display: flex; opacity: 1; transform: scale(1) translateZ(0); pointer-events: auto; }
+.page{
+    display:none;
+    width:100%;
+    max-width:100%;
+    flex:0 0 100%;
+    min-width:100%;
+}
+
+.page.active{
+    display:block;
+}
 .page.vortex-out { transform: scale(0.8) translateY(-20px); opacity: 0; transform-origin: center; }
 .page.vortex-in { transform: scale(1.1) translateY(20px); opacity: 0; transform-origin: center; }
 
