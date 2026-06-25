@@ -140,88 +140,52 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.appendChild(ripple);
             setTimeout(() => ripple.remove(), 800);
         });
-    }
-
-        function initPassport() {
-        const input = document.getElementById("visitor-name");
-        const enterBtn = document.getElementById("enter-library-btn");
+      // 🛑 ULTRA-STABLE GATE OPENER (Paste this at the very top of your script.js)
+document.addEventListener("DOMContentLoaded", () => {
+    
+    // Body par click monitor karo (Delegation)
+    document.body.addEventListener("click", (e) => {
         
-        // 1. Saved name wapas laana
-        if (input && localStorage.getItem("midnightVisitor")) {
-            input.value = localStorage.getItem("midnightVisitor");
+        // Check karo ki click "OPEN THE GATES" button par hua hai ya nahi
+        if (e.target && e.target.id === "enter-library-btn") {
+            e.preventDefault();
+            
+            console.log("Gate unlocking initiated...");
+
+            // 1. Name capture
+            const input = document.getElementById("visitor-name");
+            const name = (input && input.value.trim() !== "") ? input.value.trim() : "Wanderer";
+            localStorage.setItem("midnightVisitor", name);
+
+            // 2. Intro Screen ko permanently khatam karo
+            const intro = document.getElementById("intro-screen");
+            if (intro) {
+                intro.style.transition = "opacity 0.5s ease";
+                intro.style.opacity = "0";
+                intro.style.pointerEvents = "none";
+                setTimeout(() => intro.style.display = "none", 500);
+            }
+
+            // 3. Page 1 ko forcefully display karo
+            const page1 = document.getElementById("page1");
+            if (page1) {
+                page1.style.display = "block";
+                // Delay taaki transition smoothly ho
+                setTimeout(() => {
+                    page1.classList.add("active");
+                }, 100);
+            } else {
+                alert("Critical Error: Page1 not found in DOM!");
+            }
+
+            // 4. Audio trigger (Safe check)
+            const ambient = document.getElementById("audio-ambient");
+            if (ambient) ambient.play().catch(e => console.log("Audio waiting for interaction."));
         }
-
-        if (enterBtn) {
-            enterBtn.addEventListener("click", function(e) {
-                e.preventDefault(); // Kisi bhi unwanted page refresh ko rokega
-                
-                let name = input && input.value.trim() !== "" ? input.value.trim() : "Wanderer";
-                
-                // Secret logic
-                if (name.toLowerCase() === "silence") {
-                    globalState.hasTypedWord = true;
-                    if(typeof checkUltimateVault === "function") checkUltimateVault();
-                }
-
-                localStorage.setItem("midnightVisitor", name);
-                globalState.visitorName = name;
-                
-                // Vault letter updates
-                const greeting = document.getElementById("vault-greeting");
-                if (greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;
-
-                const letterTitle = document.getElementById("reader-letter-title");
-                if (letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;
-
-                /* ======================================================
-                   🛡️ THE ABSOLUTE FORCE-OPEN FIX 🛡️
-                   ====================================================== */
-                
-                // STEP A: Intro screen ko forcibly gayab aur disable karna
-                const introScreen = document.getElementById("intro-screen") || document.querySelector(".intro-screen");
-                if (introScreen) {
-                    introScreen.style.transition = "opacity 0.5s ease";
-                    introScreen.style.opacity = "0";
-                    introScreen.style.pointerEvents = "none"; // INVISIBLE WALL DESTROYED 💥
-                    setTimeout(() => {
-                        introScreen.style.display = "none"; // DOM se completely out
-                    }, 500);
-                }
-
-                // STEP B: Page 1 (Library) ko forcibly display karna
-                const page1 = document.getElementById("page1");
-                if (page1) {
-                    // Baaki sabhi pages ko hide karo ensure karne ke liye
-                    document.querySelectorAll(".page").forEach(p => {
-                        p.classList.remove("active");
-                        p.style.display = "none";
-                    });
-                    
-                    page1.style.display = "block"; // Zinda kiya
-                    
-                    // Thoda delay taaki browser render kar le
-                    setTimeout(() => {
-                        page1.classList.add("active");
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                    }, 50);
-                } else {
-                    alert("🔴 CRITICAL WARNING: 'page1' ID wala section tumhare HTML mein nahi hai!");
-                }
-
-                // STEP C: Audio safely play karna
-                if (typeof audioAmbient !== 'undefined' && audioAmbient && !globalState.isAudioPlaying) {
-                    audioAmbient.volume = 0.2;
-                    let playPromise = audioAmbient.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(err => console.log("Browser ne autoplay block kiya (Safe Ignore)."));
-                    }
-                    globalState.isAudioPlaying = true;
-                }
-            });
-        } else {
-            console.error("🔴 CRITICAL ERROR: 'enter-library-btn' naam ka button HTML mein nahi mila.");
-        }
-    }
+    });
+});
+ 
+       
 
 
     /* =====================================================================
