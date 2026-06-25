@@ -313,3 +313,25 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
   background: none; border: none; color: var(--gold);
   font-family: 'Cinzel'; cursor: pointer;
 }
+/* SECRET VAULT MOBILE FULLSCREEN FIX */
+
+#page-secret{
+    width:100% !important;
+    min-width:100% !important;
+    max-width:100% !important;
+
+    flex:0 0 100% !important;
+
+    position:relative !important;
+    display:block !important;
+    box-sizing:border-box !important;
+}
+@media (max-width:768px){
+
+    .page{
+        width:100% !important;
+        min-width:100% !important;
+        max-width:100% !important;
+    }
+
+}
