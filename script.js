@@ -581,7 +581,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        function executePageFlip(targetPageId) {
+               function executePageFlip(targetPageId) {
+            // 🛡️ NEW SAFETY CATCH: Agar user kisi aur page par ja raha hai, toh Vault band kar do
+            if (targetPageId !== "page-secret") {
+                const secretPage = document.getElementById("page-secret") || document.querySelector(".page-secret");
+                if (secretPage && secretPage.classList.contains("active")) {
+                    secretPage.classList.remove("active");
+                    secretPage.style.display = "none";
+                }
+            }
+
             let currentActivePage = document.querySelector(".page.active") || document.querySelector(".page[style*='display: block']") || document.getElementById("page1");
             let destinationPage = document.getElementById(targetPageId);
             
@@ -650,7 +659,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 lnk.classList.toggle("active-nav", target === targetPageId); 
             });
         }
-    }
+ 
 
     function applyWhispers(el, poemIndex) {
         const pData = POEM_DATABASE[poemIndex];
