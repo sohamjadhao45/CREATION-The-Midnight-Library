@@ -2,6 +2,7 @@
    THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFINITIVE EDITION)
    Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
    ===================================================================== */
+
 /* =====================================================================
    💥 EMERGENY MOBILE DEBUGGER (Sabse Upar Paste Karein)
    ===================================================================== */
@@ -125,13 +126,10 @@ document.addEventListener("DOMContentLoaded", () => {
             initCosmicNavigation(); 
             initLibraryFeatures(); 
         })
-        
-         // Isko dhoondo apne code mein aur aise badal do:
-    .catch(error => {
-        alert("🔴 JSON LOAD ERROR: " + error.message + "\nYaani poem.json file nahi mil rahi!");
-        console.error("Critical Error inside Library Fetch: ", error);
-    });
-           });
+        .catch(error => {
+            alert("🔴 JSON LOAD ERROR: " + error.message + "\nYaani poem.json file nahi mil rahi!");
+            console.error("Critical Error inside Library Fetch: ", error);
+        });
 
     function initTouchRipple() {
         document.body.addEventListener('click', (e) => {
@@ -182,113 +180,118 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    /* =====================================================================
+       🛡️ UNIVERSAL GOD-MODE ENGINE: BUILD SYSTEM
+       ===================================================================== */
     function buildLibrarySystem() {
-    const nav = findSafeElement("library-nav"); 
-    const bookshelf = findSafeElement("dynamic-bookshelf"); 
-    const starMap = findSafeElement("star-map"); 
-    const authorScripting = findSafeElement("author-scripting-status"); 
-    const secretPage = findSafeElement("page-secret");
+        const nav = document.getElementById("library-nav") || document.querySelector(".library-nav") || document.querySelector("nav"); 
+        let bookshelf = document.getElementById("dynamic-bookshelf") || document.querySelector(".dynamic-bookshelf") || document.querySelector(".bookshelf"); 
+        const starMap = document.getElementById("star-map") || document.querySelector(".star-map"); 
+        const authorScripting = document.getElementById("author-scripting-status") || document.querySelector(".author-status"); 
+        let secretPage = document.getElementById("page-secret") || document.querySelector(".page-secret");
 
-    if(nav) nav.innerHTML = `<button class="nav-link active-nav" data-target="page1">Library Entrance</button>`; 
-    if(bookshelf) {
-        bookshelf.innerHTML = ""; 
-        // Horizontal slide enforce karne ke liye direct inline styles (taaki CSS crash na ho)
-        bookshelf.style.display = "flex";
-        bookshelf.style.overflowX = "auto";
-        bookshelf.style.scrollBehavior = "smooth";
-        bookshelf.style.whiteSpace = "nowrap";
-        bookshelf.style.padding = "15px";
-        bookshelf.style.gap = "20px";
-    }
-    let prevPageId = "page1";
-
-    POEM_DATABASE.forEach((poem, i) => {
-        const pageId = `poem-page-${i + 1}`; 
-        const nextPageId = i < POEM_DATABASE.length - 1 ? `poem-page-${i + 2}` : `page-fragments`;
-        
-        if(nav) nav.innerHTML += `<button class="nav-link" data-target="${pageId}">${poem.chapterLabel}</button>`;
-        
-        const cleanTitle = poem.title.replace('<br>', ' '); 
-        const safeText = poem.text.replace(/\n/g, '\\n');
-
-        const sectionHtml = `
-        <section id="${pageId}" class="page" data-poem-index="${i}">
-          <div class="top-deco">✧ ─ ❦ ─ ✧</div>
-          <span class="chapter-badge">${poem.chapterLabel}</span>
-          <div class="heading-wrapper"><h2 class="page1-heading moon-glow">${poem.title}</h2></div>
-          <p class="poem-subtitle">${poem.subtitle}</p>
-          <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">
-            <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>
-            <span class="read-time">⏱️ 1 Min Read</span>
-            <button class="bookmark-btn btn-utility" data-poem="${poem.spineLabel}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>
-          </div>
-          <div class="poetry-box antique-parchment dynamic-shadow" id="card-${pageId}">
-            <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>
-            <p class="royal-poem-text typewriter-poem" data-lines="${safeText}"></p><br>
-            <p class="poem-date">${poem.dateText}</p>
-            <span class="poem-greatvibes sign-animate">${poem.signature}</span>
-            <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
-                <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>
-                <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
-            </div>
-          </div>
-          <div class="button-row" style="margin-top: 15px;">
-            <button class="btn-utility download-poem-btn" data-target="card-${pageId}" data-poem-index="${i}">📸 Save As A Memory</button>
-            <button class="btn-utility share-poem-btn" data-poem-title="${cleanTitle}">🔗 Share Verse</button>
-          </div>
-          <div class="button-row mt-20"><button class="btn-outline trigger-nav" data-target="${prevPageId}">❮ Previous</button><button class="btn-solid trigger-nav" data-target="${nextPageId}">Next ❯</button></div>
-        </section>`;
-        
-        if(secretPage) secretPage.insertAdjacentHTML('beforebegin', sectionHtml);
-        
-        // Horizontal Card Style for Bookshelf Slide
-        if(bookshelf) {
-            bookshelf.innerHTML += `
-                <div class="book-spine trigger-nav" data-target="${pageId}" style="display:inline-block; min-width:140px; height:180px; background:linear-gradient(45deg, #1a1a24, #2c2c3b); border:1px solid var(--gold); border-radius:8px; padding:15px; position:relative; cursor:pointer; flex-shrink:0; text-align:center;">
-                    <span style="font-size:10px; color:var(--gold); display:block; margin-bottom:10px;">${poem.chapterLabel}</span>
-                    <strong style="font-size:14px; white-space:normal; display:block; color:#f2eee9; font-family:'Cinzel', serif;">${cleanTitle}</strong>
-                    <span style="font-size:9px; position:absolute; bottom:15px; left:0; width:100%; color:rgba(255,255,255,0.4);">${poem.spineLabel}</span>
-                </div>
-            `;
+        // CRITICAL FIX: Agar HTML mein horizontal bookshelf nahi mili, toh khud generate karo
+        if (!bookshelf) {
+            console.warn("Bookshelf container missing in HTML! Creating a universal fallback drawer...");
+            bookshelf = document.createElement("div");
+            bookshelf.id = "dynamic-bookshelf";
+            const entrancePage = document.getElementById("page1") || document.querySelector(".page");
+            if (entrancePage) entrancePage.appendChild(bookshelf);
         }
-        prevPageId = pageId;
-    });
 
-    if(nav) nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;
-    
-    // Explicit Targets for Global Buttons (Fixing the broken triggers)
-    const btnExplore = document.getElementById("btn-explore");
-    if (btnExplore) btnExplore.setAttribute("data-target", "poem-page-1");
+        if (bookshelf) {
+            bookshelf.innerHTML = ""; 
+            bookshelf.style.cssText = "display: flex !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; white-space: nowrap !important; padding: 15px !important; gap: 20px !important; width: 100% !important; min-height: 200px !important; z-index: 9999;";
+        }
 
-    const btnFragPrev = document.getElementById("btn-frag-prev");
-    if (btnFragPrev) btnFragPrev.setAttribute("data-target", `poem-page-${POEM_DATABASE.length}`);
-    
-    if(bookshelf) {
-        bookshelf.innerHTML += `
-            <div class="book-spine spine-locked interactive-locked" title="Some stories are still being lived." style="display:inline-block; min-width:140px; height:180px; background:rgba(255,255,255,0.02); border:1px dashed rgba(191,164,111,0.3); border-radius:8px; padding:15px; position:relative; flex-shrink:0; text-align:center; opacity:0.6;">
-                <span style="font-size:10px; display:block; margin-bottom:10px;">CHAPTER III</span>
-                <strong style="font-size:12px; white-space:normal; display:block; color:var(--text-muted);">${UPCOMING_CHAPTER.title}</strong>
-                <span style="font-size:9px; position: absolute; bottom: 15px; width: 100%; left:0; text-align: center; color: rgba(255,255,255,0.3);">COMING SOON</span>
-            </div>`;
-    }
+        if (nav) nav.innerHTML = `<button class="nav-link active-nav" data-target="page1">Library Entrance</button>`; 
+        let prevPageId = "page1";
 
-    // Constellation rendering
-    let svgLines = ''; let starsHtml = '';
-    for (let i = 0; i < POEM_DATABASE.length; i++) {
-        let p1 = starCoords[i]; starsHtml += `<div class="star-node active-star trigger-nav" data-target="poem-page-${i+1}" title="${POEM_DATABASE[i].dateText} - ${POEM_DATABASE[i].title.replace('<br>',' ')}" style="position:absolute; width:12px; height:12px; background:var(--gold); border-radius:50%; box-shadow:0 0 10px var(--gold); cursor:pointer; top: ${p1.top}%; left: ${p1.left}%;"></div>`;
-        if (i < POEM_DATABASE.length - 1) { let p2 = starCoords[i+1]; svgLines += `<line x1="${p1.left}%" y1="${p1.top}%" x2="${p2.left}%" y2="${p2.top}%" stroke="rgba(191,164,111,0.4)" stroke-width="1" stroke-dasharray="4" />`; }
-    }
-    if (POEM_DATABASE.length > 0 && starMap) {
-        let lastStar = starCoords[POEM_DATABASE.length - 1]; let lockedStar = starCoords[POEM_DATABASE.length];
-        svgLines += `<line x1="${lastStar.left}%" y1="${lastStar.top}%" x2="${lockedStar.left}%" y2="${lockedStar.top}%" stroke="rgba(191,164,111,0.1)" stroke-width="1" stroke-dasharray="4" />`;
-        starsHtml += `<div class="star-node pulse-star interactive-locked" title="Awaiting Completion..." style="position:absolute; width:12px; height:12px; background:rgba(255,255,255,0.2); border-radius:50%; top: ${lockedStar.top}%; left: ${lockedStar.left}%;"></div>`;
-        starMap.innerHTML = `<svg width="100%" height="100%" style="position: absolute; top:0; left:0; z-index: 1;">${svgLines}</svg>${starsHtml}`;
-    }
-    if(authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter ${UPCOMING_CHAPTER.chapterNum}: ${UPCOMING_CHAPTER.title}`;
-}
+        if (!POEM_DATABASE || POEM_DATABASE.length === 0) {
+            POEM_DATABASE = [{
+                title: "Echoes of Silence", subtitle: "The First Midnight Fragment", chapterLabel: "CHAPTER I", themeTag: "Mystic", spineLabel: "SILENCE", text: "Welcome back wanderer.\nYour library is safe.\nTap any button to begin.", dateText: "Solitude", signature: "Soham"
+            }];
+        }
 
-    
+        POEM_DATABASE.forEach((poem, i) => {
+            const pageId = `poem-page-${i + 1}`; 
+            const nextPageId = i < POEM_DATABASE.length - 1 ? `poem-page-${i + 2}` : `page-fragments`;
+            
+            if (nav) nav.innerHTML += `<button class="nav-link" data-target="${pageId}">${poem.chapterLabel}</button>`;
+            
+            const cleanTitle = poem.title.replace('<br>', ' '); 
+            const safeText = poem.text.replace(/\n/g, '\\n');
+
+            const sectionHtml = `
+            <section id="${pageId}" class="page direct-js-built" data-poem-index="${i}" style="display:none;">
+              <div class="top-deco">✧ ─ ❦ ─ ✧</div>
+              <span class="chapter-badge">${poem.chapterLabel}</span>
+              <div class="heading-wrapper"><h2 class="page1-heading moon-glow">${poem.title}</h2></div>
+              <p class="poem-subtitle">${poem.subtitle}</p>
+              <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">
+                <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>
+                <span class="read-time">⏱️ 1 Min Read</span>
+                <button class="bookmark-btn btn-utility" data-poem="${poem.spineLabel}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>
+              </div>
+              <div class="poetry-box antique-parchment dynamic-shadow" id="card-${pageId}">
+                <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>
+                <p class="royal-poem-text typewriter-poem" data-lines="${safeText}"></p><br>
+                <p class="poem-date">${poem.dateText}</p>
+                <span class="poem-greatvibes sign-animate">${poem.signature}</span>
+                <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
+                    <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>
+                    <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
+                </div>
+              </div>
+              <div class="button-row" style="margin-top: 15px;">
+                <button class="btn-utility download-poem-btn" data-target="card-${pageId}" data-poem-index="${i}">📸 Save As A Memory</button>
+                <button class="btn-utility share-poem-btn" data-poem-title="${cleanTitle}">🔗 Share Verse</button>
+              </div>
+              <div class="button-row mt-20"><button class="btn-outline trigger-nav" data-target="${prevPageId}">❮ Previous</button><button class="btn-solid trigger-nav" data-target="${nextPageId}">Next ❯</button></div>
+            </section>`;
+            
+            if (secretPage) {
+                secretPage.insertAdjacentHTML('beforebegin', sectionHtml);
+            } else {
+                const containerFallback = document.querySelector('main') || document.body;
+                containerFallback.insertAdjacentHTML('beforeend', sectionHtml);
+            }
+            
+            if (bookshelf) {
+                bookshelf.innerHTML += `
+                    <div class="book-spine trigger-nav" data-target="${pageId}" style="display:inline-block !important; min-width:150px !important; height:180px !important; background:linear-gradient(45deg, #1a1a24, #2c2c3b) !important; border:1px solid #bfa46f !important; border-radius:8px !important; padding:15px !important; margin-right:15px !important; cursor:pointer !important; flex-shrink:0 !important; text-align:center !important; white-space:normal !important;">
+                        <span style="font-size:10px; color:#bfa46f; display:block; margin-bottom:10px;">${poem.chapterLabel}</span>
+                        <strong style="font-size:13px; display:block; color:#f2eee9; font-family:'Cinzel', serif; line-height:1.3;">${cleanTitle}</strong>
+                        <span style="font-size:9px; position:absolute; bottom:15px; left:0; width:100%; color:rgba(255,255,255,0.4); text-align:center;">${poem.spineLabel}</span>
+                    </div>`;
+            }
+            prevPageId = pageId;
+        });
+
+        if (nav) nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;
         
+        if (bookshelf) {
+            bookshelf.innerHTML += `
+                <div class="book-spine spine-locked" style="display:inline-block !important; min-width:150px !important; height:180px !important; background:rgba(255,255,255,0.02) !important; border:1px dashed rgba(191,164,111,0.3) !important; border-radius:8px !important; padding:15px !important; flex-shrink:0 !important; text-align:center !important; opacity:0.5;">
+                    <span style="font-size:10px; display:block; margin-bottom:10px;">CHAPTER III</span>
+                    <strong style="font-size:12px; display:block; color:gray;">THE COSMOS WITHIN</strong>
+                    <span style="font-size:9px; position: absolute; bottom: 15px; width: 100%; left:0; text-align: center; color: rgba(255,255,255,0.3);">COMING SOON</span>
+                </div>`;
+        }
+
+        let svgLines = ''; let starsHtml = '';
+        for (let i = 0; i < POEM_DATABASE.length; i++) {
+            if(!starCoords[i]) break; 
+            let p1 = starCoords[i]; starsHtml += `<div class="star-node active-star trigger-nav" data-target="poem-page-${i+1}" style="position:absolute; width:12px; height:12px; background:#bfa46f; border-radius:50%; box-shadow:0 0 10px #bfa46f; cursor:pointer; top: ${p1.top}%; left: ${p1.left}%;"></div>`;
+            if (i < POEM_DATABASE.length - 1 && starCoords[i+1]) { let p2 = starCoords[i+1]; svgLines += `<line x1="${p1.left}%" y1="${p1.top}%" x2="${p2.left}%" y2="${p2.top}%" stroke="rgba(191,164,111,0.4)" stroke-width="1" stroke-dasharray="4" />`; }
+        }
+        if (POEM_DATABASE.length > 0 && starMap) {
+            starMap.innerHTML = `<svg width="100%" height="100%" style="position: absolute; top:0; left:0; z-index: 1;">${svgLines}</svg>${starsHtml}`;
+        }
+        if (authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter III: THE COSMOS WITHIN`;
+    }
+
+    // Floating Midnight Thought Button Logic (Preserved)
     const thoughtBtn = findSafeElement("reveal-thought-btn", "THOUGHT");
     const thoughtDisplay = findSafeElement("midnight-thought-display");
     if(thoughtBtn && thoughtDisplay) {
@@ -545,92 +548,109 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-   function initCosmicNavigation() {
-    document.body.addEventListener("click", (e) => {
-        // Universal collector for navigation triggers
-        let targetBtn = e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node");
-        if (!targetBtn) return;
+    /* =====================================================================
+       🛡️ UNIVERSAL GOD-MODE ENGINE: COSMIC NAVIGATION
+       ===================================================================== */
+    function initCosmicNavigation() {
+        document.addEventListener("click", (e) => {
+            let targetBtn = e.target.closest("[data-target]") || e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node") || e.target.closest("button");
+            if (!targetBtn) return;
 
-        let targetPageId = targetBtn.getAttribute("data-target");
-        
-        // Fallback checks for hardcoded structural buttons
-        if (!targetPageId) {
-            if (targetBtn.id === "btn-explore") {
-                targetPageId = "poem-page-1";
-            } else if (targetBtn.textContent.toUpperCase().includes("AUTHOR") || targetBtn.textContent.toUpperCase().includes("CHAMBER")) {
-                targetPageId = "page-about";
+            let targetPageId = targetBtn.getAttribute("data-target");
+            let btnText = targetBtn.textContent.toUpperCase();
+
+            // HARDCODED TEXT FALLBACKS
+            if (!targetPageId) {
+                if (targetBtn.id === "btn-explore" || btnText.includes("EXPLORE") || btnText.includes("CHAPTER")) {
+                    targetPageId = "poem-page-1";
+                } else if (btnText.includes("AUTHOR") || btnText.includes("CHAMBER") || targetBtn.id === "btn-about" || btnText.includes("ABOUT")) {
+                    targetPageId = "page-about";
+                } else if (btnText.includes("NOTES") || btnText.includes("ROOM") || btnText.includes("FRAGMENT")) {
+                    targetPageId = "page-fragments";
+                } else if (btnText.includes("ANCIENT") || btnText.includes("SHELF") || btnText.includes("ARCHIVE")) {
+                    targetPageId = "page-archive";
+                } else if (btnText.includes("ENTRANCE") || btnText.includes("LIBRARY")) {
+                    targetPageId = "page1";
+                }
             }
-        }
 
-        if (targetPageId) {
-            if(audioPageTurn) {
-                audioPageTurn.currentTime = 0;
-                audioPageTurn.play().catch(() => {});
+            if (targetPageId) {
+                e.preventDefault();
+                if (audioPageTurn) { audioPageTurn.currentTime = 0; audioPageTurn.play().catch(() => {}); }
+                executePageFlip(targetPageId);
             }
-            executePageFlip(targetPageId);
-        }
-    });
-
-    function executePageFlip(targetPageId) {
-        const currentActivePage = document.querySelector(".page.active"); 
-        let destinationPage = document.getElementById(targetPageId);
-        
-        // Secondary fallback if ID naming mismatched with page-about / author section
-        if (!destinationPage && targetPageId === "page-about") {
-            destinationPage = document.getElementById("author-chamber") || document.querySelector(".page-about");
-        }
-
-        if(!destinationPage || currentActivePage === destinationPage) return;
-        
-        if (window.stopZenModeGlobally) window.stopZenModeGlobally();
-        if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();
-        
-        globalState.vortexActive = true; 
-        document.body.style.overflowY = 'hidden'; 
-        
-        if(targetPageId === "page-fragments") {
-            const currentCombo = notesCombos[globalState.notesVisitCount % 5];
-            const q1 = findSafeElement("combo-quote-1");
-            const q2 = findSafeElement("combo-quote-2");
-            const q3 = findSafeElement("combo-quote-3");
-            if(q1) q1.innerText = currentCombo[0]; 
-            if(q2) q2.innerText = currentCombo[1]; 
-            if(q3) q3.innerText = currentCombo[2];
-            globalState.notesVisitCount++; 
-            checkUltimateVault();
-        }
-        
-        if(currentActivePage) {
-            const sign = currentActivePage.querySelector('.sign-animate'); 
-            if (sign) sign.classList.remove('active-sign');
-            currentActivePage.classList.remove("active"); 
-            currentActivePage.classList.add("vortex-out");
-            
-            setTimeout(() => {
-                currentActivePage.classList.remove("vortex-out"); 
-                destinationPage.classList.add("vortex-in"); 
-                destinationPage.classList.add("active");
-                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                
-                setTimeout(() => {
-                    destinationPage.classList.remove("vortex-in"); 
-                    globalState.vortexActive = false; 
-                    document.body.style.overflowY = 'auto'; 
-                    bindWaxSeals(destinationPage);
-                }, 50); 
-            }, 600); 
-        } else { 
-            destinationPage.classList.add("active"); 
-            initTypewriterEngine(); 
-        }
-        
-        document.querySelectorAll(".nav-link").forEach(lnk => { 
-            lnk.classList.toggle("active-nav", lnk.getAttribute("data-target") === targetPageId); 
         });
+
+        function executePageFlip(targetPageId) {
+            let currentActivePage = document.querySelector(".page.active") || document.querySelector(".page[style*='display: block']") || document.getElementById("page1");
+            let destinationPage = document.getElementById(targetPageId);
+            
+            if (!destinationPage) {
+                if (targetPageId === "page-about") destinationPage = document.getElementById("author-chamber") || document.querySelector(".page-about") || document.querySelector("[id*='about']");
+                if (targetPageId === "page-fragments") destinationPage = document.getElementById("notes-room") || document.querySelector(".page-fragments") || document.querySelector("[id*='fragment']");
+                if (targetPageId === "page-archive") destinationPage = document.getElementById("ancient-shelf") || document.querySelector(".page-archive") || document.querySelector("[id*='archive']");
+            }
+
+            if (!destinationPage) {
+                console.error("Target page not found: " + targetPageId + ". Resetting to entrance.");
+                destinationPage = document.getElementById("page1") || document.querySelector(".page");
+            }
+
+            if (!destinationPage || currentActivePage === destinationPage) return;
+            
+            if (window.stopZenModeGlobally) window.stopZenModeGlobally();
+            if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();
+            
+            globalState.vortexActive = true; 
+            document.body.style.overflowY = 'hidden'; 
+            
+            if (targetPageId === "page-fragments") {
+                const currentCombo = notesCombos[globalState.notesVisitCount % 5];
+                const q1 = document.getElementById("combo-quote-1"); const q2 = document.getElementById("combo-quote-2"); const q3 = document.getElementById("combo-quote-3");
+                if(q1) q1.innerText = currentCombo[0]; if(q2) q2.innerText = currentCombo[1]; if(q3) q3.innerText = currentCombo[2];
+                globalState.notesVisitCount++; 
+                if(typeof checkUltimateVault === "function") checkUltimateVault();
+            }
+            
+            try {
+                if (currentActivePage) {
+                    currentActivePage.classList.remove("active");
+                    currentActivePage.style.display = "none"; 
+                    currentActivePage.classList.add("vortex-out");
+                    
+                    setTimeout(() => {
+                        currentActivePage.classList.remove("vortex-out"); 
+                        destinationPage.style.display = "block"; 
+                        destinationPage.classList.add("vortex-in"); 
+                        destinationPage.classList.add("active");
+                        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                        
+                        setTimeout(() => {
+                            destinationPage.classList.remove("vortex-in"); 
+                            globalState.vortexActive = false; 
+                            document.body.style.overflowY = 'auto'; 
+                            if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);
+                        }, 50); 
+                    }, 400); 
+                } else {
+                    destinationPage.style.display = "block";
+                    destinationPage.classList.add("active");
+                    if(typeof initTypewriterEngine === "function") initTypewriterEngine();
+                }
+            } catch(e) {
+                if(currentActivePage) currentActivePage.style.display = "none";
+                destinationPage.style.display = "block";
+                destinationPage.classList.add("active");
+                globalState.vortexActive = false;
+                document.body.style.overflowY = 'auto';
+            }
+            
+            document.querySelectorAll(".nav-link").forEach(lnk => { 
+                let target = lnk.getAttribute("data-target");
+                lnk.classList.toggle("active-nav", target === targetPageId); 
+            });
+        }
     }
-}
- 
-        
 
     function applyWhispers(el, poemIndex) {
         const pData = POEM_DATABASE[poemIndex];
