@@ -633,7 +633,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         }, 50); 
                     }, 400); 
                 } else {
-                    destinationPage.style.display = "block";
+                    document.querySelectorAll(".page").forEach(page => {
+    page.style.display = "none";
+    page.classList.remove("active");
+});
+                   destinationPage.style.display = "block";
                     destinationPage.classList.add("active");
                     if(typeof initTypewriterEngine === "function") initTypewriterEngine();
                 }
