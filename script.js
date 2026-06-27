@@ -932,5 +932,111 @@ function initAudioSpeechEngine() {
         if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); resetListenBtn(); }  
     };  
 }
+// =====================================================================
+// 🌐 LIVE FIREBASE MYSTIC LEDGER (GUESTBOOK)
+// =====================================================================
+function initMysticLedger() {
+    // 🔴 IMPORTANT: Yahan apna Firebase Config Paste Karna!
+    const firebaseConfig = {
+        apiKey: "TERA_API_KEY",
+        authDomain: "TERA_PROJECT.firebaseapp.com",
+        databaseURL: "https://TERA_PROJECT-default-rtdb.firebaseio.com",
+        projectId: "TERA_PROJECT",
+        storageBucket: "TERA_PROJECT.appspot.com",
+        messagingSenderId: "SENDER_ID",
+        appId: "APP_ID"
+    };
+
+    // Firebase ek hi baar initialize hona chahiye
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
+    // Use your engine's safe element finder
+    const openBtn = findSafeElement('open-feedback-btn');
+    const closeBtn = findSafeElement('close-feedback-btn');
+    const submitBtn = findSafeElement('submit-feedback-btn');
+    const modal = findSafeElement('feedback-modal');
+    const input = findSafeElement('feedback-input');
+    const commentsList = findSafeElement('public-comments-list');
+
+    // Date Format Helper
+    function formatDate(date) {
+        return date.toLocaleDateString("en-US", { month: 'short', day: 'numeric' }) + " | " + date.toLocaleTimeString("en-US", { hour: '2-digit', minute:'2-digit' });
+    }
+
+    // Modal Open/Close Logic
+    if(openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.style.display = 'flex';
+            loadLiveComments(); // Jab bhi open karega, live comments load hongi
+        });
+    }
+
+    if(closeBtn && modal) {
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.style.display = 'none';
+        });
+    }
+
+    // 📡 FETCH LIVE COMMENTS FROM FIREBASE
+    function loadLiveComments() {
+        if(!commentsList) return;
+        const commentsRef = db.ref('mystic_ledger_comments');
+        
+        // .on() matlab real-time sync (bina refresh ke nayi comments aayengi)
+        commentsRef.on('value', (snapshot) => {
+            commentsList.innerHTML = ''; 
+            const data = snapshot.val();
+            
+            if (data) {
+                // Object ko array mein badal kar ulta karna taaki latest upar aaye
+                const commentsArray = Object.values(data).reverse();
+                commentsArray.forEach(comment => {
+                    const div = document.createElement('div');
+                    div.className = 'public-comment';
+                    div.innerHTML = `
+                        <div class="pc-header">
+                            <span class="pc-name">${comment.name}</span>
+                            <span class="pc-date">${comment.timestamp}</span>
+                        </div>
+                        <div class="pc-text">${comment.text}</div>
+                    `;
+                    commentsList.appendChild(div);
+                });
+            } else {
+                commentsList.innerHTML = '<p style="text-align:center; opacity:0.5; font-style:italic; margin-top: 20px; font-family:\'Cormorant Garamond\', serif;">The room is silent. Be the first to speak.</p>';
+            }
+        });
+    }
+
+    // 🚀 SUBMIT NEW COMMENT TO FIREBASE
+    if(submitBtn && input) {
+        submitBtn.addEventListener('click', () => {
+            const feedbackText = input.value;
+            if(feedbackText.trim() !== '') {
+                const commentsRef = db.ref('mystic_ledger_comments');
+                
+                // Database mein comment push kar rahe hain
+                commentsRef.push({
+                    name: globalState.visitorName || "Wanderer",
+                    text: feedbackText.trim(),
+                    timestamp: formatDate(new Date())
+                }).then(() => {
+                    input.value = '';
+                    showToast("✨ Your whisper has been added to the library.");
+                }).catch((error) => {
+                    console.error("Firebase Error: ", error);
+                    showToast("🔴 Failed to add whisper. Check your connection.");
+                });
+            } else {
+                showToast("Please write something before sending.");
+            }
+        });
+    }
+}
 
 });
