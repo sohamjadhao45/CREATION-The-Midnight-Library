@@ -1089,5 +1089,28 @@ if (installBtn) {
 window.addEventListener('appinstalled', (evt) => {
     showToast("🎉 Creation App installed successfully on your device!");
 });
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        
+        // Browser ka install prompt dikhao
+        deferredPrompt.prompt();
+        
+        // Wanderer ka choice check karo
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to the install prompt: ${outcome}`);
+        
+        // Prompt ko clear karo
+        deferredPrompt = null;
+        
+        // Button ko wapas chhupa do
+        installBtn.style.display = 'none';
+    });
+}
 
+window.addEventListener('appinstalled', (evt) => {
+    showToast("🎉 Creation App installed successfully on your device!");
+});
+
+    
 });
