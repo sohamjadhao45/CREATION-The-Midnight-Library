@@ -8,6 +8,29 @@ Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
 ===================================================================== */
 // 1. Script load hote hi check karne ke liye (Cache Test)
 alert("🔄 System Check:\nSCRIPT.js HAVE SUCCESSFULLY NAVIGATED IN YOUR DEVICE , NOW YOU ARE FREE TO EXPLORE THE WONDER CREATIVITY \n' T H E - C R E A T I O N ! '");
+let deferredPrompt;
+const installBtn = document.getElementById('install-app-btn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Browser ke default prompt ko roko
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Agar button HTML mein hai, toh use show karo
+    if (installBtn) {
+        installBtn.style.display = 'inline-block';
+    }
+    console.log("🟢 PWA Install Prompt Ready!");
+});
+
+// SERVICE WORKER REGISTRATION
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker Registered!', reg))
+        .catch(err => console.error('Service Worker Reg Failed!', err));
+    });
+}
 
 // 2. Normal code crash pakadne ke liye
 window.onerror = function(message, source, lineno, colno, error) {
