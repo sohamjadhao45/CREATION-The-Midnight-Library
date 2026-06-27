@@ -113,6 +113,7 @@ init1111Wish();
 initZenMode();  
 initAudioSpeechEngine();   
 initMysticLedger();
+
 // Fetch dynamic database from poem.json  
 fetch('poem.json')  
     .then(response => {  
@@ -179,9 +180,9 @@ function initPassport() {
     }  
 }  
 
-/* =====================================================================  
-   🛡️ UNIVERSAL GOD-MODE ENGINE: BUILD SYSTEM  
-   ===================================================================== */  
+/* ======================================================  
+    Universal Build System
+   ====================================================== */  
 function buildLibrarySystem() {  
     const nav = document.getElementById("library-nav") || document.querySelector(".library-nav") || document.querySelector("nav");   
     let bookshelf = document.getElementById("dynamic-bookshelf") || document.querySelector(".dynamic-bookshelf") || document.querySelector(".bookshelf");   
@@ -189,9 +190,7 @@ function buildLibrarySystem() {
     const authorScripting = document.getElementById("author-scripting-status") || document.querySelector(".author-status");   
     let secretPage = document.getElementById("page-secret") || document.querySelector(".page-secret");  
 
-    // CRITICAL FIX: Agar HTML mein horizontal bookshelf nahi mili, toh khud generate karo  
     if (!bookshelf) {  
-        console.warn("Bookshelf container missing in HTML! Creating a universal fallback drawer...");  
         bookshelf = document.createElement("div");  
         bookshelf.id = "dynamic-bookshelf";  
         const entrancePage = document.getElementById("page1") || document.querySelector(".page");  
@@ -290,7 +289,7 @@ function buildLibrarySystem() {
     if (authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter III: THE COSMOS WITHIN`;  
 }  
 
-// Floating Midnight Thought Button Logic (Preserved)  
+// Floating Midnight Thought Button Logic
 const thoughtBtn = findSafeElement("reveal-thought-btn", "THOUGHT");  
 const thoughtDisplay = findSafeElement("midnight-thought-display");  
 if(thoughtBtn && thoughtDisplay) {  
@@ -547,9 +546,9 @@ function bindWaxSeals(page) {
     }  
 }  
 
-/* =====================================================================  
-   🛡️ UNIVERSAL GOD-MODE ENGINE: COSMIC NAVIGATION  
-   ===================================================================== */  
+/* ======================================================  
+   Cosmic Navigation
+   ====================================================== */  
 function initCosmicNavigation() {  
     document.addEventListener("click", (e) => {  
         let targetBtn = e.target.closest("[data-target]") || e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node") || e.target.closest("button");  
@@ -558,7 +557,6 @@ function initCosmicNavigation() {
         let targetPageId = targetBtn.getAttribute("data-target");  
         let btnText = targetBtn.textContent.toUpperCase();  
 
-        // HARDCODED TEXT FALLBACKS  
         if (!targetPageId) {  
             if (targetBtn.id === "btn-explore" || btnText.includes("EXPLORE") || btnText.includes("CHAPTER")) {  
                 targetPageId = "poem-page-1";  
@@ -932,15 +930,11 @@ function initAudioSpeechEngine() {
         if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); resetListenBtn(); }  
     };  
 }
-// =====================================================================
-// 🌐 LIVE FIREBASE MYSTIC LEDGER (GUESTBOOK)
-// =====================================================================
+
 // =====================================================================
 // 🌐 LIVE FIREBASE MYSTIC LEDGER (GUESTBOOK)
 // =====================================================================
 function initMysticLedger() {
-    
-    // TERA ASLI FIREBASE CONFIG 🔥
     const firebaseConfig = {
       apiKey: "AIzaSyDj32kF9AJ9d3ibw1uZLtXeSDIBUa9ctE4",
       authDomain: "creation-21s.firebaseapp.com",
@@ -951,7 +945,6 @@ function initMysticLedger() {
       appId: "1:378812101045:web:1480c5c267c5eae6cce9fc"
     };
 
-    // Firebase ek hi baar initialize hona chahiye
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
@@ -964,17 +957,15 @@ function initMysticLedger() {
     const input = findSafeElement('feedback-input');
     const commentsList = findSafeElement('public-comments-list');
 
-    // Date Format Helper
     function formatDate(date) {
         return date.toLocaleDateString("en-US", { month: 'short', day: 'numeric' }) + " | " + date.toLocaleTimeString("en-US", { hour: '2-digit', minute:'2-digit' });
     }
 
-    // Modal Open/Close Logic
     if(openBtn && modal) {
         openBtn.addEventListener('click', (e) => {
             e.preventDefault();
             modal.style.display = 'flex';
-            loadLiveComments(); // Jab bhi open karega, live comments load hongi
+            loadLiveComments();
         });
     }
 
@@ -985,7 +976,6 @@ function initMysticLedger() {
         });
     }
 
-    // 📡 FETCH LIVE COMMENTS FROM FIREBASE
     function loadLiveComments() {
         if(!commentsList) return;
         const commentsRef = db.ref('mystic_ledger_comments');
@@ -1014,7 +1004,6 @@ function initMysticLedger() {
         });
     }
 
-    // 🚀 SUBMIT NEW COMMENT TO FIREBASE
     if(submitBtn && input) {
         submitBtn.addEventListener('click', () => {
             const feedbackText = input.value;
@@ -1038,6 +1027,4 @@ function initMysticLedger() {
         });
     }
 }
-
-
 });
