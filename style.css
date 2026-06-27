@@ -9,7 +9,6 @@
 --parchment-shadow: inset 0 0 50px rgba(0,0,0,1), inset 0 0 15px rgba(20,20,20,0.8), var(--shadow-x, 0px) var(--shadow-y, 15px) 35px rgba(0,0,0,0.9);  
 --parchment-border: rgba(255, 255, 255, 0.08); --parchment-dropcap: #bfa46f;  
 --seal-overlay: rgba(15,15,15,0.95);
-
 }
 
 [data-theme="light"] {
@@ -21,9 +20,8 @@
 --seal-overlay: rgba(232, 220, 199, 0.95);
 }
 
-*{ margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { width: 100%; min-height: 100%; background-color: var(--bg-base); color: var(--text-primary); font-family: 'Urbanist', sans-serif; font-weight: 200; overflow-x: hidden; scroll-behavior: smooth; transition: background-color 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
-
 
 /* ✨ Touch Ripple Effect ✨ */
 .touch-ripple { position: fixed; width: 20px; height: 20px; background: radial-gradient(circle, var(--gold) 0%, transparent 70%); border-radius: 50%; transform: translate(-50%, -50%) scale(0); animation: rippleAnim 0.8s ease-out forwards; pointer-events: none; z-index: 999999; will-change: transform, opacity; }
@@ -55,6 +53,9 @@ body.reading-mode .content { z-index: 999; }
 .exit-focus-btn { position: fixed; top: 20px; right: 20px; z-index: 99999; background: rgba(0,0,0,0.7); color: var(--gold); border: 1px solid var(--gold); padding: 8px 16px; border-radius: 4px; font-family: 'Cinzel', serif; font-size: 12px; cursor: pointer; display: none; transition: all 0.3s ease; }
 .exit-focus-btn:hover { background: var(--gold); color: #000; }
 body.reading-mode .exit-focus-btn { display: block; }
+
+/* 🌟 UNIVERSAL MODAL SYSTEM BASE FIX */
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
 
 .drawer { position: fixed; bottom: -100%; left: 0; width: 100%; height: 50vh; background: var(--bg-base); z-index: 99999; border-top: 2px solid var(--gold); border-radius: 20px 20px 0 0; transition: bottom 0.5s cubic-bezier(0.25, 1, 0.5, 1); padding: 20px; box-shadow: 0 -10px 40px rgba(0,0,0,0.8); will-change: bottom; }
 .drawer.open { bottom: 0; }
@@ -88,31 +89,30 @@ body.reading-mode .exit-focus-btn { display: block; }
 .page.vortex-out { transform: scale(0.8) translateY(-20px); opacity: 0; transform-origin: center; }
 .page.vortex-in { transform: scale(1.1) translateY(20px); opacity: 0; transform-origin: center; }
 
-/* 🔴 FULLSCREEN VAULT CSS 🔴 */
+/* FULLSCREEN VAULT CSS */
 .fullscreen-vault.active { width: 100vw !important; max-width: 100vw !important; min-height: 100vh; padding: 40px 15px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(107, 140, 206, 0.05), transparent 70%); }
 .vault-parchment { width: min(900px, 95%) !important; margin: 0 auto !important; }
 
-/* 🔴 WAX SEAL INTERACTIVE (Click to Break) 🔴 */
+/* WAX SEAL INTERACTIVE */
 .wax-seal-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--seal-overlay); z-index: 50; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease, visibility 0.8s; border-radius: inherit; }
 .wax-seal { width: 70px; height: 70px; background: #8b0000; background-image: radial-gradient(circle at 30% 30%, #a52a2a, #500000); border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.6), inset 0 0 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.6s; }
 .seal-ring { width: 54px; height: 54px; border: 2px solid rgba(255,255,255,0.15); border-radius: 50%; position: absolute; pointer-events: none;}
 .seal-letter { font-family: 'Cinzel', serif; font-size: 30px; color: rgba(255,255,255,0.8); text-shadow: 1px 1px 2px #000; pointer-events: none;}
 
-/* Dramatic explosion effect on click */
 .wax-seal-wrapper.broken .wax-seal { transform: scale(2.5) rotate(20deg) !important; opacity: 0; filter: drop-shadow(0 0 30px #8b0000); transition: all 0.5s ease-out; }
 .wax-seal-wrapper.broken { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.8s ease 0.4s, visibility 0.8s 0.4s; }
 
-/* 🖋️ Signature (Typewriter Effect Update) */
+/* Signature */
 .sign-animate { display: inline-block; overflow: hidden; white-space: nowrap; border-right: 2px solid var(--gold); width: 0; opacity: 0; }
 .sign-animate.active-sign { animation: signWrite 2.5s steps(40, end) forwards; opacity: 1; }
 .sign-animate.show-instantly { width: 100% !important; border-color: transparent !important; animation: none !important; opacity: 1 !important; }
 @keyframes signWrite { 0% { width: 0; opacity: 1; } 99% { border-color: var(--gold); } 100% { width: 100%; border-color: transparent; opacity: 1; } }
 
-/* 🪶 Feather Caret */
+/* Feather Caret */
 .typewriter-poem.is-typing::after { content: ' 🪶'; display: inline-block; animation: quillDip 0.6s infinite alternate ease-in-out; filter: drop-shadow(0 0 5px var(--gold)); font-size: 1.2em; margin-left: 2px; }
 @keyframes quillDip { 0% { transform: translateY(0px) rotate(0deg); } 100% { transform: translateY(4px) rotate(-15deg); } }
 
-/* 🌕 Moon Glow */
+/* Moon Glow */
 .heading-wrapper { position: relative; display: inline-block; margin-bottom: 10px; }
 .page1-heading { font-family: 'Cinzel', serif; color: var(--gold); letter-spacing: 8px; font-size: clamp(2.2rem, 5vw, 4.8rem); line-height: 1.15; position: relative; z-index: 2; transition: all 0.5s; }
 .moon-glow { animation: lunarBreathe 4s infinite alternate ease-in-out; }
@@ -132,7 +132,7 @@ body.reading-mode .exit-focus-btn { display: block; }
 .journal-submit { background: transparent; border: none; cursor: pointer; font-size: 18px; opacity: 0.6; transition: opacity 0.3s; pointer-events: auto; }
 .journal-submit:hover { opacity: 1; }
 
-/* ✨ PHATA GHISA PITA ANTIQUE PARCHMENT ✨ */
+/* ANTIQUE PARCHMENT */
 .antique-parchment {
 width: min(750px, 95%); margin: 30px 0; padding: 60px 45px !important;
 background-color: var(--parchment-bg) !important;
@@ -181,6 +181,8 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
 
 .bookshelf-container { width: min(650px, 100%); margin: 40px auto; }
 .bookshelf-row { display: flex; justify-content: center; align-items: flex-end; gap: 15px; padding: 0 10px; }
+
+/* 木-SPINE MODIFIED FIXES */
 .book-spine { width: 60px; height: 240px; background: linear-gradient(90deg, #421212, #6b2323, #300d0d); border-radius: 5px 5px 0 0; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: transform 0.4s ease; box-shadow: 5px 0 15px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; flex-direction: column; will-change: transform;}
 .spine-gold { background: linear-gradient(90deg, #59431e, #8c6b32, #403014); height: 260px; }
 .spine-locked { background: linear-gradient(90deg, #232526, #414345, #161718); cursor: not-allowed; opacity: 0.5; }
@@ -217,94 +219,23 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
 .library-nav { bottom: 60px; max-width: 90vw; }
 .poem-interactions { flex-direction: column; align-items: center; }
 }
-/* Jab Zen mode active hoga toh button halka sa glow karega */
 
-/* ======================================================
-✨ ZEN MODE BUTTON GLOW EFFECTS
-====================================================== /
-/ ======================================================
-✨ ZEN MODE BUTTON GLOW EFFECTS
-====================================================== */
-#zen-mode-toggle {
-transition: all 0.4s ease;
-}
+/* ✨ ZEN MODE BUTTON GLOW EFFECTS */
+#zen-mode-toggle { transition: all 0.4s ease; }
+#zen-mode-toggle[style*="background-color"] { box-shadow: 0 0 15px rgba(191, 164, 111, 0.6); text-shadow: 0 0 5px rgba(0, 0, 0, 0.3); }
 
-/* Jab Zen Mode active hoga aur background gold hoga, tab halka sa glow background mein dikhega /
-#zen-mode-toggle[style="background-color"] {
-box-shadow: 0 0 15px rgba(191, 164, 111, 0.6);
-text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-}
 /* Bookshelf Container styling */
-#dynamic-bookshelf {
-display: flex;
-gap: 15px;
-justify-content: center;
-align-items: flex-end;
-min-height: 200px;
-padding: 20px;
-}
-
-/* Individual vertical book spine styling /
-.book-spine {
-width: 45px;
-height: 180px;
-background: linear-gradient(90deg, #4a1525, #2b0b14); / Dynamic dynamic color deep red/gothic /
-border: 1px solid var(--gold);
-border-radius: 3px 3px 0 0;
-cursor: pointer;
-writing-mode: vertical-rl; / Turns text vertical */
-text-orient: mixed;
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 15px 5px;
-color: #f1ebd9;
-font-family: 'Cinzel', serif;
-font-size: 13px;
-letter-spacing: 1px;
-transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
-box-shadow: 3px 0 5px rgba(0,0,0,0.5);
-}
-
-.book-spine:hover {
-transform: translateY(-15px) scale(1.05);
-box-shadow: 10px 10px 20px rgba(0,0,0,0.7);
-}
+#dynamic-bookshelf { display: flex; gap: 15px; justify-content: center; align-items: flex-end; min-height: 200px; padding: 20px; }
 
 /* Whisper Words Interactivity */
-.whisper-word {
-border-bottom: 1px dotted var(--gold);
-color: #a48b56;
-cursor: pointer;
-transition: all 0.3s ease;
-}
-.whisper-word:hover {
-background: rgba(191,164,111,0.15);
-}
-.whisper-word.revealed {
-color: #6b8cce;
-font-style: italic;
-font-weight: bold;
-border-bottom: none;
-}
+.whisper-word { border-bottom: 1px dotted var(--gold); color: #a48b56; cursor: pointer; transition: all 0.3s ease; }
+.whisper-word:hover { background: rgba(191,164,111,0.15); }
+.whisper-word.revealed { color: #6b8cce; font-style: italic; font-weight: bold; border-bottom: none; }
 
 /* Global Reader Overlay */
-.reader-overlay {
-display: none;
-position: fixed;
-top: 0; left: 0; width: 100%; height: 100%;
-z-index: 10000;
-background: rgba(0,0,0,0.85);
-backdrop-filter: blur(8px);
-align-items: center;
-justify-content: center;
-}
-.close-reader-btn {
-position: absolute;
-top: 15px; right: 20px;
-background: none; border: none; color: var(--gold);
-font-family: 'Cinzel'; cursor: pointer;
-}
+.reader-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+.close-reader-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--gold); font-family: 'Cinzel'; cursor: pointer; }
+
 /* ======================================================
    ✨ THE GUESTBOOK (MIDNIGHT LIBRARY EXCLUSIVE)
    ====================================================== */
@@ -325,7 +256,6 @@ font-family: 'Cinzel'; cursor: pointer;
     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Hover karne par comment halke se aage aayega aur glow karega */
 .public-comment:hover {
     background: linear-gradient(135deg, rgba(20, 20, 25, 0.9), rgba(10, 10, 15, 1));
     box-shadow: 0 8px 25px var(--gold-glow);
@@ -333,38 +263,7 @@ font-family: 'Cinzel'; cursor: pointer;
     border-left: 3px solid var(--gold);
 }
 
-.pc-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 8px;
-    border-bottom: 1px solid rgba(191,164,111,0.1);
-    padding-bottom: 6px;
-}
-
-/* Naam ekdum royal Cinzel font mein */
-.pc-name {
-    font-family: 'Cinzel', serif;
-    font-size: 14px;
-    color: var(--gold);
-    letter-spacing: 1.5px;
-    text-shadow: 0 0 5px rgba(191,164,111,0.2);
-}
-
-/* Date choti aur mystic dikhegi */
-.pc-date {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 12px;
-    color: var(--text-muted);
-}
-
-/* Actual comment ka text */
-.pc-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 15.5px;
-    color: var(--parchment-text);
-    line-height: 1.6;
-    word-wrap: break-word;
-    opacity: 0.9;
-}
+.pc-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; border-bottom: 1px solid rgba(191,164,111,0.1); padding-bottom: 6px; }
+.pc-name { font-family: 'Cinzel', serif; font-size: 14px; color: var(--gold); letter-spacing: 1.5px; text-shadow: 0 0 5px rgba(191,164,111,0.2); }
+.pc-date { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 12px; color: var(--text-muted); }
+.pc-text { font-family: 'Playfair Display', serif; font-size: 15.5px; color: var(--parchment-text); line-height: 1.6; word-wrap: break-word; opacity: 0.9; }
