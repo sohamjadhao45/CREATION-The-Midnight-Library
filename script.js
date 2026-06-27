@@ -112,7 +112,7 @@ initTimeCapsule();
 init1111Wish();  
 initZenMode();  
 initAudioSpeechEngine();   
-
+initMysticLedger();
 // Fetch dynamic database from poem.json  
 fetch('poem.json')  
     .then(response => {  
