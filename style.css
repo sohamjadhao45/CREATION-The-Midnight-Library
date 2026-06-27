@@ -21,7 +21,7 @@
 --seal-overlay: rgba(232, 220, 199, 0.95);
 }
 
-{ margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+*{ margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { width: 100%; min-height: 100%; background-color: var(--bg-base); color: var(--text-primary); font-family: 'Urbanist', sans-serif; font-weight: 200; overflow-x: hidden; scroll-behavior: smooth; transition: background-color 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
 
 
