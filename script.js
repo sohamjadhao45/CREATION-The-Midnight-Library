@@ -1027,4 +1027,44 @@ function initMysticLedger() {
         });
     }
 }
+/* ======================================================  
+   📥 AUTOMATIC PWA APP INSTALLATION ENGINE
+   ====================================================== */  
+let deferredPrompt;
+const installBtn = document.getElementById('install-app-btn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Browser ke default prompt ko roko
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Agar button HTML mein hai, toh use show karo
+    if (installBtn) {
+        installBtn.style.display = 'inline-block';
+    }
+});
+
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        
+        // Browser ka install prompt dikhao
+        deferredPrompt.prompt();
+        
+        // Wanderer ka choice check karo
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to the install prompt: ${outcome}`);
+        
+        // Prompt ko clear karo, ye ek hi baar use hota hai
+        deferredPrompt = null;
+        
+        // Button ko wapas chhupa do
+        installBtn.style.display = 'none';
+    });
+}
+
+window.addEventListener('appinstalled', (evt) => {
+    showToast("🎉 Creation App installed successfully on your device!");
+});
+
 });
