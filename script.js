@@ -7,7 +7,7 @@ Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
 💥 EMERGENY MOBILE DEBUGGER (Sabse Upar Paste Karein)
 ===================================================================== */
 // 1. Script load hote hi check karne ke liye (Cache Test)
-alert("🔄 System Check: /nscript.js HAVE SUCCESSFULLY NAVIGATED IN YOUR DEVICE , NOW YOU ARE FREE TO EXPLORE THE WONDER CREATIVITY "THE CREATION!"");
+alert("🔄 System Check: /nscript.js HAVE SUCCESSFULLY NAVIGATED IN YOUR DEVICE , NOW YOU ARE FREE TO EXPLORE THE WONDER CREATIVITY 'THE CREATION !'");
 
 // 2. Normal code crash pakadne ke liye
 window.onerror = function(message, source, lineno, colno, error) {
