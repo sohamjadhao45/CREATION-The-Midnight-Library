@@ -935,16 +935,20 @@ function initAudioSpeechEngine() {
 // =====================================================================
 // 🌐 LIVE FIREBASE MYSTIC LEDGER (GUESTBOOK)
 // =====================================================================
+// =====================================================================
+// 🌐 LIVE FIREBASE MYSTIC LEDGER (GUESTBOOK)
+// =====================================================================
 function initMysticLedger() {
-    // 🔴 IMPORTANT: Yahan apna Firebase Config Paste Karna!
+    
+    // TERA ASLI FIREBASE CONFIG 🔥
     const firebaseConfig = {
-        apiKey: "TERA_API_KEY",
-        authDomain: "TERA_PROJECT.firebaseapp.com",
-        databaseURL: "https://TERA_PROJECT-default-rtdb.firebaseio.com",
-        projectId: "TERA_PROJECT",
-        storageBucket: "TERA_PROJECT.appspot.com",
-        messagingSenderId: "SENDER_ID",
-        appId: "APP_ID"
+      apiKey: "AIzaSyDj32kF9AJ9d3ibw1uZLtXeSDIBUa9ctE4",
+      authDomain: "creation-21s.firebaseapp.com",
+      databaseURL: "https://creation-21s-default-rtdb.firebaseio.com",
+      projectId: "creation-21s",
+      storageBucket: "creation-21s.firebasestorage.app",
+      messagingSenderId: "378812101045",
+      appId: "1:378812101045:web:1480c5c267c5eae6cce9fc"
     };
 
     // Firebase ek hi baar initialize hona chahiye
@@ -953,7 +957,6 @@ function initMysticLedger() {
     }
     const db = firebase.database();
 
-    // Use your engine's safe element finder
     const openBtn = findSafeElement('open-feedback-btn');
     const closeBtn = findSafeElement('close-feedback-btn');
     const submitBtn = findSafeElement('submit-feedback-btn');
@@ -987,13 +990,11 @@ function initMysticLedger() {
         if(!commentsList) return;
         const commentsRef = db.ref('mystic_ledger_comments');
         
-        // .on() matlab real-time sync (bina refresh ke nayi comments aayengi)
         commentsRef.on('value', (snapshot) => {
             commentsList.innerHTML = ''; 
             const data = snapshot.val();
             
             if (data) {
-                // Object ko array mein badal kar ulta karna taaki latest upar aaye
                 const commentsArray = Object.values(data).reverse();
                 commentsArray.forEach(comment => {
                     const div = document.createElement('div');
@@ -1020,7 +1021,6 @@ function initMysticLedger() {
             if(feedbackText.trim() !== '') {
                 const commentsRef = db.ref('mystic_ledger_comments');
                 
-                // Database mein comment push kar rahe hain
                 commentsRef.push({
                     name: globalState.visitorName || "Wanderer",
                     text: feedbackText.trim(),
@@ -1030,7 +1030,7 @@ function initMysticLedger() {
                     showToast("✨ Your whisper has been added to the library.");
                 }).catch((error) => {
                     console.error("Firebase Error: ", error);
-                    showToast("🔴 Failed to add whisper. Check your connection.");
+                    showToast("🔴 Failed to add whisper.");
                 });
             } else {
                 showToast("Please write something before sending.");
@@ -1038,5 +1038,6 @@ function initMysticLedger() {
         });
     }
 }
+
 
 });
