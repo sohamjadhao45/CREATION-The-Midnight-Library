@@ -641,18 +641,15 @@ function initCosmicNavigation() {
                 currentActivePage.classList.remove("active");  
                 currentActivePage.style.display = "none";   
                 currentActivePage.classList.add("vortex-out");  
-                 currentActivePage.style.position = "";
-        currentActivePage.style.top = "";
-        currentActivePage.style.left = "";
-        currentActivePage.style.width = "";
-        currentActivePage.style.height = "";
+               
  
                 setTimeout(() => {  
                     currentActivePage.classList.remove("vortex-out");   
                     destinationPage.style.display = "block";   
                     destinationPage.classList.add("vortex-in");   
                     destinationPage.classList.add("active");  
-                    window.scrollTo(0, 0);
+                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); 
+               
                     ,
         } catch(e) {  
             if(currentActivePage) currentActivePage.style.display = "none";  
