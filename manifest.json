@@ -1,1 +1,19 @@
 
+{
+  "name": "CREATION — The Midnight Library",
+  "short_name": "Creation",
+  "description": "The Midnight Library — A digital sanctuary for wandering souls.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050507",
+  "theme_color": "#bfa46f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
