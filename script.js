@@ -649,18 +649,7 @@ function initCosmicNavigation() {
                     destinationPage.classList.add("active");  
                     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
                       
-                    setTimeout(() => {  
-                        destinationPage.classList.remove("vortex-in");   
-                        globalState.vortexActive = false;   
-                        document.body.style.overflowY = 'auto';   
-                        if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);  
-                    }, 50);   
-                }, 400);   
-            } else {  
-                destinationPage.style.display = "block";  
-                destinationPage.classList.add("active");  
-                if(typeof initTypewriterEngine === "function") initTypewriterEngine();  
-            }  
+                    ,
         } catch(e) {  
             if(currentActivePage) currentActivePage.style.display = "none";  
             destinationPage.style.display = "block";  
