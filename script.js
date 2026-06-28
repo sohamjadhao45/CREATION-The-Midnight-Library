@@ -635,22 +635,32 @@ function initCosmicNavigation() {
             globalState.notesVisitCount++;   
             if(typeof checkUltimateVault === "function") checkUltimateVault();  
         }  
-          
-        try {  
+
+   try {  
             if (currentActivePage) {  
                 currentActivePage.classList.remove("active");  
                 currentActivePage.style.display = "none";   
                 currentActivePage.classList.add("vortex-out");  
-               
- 
+                  
                 setTimeout(() => {  
                     currentActivePage.classList.remove("vortex-out");   
                     destinationPage.style.display = "block";   
                     destinationPage.classList.add("vortex-in");   
                     destinationPage.classList.add("active");  
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); 
-               
-                    ,
+                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
+                      
+                    setTimeout(() => {  
+                        destinationPage.classList.remove("vortex-in");   
+                        globalState.vortexActive = false;   
+                        document.body.style.overflowY = 'auto';   
+                        if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);  
+                    }, 50);   
+                }, 400);   
+            } else {  
+                destinationPage.style.display = "block";  
+                destinationPage.classList.add("active");  
+                if(typeof initTypewriterEngine === "function") initTypewriterEngine();  
+            }  
         } catch(e) {  
             if(currentActivePage) currentActivePage.style.display = "none";  
             destinationPage.style.display = "block";  
@@ -664,7 +674,7 @@ function initCosmicNavigation() {
             lnk.classList.toggle("active-nav", target === targetPageId);   
         });  
     }  
-}  
+}           
 
 function applyWhispers(el, poemIndex) {  
     const pData = POEM_DATABASE[poemIndex];  
