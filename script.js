@@ -641,7 +641,12 @@ function initCosmicNavigation() {
                 currentActivePage.classList.remove("active");  
                 currentActivePage.style.display = "none";   
                 currentActivePage.classList.add("vortex-out");  
-                  
+                 currentActivePage.style.position = "";
+        currentActivePage.style.top = "";
+        currentActivePage.style.left = "";
+        currentActivePage.style.width = "";
+        currentActivePage.style.height = "";
+ 
                 setTimeout(() => {  
                     currentActivePage.classList.remove("vortex-out");   
                     destinationPage.style.display = "block";   
