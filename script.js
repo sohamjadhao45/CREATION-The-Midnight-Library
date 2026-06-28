@@ -3,20 +3,18 @@ THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFINITIVE EDITION)
 Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
 ===================================================================== */
 
-/* =====================================================================
-💥 EMERGENY MOBILE DEBUGGER (Sabse Upar Paste Karein)
-===================================================================== */
-// 1. Script load hote hi check karne ke liye (Cache Test)
-alert("🔄 System Check:\nSCRIPT.js HAVE SUCCESSFULLY NAVIGATED IN YOUR DEVICE , NOW YOU ARE FREE TO EXPLORE THE WONDER CREATIVITY \n' T H E - C R E A T I O N ! '");
+/* ======================================================  
+   📥 AUTOMATIC PWA APP INSTALLATION ENGINE (GLOBAL SCOPE)
+   ====================================================== */  
 let deferredPrompt;
-const installBtn = document.getElementById('install-app-btn');
 
 window.addEventListener('beforeinstallprompt', (e) => {
     // Browser ke default prompt ko roko
     e.preventDefault();
     deferredPrompt = e;
     
-    // Agar button HTML mein hai, toh use show karo
+    // Dynamically look for the button when the event fires
+    const installBtn = document.getElementById('install-app-btn');
     if (installBtn) {
         installBtn.style.display = 'inline-block';
     }
@@ -31,6 +29,12 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.error('Service Worker Reg Failed!', err));
     });
 }
+
+/* =====================================================================
+💥 EMERGENY MOBILE DEBUGGER (Sabse Upar Paste Karein)
+===================================================================== */
+// 1. Script load hote hi check karne ke liye (Cache Test)
+alert("🔄 System Check:\nSCRIPT.js HAVE SUCCESSFULLY NAVIGATED IN YOUR DEVICE , NOW YOU ARE FREE TO EXPLORE THE WONDER CREATIVITY \n' T H E - C R E A T I O N ! '");
 
 // 2. Normal code crash pakadne ke liye
 window.onerror = function(message, source, lineno, colno, error) {
@@ -954,9 +958,6 @@ function initAudioSpeechEngine() {
     };  
 }
 
-// =====================================================================
-// 🌐 LIVE FIREBASE MYSTIC LEDGER (GUESTBOOK)
-// =====================================================================
 function initMysticLedger() {
     const firebaseConfig = {
       apiKey: "AIzaSyDj32kF9AJ9d3ibw1uZLtXeSDIBUa9ctE4",
@@ -1050,45 +1051,11 @@ function initMysticLedger() {
         });
     }
 }
+
 /* ======================================================  
-   📥 AUTOMATIC PWA APP INSTALLATION ENGINE
+   📥 CLICK HANDLER FOR PWA BUTTON
    ====================================================== */  
-let deferredPrompt;
 const installBtn = document.getElementById('install-app-btn');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Browser ke default prompt ko roko
-    e.preventDefault();
-    deferredPrompt = e;
-    
-    // Agar button HTML mein hai, toh use show karo
-    if (installBtn) {
-        installBtn.style.display = 'inline-block';
-    }
-});
-
-if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-        if (!deferredPrompt) return;
-        
-        // Browser ka install prompt dikhao
-        deferredPrompt.prompt();
-        
-        // Wanderer ka choice check karo
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`User response to the install prompt: ${outcome}`);
-        
-        // Prompt ko clear karo, ye ek hi baar use hota hai
-        deferredPrompt = null;
-        
-        // Button ko wapas chhupa do
-        installBtn.style.display = 'none';
-    });
-}
-
-window.addEventListener('appinstalled', (evt) => {
-    showToast("🎉 Creation App installed successfully on your device!");
-});
 if (installBtn) {
     installBtn.addEventListener('click', async () => {
         if (!deferredPrompt) return;
@@ -1112,5 +1079,4 @@ window.addEventListener('appinstalled', (evt) => {
     showToast("🎉 Creation App installed successfully on your device!");
 });
 
-    
 });
