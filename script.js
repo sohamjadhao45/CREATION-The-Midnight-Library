@@ -876,7 +876,7 @@ function initZenMode() {
     function startZen() {  
         globalState.zenActive = true;  
         zenBtn.innerHTML = "🛑 Stop Zen";  
-        showToast("🧘 Zen Mode Active...");  
+        showToast("🧘 Zen Mode Actived...");  
         zenScrollId = requestAnimationFrame(smoothScroll);  
     }  
 
@@ -1053,6 +1053,32 @@ if (installBtn) {
 
 window.addEventListener('appinstalled', (evt) => {
     showToast("🎉 Creation App installed successfully on your device!");
+});
+// 🗝️ DIRECT FIX FOR LEAVE THE VAULT BUTTON
+document.addEventListener("click", (e) => {
+    if (e.target && e.target.textContent.trim() === "Leave the Vault") {
+        e.preventDefault();
+        
+        const vaultPage = document.getElementById("page-secret");
+        const entrancePage = document.getElementById("page1");
+        
+        if (vaultPage && entrancePage) {
+            // Immediate Force Exit without waiting
+            vaultPage.classList.remove("active");
+            vaultPage.style.display = "none";
+            
+            entrancePage.style.display = "block";
+            entrancePage.classList.add("active");
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            
+            // Nav links ko update karo
+            document.querySelectorAll(".nav-link").forEach(lnk => {   
+                lnk.classList.toggle("active-nav", lnk.getAttribute("data-target") === "page1");   
+            });
+            
+            showToast("🏛️ Returned to Main Entrance");
+        }
+    }
 });
 
 });
