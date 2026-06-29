@@ -220,36 +220,38 @@ function buildLibrarySystem() {
         const cleanTitle = poem.title.replace('<br>', ' ');   
         const safeText = poem.text.replace(/\n/g, '\\n');  
 
-        const sectionHtml = `  
-        <section id="${pageId}" class="page direct-js-built" data-poem-index="${i}" style="display:none;">  
-          <div class="top-deco">✧ ─ ❦ ─ ✧</div>  
-          
-          <div class="chapter-label-top" style="font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold); letter-spacing: 4px; margin-bottom: 5px;">${poem.chapterLabel}</div>
-          
-          <div class="heading-wrapper"><h2 class="page1-heading moon-glow" style="margin-top: 0;">${poem.title}</h2></div>  
-          
-          <p class="poem-subtitle">${poem.subtitle}</p>  
-          <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">  
-            <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>  
-            <span class="read-time">⏱️ 1 Min Read</span>  
-            <button class="bookmark-btn btn-utility" data-poem="${poem.spineLabel}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>  
-          </div>  
-          <div class="poetry-box antique-parchment dynamic-shadow" id="card-${pageId}">  
-            <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>  
-            <p class="royal-poem-text typewriter-poem" data-lines="${safeText}"></p><br>  
-            <p class="poem-date">${poem.dateText}</p>  
-            <span class="poem-greatvibes sign-animate">${poem.signature}</span>  
-            <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">  
-                <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>  
-                <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>  
-            </div>  
-          </div>  
-          <div class="button-row" style="margin-top: 15px;">  
-            <button class="btn-utility download-poem-btn" data-target="card-${pageId}" data-poem-index="${i}">📸 Save As A Memory</button>  
-            <button class="btn-utility share-poem-btn" data-poem-title="${cleanTitle}">🔗 Share Verse</button>  
-          </div>  
-          <div class="button-row mt-20"><button class="btn-outline trigger-nav" data-target="${prevPageId}">❮ Previous</button><button class="btn-solid trigger-nav" data-target="${nextPageId}">Next ❯</button></div>  
-        </section>`;  
+        // 📑 buildLibrarySystem ke andar is block ko replace karein taaki heading sahi ho jaye:
+const sectionHtml = `  
+<section id="${pageId}" class="page direct-js-built" data-poem-index="${i}" style="display:none;">  
+  <div class="top-deco">✧ ─ ❦ ─ ✧</div>  
+  
+  <div class="chapter-label-top" style="font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold); letter-spacing: 4px; margin-bottom: 5px;">${poem.chapterLabel}</div>
+  
+  <div class="heading-wrapper"><h2 class="page1-heading moon-glow" style="margin-top: 0;">${poem.title}</h2></div>  
+  
+  <p class="poem-subtitle">${poem.subtitle}</p>  
+  <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">  
+    <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>  
+    <span class="read-time">⏱️ 1 Min Read</span>  
+    <button class="bookmark-btn btn-utility" data-poem="${poem.spineLabel}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>  
+  </div>  
+  <div class="poetry-box antique-parchment dynamic-shadow" id="card-${pageId}">  
+    <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>  
+    <p class="royal-poem-text typewriter-poem" data-lines="${safeText}"></p><br>  
+    <p class="poem-date">${poem.dateText}</p>  
+    <span class="poem-greatvibes sign-animate">${poem.signature}</span>  
+    <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">  
+        <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>  
+        <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>  
+    </div>  
+  </div>  
+  <div class="button-row" style="margin-top: 15px;">  
+    <button class="btn-utility download-poem-btn" data-target="card-${pageId}" data-poem-index="${i}">📸 Save As A Memory</button>  
+    <button class="btn-utility share-poem-btn" data-poem-title="${cleanTitle}">🔗 Share Verse</button>  
+  </div>  
+  <div class="button-row mt-20"><button class="btn-outline trigger-nav" data-target="${prevPageId}">❮ Previous</button><button class="btn-solid trigger-nav" data-target="${nextPageId}">Next ❯</button></div>  
+</section>`;
+
           
         if (secretPage) {  
             secretPage.insertAdjacentHTML('beforebegin', sectionHtml);  
@@ -610,6 +612,7 @@ function initCosmicNavigation() {
             if(typeof checkUltimateVault === "function") checkUltimateVault();  
         }  
 
+        // 🎬 SCREEN OVERLAY ENVELOPE ANIMATION CONTROL
         const crushCurtain = document.getElementById("paper-crush-curtain");
         const turnSound = document.getElementById("page-turn-sound");
 
@@ -621,6 +624,7 @@ function initCosmicNavigation() {
             crushCurtain.classList.add("active", "run-curtain-crush");
         }
 
+                // ⏳ CENTER POINT SWAP (730ms)
         setTimeout(() => {
             try {  
                 if (currentActivePage) {  
@@ -628,6 +632,7 @@ function initCosmicNavigation() {
                     currentActivePage.style.display = "none";   
                 }
                 
+                // EXTRA SAFETY CHECK: Agar hum Vault chhod rahe hain, toh uski style display saaf karo
                 const vaultPage = document.getElementById("page-secret");
                 if (vaultPage && targetPageId !== "page-secret") {
                     vaultPage.classList.remove("active");
@@ -643,25 +648,26 @@ function initCosmicNavigation() {
                 destinationPage.style.display = "block";  
                 destinationPage.classList.add("active");  
             }  
-        }, 1200);
+        }, 730);
 
+
+        // 🧹 LAYER REMOVAL CLEAN-UP (1480ms)
         setTimeout(() => {
             if (crushCurtain) {
-                crushCurtain.classList.remove("active");
-                crushCurtain.classList.remove("run-curtain-crush");
+                crushCurtain.classList.remove("active", "run-curtain-crush");
             }
             globalState.vortexActive = false;   
             document.body.style.overflowY = 'auto';   
             if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);
-        }, 2420);
+        }, 1480);
 
         document.querySelectorAll(".nav-link").forEach(lnk => {   
             let target = lnk.getAttribute("data-target");  
             lnk.classList.toggle("active-nav", target === targetPageId);   
         });  
-    }
+    }  
 }
-                
+
 function applyWhispers(el, poemIndex) {  
     const pData = POEM_DATABASE[poemIndex];  
     if(!pData || !pData.whispers || el.dataset.whispersApplied === "true") return;  
@@ -875,7 +881,7 @@ function initZenMode() {
     function startZen() {  
         globalState.zenActive = true;  
         zenBtn.innerHTML = "🛑 Stop Zen";  
-        showToast("🧘 Zen Mode Active...");  
+        showToast("🧘 Zen Mode Actived...");  
         zenScrollId = requestAnimationFrame(smoothScroll);  
     }  
 
@@ -1053,7 +1059,6 @@ if (installBtn) {
 window.addEventListener('appinstalled', (evt) => {
     showToast("🎉 Creation App installed successfully on your device!");
 });
-
 // 🗝️ DIRECT FIX FOR LEAVE THE VAULT BUTTON
 document.addEventListener("click", (e) => {
     if (e.target && e.target.textContent.trim() === "Leave the Vault") {
@@ -1063,6 +1068,7 @@ document.addEventListener("click", (e) => {
         const entrancePage = document.getElementById("page1");
         
         if (vaultPage && entrancePage) {
+            // Immediate Force Exit without waiting
             vaultPage.classList.remove("active");
             vaultPage.style.display = "none";
             
@@ -1070,27 +1076,12 @@ document.addEventListener("click", (e) => {
             entrancePage.classList.add("active");
             window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
             
+            // Nav links ko update karo
             document.querySelectorAll(".nav-link").forEach(lnk => {   
                 lnk.classList.toggle("active-nav", lnk.getAttribute("data-target") === "page1");   
             });
             
             showToast("🏛️ Returned to Main Entrance");
-        }
-    }
-});
-
-// 🚪 DIRECT FIX FOR OPEN THE GATES BUTTON (With Smooth 3D Crumple Animation)
-document.addEventListener("click", (e) => {
-    if (e.target && e.target.textContent.trim() === "OPEN THE GATES") {
-        e.preventDefault();
-        
-        // Tumhara entry button click hone par seedhe cinematic animation loop trigger hoga
-        const enterLibraryBtn = document.getElementById("enter-library-btn");
-        const visitorInput = document.getElementById("visitor-name");
-        
-        if (enterLibraryBtn) {
-            // Safe execution taaki sound aur states properly trigger ho jayein
-            executePageFlip("poem-page-1");
         }
     }
 });
