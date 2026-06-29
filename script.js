@@ -9,11 +9,9 @@ Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
-    // Browser ke default prompt ko roko
     e.preventDefault();
     deferredPrompt = e;
     
-    // Dynamically look for the button when the event fires
     const installBtn = document.getElementById('install-app-btn');
     if (installBtn) {
         installBtn.style.display = 'inline-block';
@@ -21,7 +19,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
     console.log("🟢 PWA Install Prompt Ready!");
 });
 
-// SERVICE WORKER REGISTRATION
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
@@ -29,23 +26,6 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.error('Service Worker Reg Failed!', err));
     });
 }
-
-/* =====================================================================
-💥 EMERGENY MOBILE DEBUGGER (Sabse Upar Paste Karein)
-===================================================================== */
-// 1. Script load hote hi check karne ke liye (Cache Test)
-alert("🔄 System Check:\nSCRIPT.js HAVE SUCCESSFULLY NAVIGATED IN YOUR DEVICE , NOW YOU ARE FREE TO EXPLORE THE WONDER CREATIVITY \n' T H E - C R E A T I O N ! '");
-
-// 2. Normal code crash pakadne ke liye
-window.onerror = function(message, source, lineno, colno, error) {
-alert("🔴 CRITICAL CODE ERROR!\n\nMessage: " + message + "\nLine: " + lineno);
-return false;
-};
-
-// 3. Network/Fetch/Promises fail pakadne ke liye
-window.onunhandledrejection = function(event) {
-alert("🔴 NETWORK/FETCH ERROR!\n\nReason: " + event.reason);
-};
 
 document.addEventListener("DOMContentLoaded", () => {
 "use strict";
@@ -117,7 +97,6 @@ const notesCombos = [
 ];  
 const starCoords = [{top: 50, left: 20}, {top: 20, left: 50}, {top: 60, left: 80}, {top: 80, left: 40}, {top: 30, left: 85}, {top: 75, left: 15}];  
 
-// Protected Audio Elements  
 const audioPageTurn = findSafeElement("audio-page-turn");  
 const audioRain = findSafeElement("audio-rain");  
 const audioAmbient = findSafeElement("audio-ambient");  
@@ -139,9 +118,8 @@ initTimeCapsule();
 init1111Wish();  
 initZenMode();  
 initAudioSpeechEngine();   
-initMysticLedger();
+initMysticLedger();  
 
-// Fetch dynamic database from poem.json  
 fetch('poem.json')  
     .then(response => {  
         if (!response.ok) throw new Error("Poem database load nahi ho paya");  
@@ -154,7 +132,6 @@ fetch('poem.json')
         initLibraryFeatures();   
     })  
     .catch(error => {  
-        alert("🔴 JSON LOAD ERROR: " + error.message + "\nYaani poem.json file nahi mil rahi!");  
         console.error("Critical Error inside Library Fetch: ", error);  
     });  
 
@@ -180,7 +157,6 @@ function initPassport() {
             let name = input ? input.value.trim() : "";  
             if(!name) name = "Wanderer";  
               
-            // Secret logic matching your exact word condition  
             if(name.toLowerCase() === "silence") {  
                 globalState.hasTypedWord = true;  
                 checkUltimateVault();  
@@ -207,9 +183,6 @@ function initPassport() {
     }  
 }  
 
-/* ======================================================  
-    Universal Build System
-   ====================================================== */  
 function buildLibrarySystem() {  
     const nav = document.getElementById("library-nav") || document.querySelector(".library-nav") || document.querySelector("nav");   
     let bookshelf = document.getElementById("dynamic-bookshelf") || document.querySelector(".dynamic-bookshelf") || document.querySelector(".bookshelf");   
@@ -316,7 +289,6 @@ function buildLibrarySystem() {
     if (authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter III: THE COSMOS WITHIN`;  
 }  
 
-// Floating Midnight Thought Button Logic
 const thoughtBtn = findSafeElement("reveal-thought-btn", "THOUGHT");  
 const thoughtDisplay = findSafeElement("midnight-thought-display");  
 if(thoughtBtn && thoughtDisplay) {  
@@ -600,12 +572,11 @@ function initCosmicNavigation() {
 
         if (targetPageId) {  
             e.preventDefault();  
-            if (audioPageTurn) { audioPageTurn.currentTime = 0; audioPageTurn.play().catch(() => {}); }  
             executePageFlip(targetPageId);  
         }  
     });  
 
-     function executePageFlip(targetPageId) {  
+    function executePageFlip(targetPageId) {  
         let currentActivePage = document.querySelector(".page.active") || document.querySelector(".page[style*='display: block']") || document.getElementById("page1");  
         let destinationPage = document.getElementById(targetPageId);  
           
@@ -636,52 +607,53 @@ function initCosmicNavigation() {
             if(typeof checkUltimateVault === "function") checkUltimateVault();  
         }  
 
-        // 🔊 Safe Antique Sound Trigger
+        // 🎬 SCREEN OVERLAY ENVELOPE ANIMATION CONTROL
+        const crushCurtain = document.getElementById("paper-crush-curtain");
         const turnSound = document.getElementById("page-turn-sound");
-        if (turnSound) {
-            turnSound.currentTime = 0;
-            turnSound.play().catch(e => console.log("Sound buffered safely"));
+
+        if (crushCurtain) {
+            if (turnSound) {
+                turnSound.currentTime = 0;
+                turnSound.play().catch(err => console.log("Sound buffered safely"));
+            }
+            crushCurtain.classList.add("active", "run-curtain-crush");
         }
 
-        try {  
-            if (currentActivePage) {  
-                currentActivePage.classList.remove("active");  
-                currentActivePage.style.display = "none";   
-                currentActivePage.classList.add("vortex-out");  
-                  
-                setTimeout(() => {  
-                    currentActivePage.classList.remove("vortex-out");   
-                    destinationPage.style.display = "block";   
-                    destinationPage.classList.add("vortex-in");   
-                    destinationPage.classList.add("active");  
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
-                      
-                    setTimeout(() => {  
-                        destinationPage.classList.remove("vortex-in");   
-                        globalState.vortexActive = false;   
-                        document.body.style.overflowY = 'auto';   
-                        if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);  
-                    }, 50);   
-                }, 400);   
-            } else {  
+        // ⏳ CENTER POINT SWAP (730ms)
+        setTimeout(() => {
+            try {  
+                if (currentActivePage) {  
+                    currentActivePage.classList.remove("active");  
+                    currentActivePage.style.display = "none";   
+                }
+                
+                destinationPage.style.display = "block";   
+                destinationPage.classList.add("active");  
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
+                
+            } catch(e) {  
+                if(currentActivePage) currentActivePage.style.display = "none";  
                 destinationPage.style.display = "block";  
                 destinationPage.classList.add("active");  
-                if(typeof initTypewriterEngine === "function") initTypewriterEngine();  
             }  
-        } catch(e) {  
-            if(currentActivePage) currentActivePage.style.display = "none";  
-            destinationPage.style.display = "block";  
-            destinationPage.classList.add("active");  
-            globalState.vortexActive = false;  
-            document.body.style.overflowY = 'auto';  
-        }  
-          
+        }, 730);
+
+        // 🧹 LAYER REMOVAL CLEAN-UP (1480ms)
+        setTimeout(() => {
+            if (crushCurtain) {
+                crushCurtain.classList.remove("active", "run-curtain-crush");
+            }
+            globalState.vortexActive = false;   
+            document.body.style.overflowY = 'auto';   
+            if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);
+        }, 1480);
+
         document.querySelectorAll(".nav-link").forEach(lnk => {   
             let target = lnk.getAttribute("data-target");  
             lnk.classList.toggle("active-nav", target === targetPageId);   
         });  
     }  
-      
+}
 
 function applyWhispers(el, poemIndex) {  
     const pData = POEM_DATABASE[poemIndex];  
@@ -1059,25 +1031,14 @@ function initMysticLedger() {
     }
 }
 
-/* ======================================================  
-   📥 CLICK HANDLER FOR PWA BUTTON
-   ====================================================== */  
 const installBtn = document.getElementById('install-app-btn');
 if (installBtn) {
     installBtn.addEventListener('click', async () => {
         if (!deferredPrompt) return;
-        
-        // Browser ka install prompt dikhao
         deferredPrompt.prompt();
-        
-        // Wanderer ka choice check karo
         const { outcome } = await deferredPrompt.userChoice;
         console.log(`User response to the install prompt: ${outcome}`);
-        
-        // Prompt ko clear karo
         deferredPrompt = null;
-        
-        // Button ko wapas chhupa do
         installBtn.style.display = 'none';
     });
 }
