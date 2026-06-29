@@ -1084,5 +1084,29 @@ document.addEventListener("click", (e) => {
         }
     }
 });
+// 🚪 DIRECT FIX FOR OPEN THE GATES BUTTON
+document.addEventListener("click", (e) => {
+    // Agar click "Open the Gates" button par hua hai
+    if (e.target && (e.target.textContent.trim() === "Open the Gates" || e.target.classList.contains("trigger-nav") && e.target.getAttribute("data-target") === "page2")) {
+        e.preventDefault();
+        
+        // Pura page flip function direct call karo target page ke sath
+        if (typeof executePageFlip === "function") {
+            executePageFlip("page2"); // Ya jo bhi aapka main content page ID hai (jaise page2)
+        } else {
+            // Fallback backup agar function na mile
+            const entrancePage = document.getElementById("page1");
+            const targetPage = document.getElementById("page2");
+            if (entrancePage && targetPage) {
+                entrancePage.classList.remove("active");
+                entrancePage.style.display = "none";
+                targetPage.style.display = "block";
+                targetPage.classList.add("active");
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            }
+        }
+    }
+});
 
+   
 });
