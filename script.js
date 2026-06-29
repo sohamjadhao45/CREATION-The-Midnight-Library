@@ -605,76 +605,60 @@ function initCosmicNavigation() {
         }  
     });  
 
-    function executePageFlip(targetPageId) {  
-        let currentActivePage = document.querySelector(".page.active") || document.querySelector(".page[style*='display: block']") || document.getElementById("page1");  
-        let destinationPage = document.getElementById(targetPageId);  
-          
-        if (!destinationPage) {  
-            if (targetPageId === "page-about") destinationPage = document.getElementById("author-chamber") || document.querySelector(".page-about") || document.querySelector("[id*='about']");  
-            if (targetPageId === "page-fragments") destinationPage = document.getElementById("notes-room") || document.querySelector(".page-fragments") || document.querySelector("[id*='fragment']");  
-            if (targetPageId === "page-archive") destinationPage = document.getElementById("ancient-shelf") || document.querySelector(".page-archive") || document.querySelector("[id*='archive']");  
-        }  
+  function executePageFlip(targetPageId) {
+    // 1. Pehle current active page ko dhoondho
+    const currentActivePage = document.querySelector(".page-node.active, .page.active, [id^='page'].active, [id*='page'].active") || document.querySelector(".active");
+    // 2. Naye destination page ko dhoondho uski ID se
+    const destinationPage = document.getElementById(targetPageId);
 
-        if (!destinationPage) {  
-            console.error("Target page not found: " + targetPageId + ". Resetting to entrance.");  
-            destinationPage = document.getElementById("page1") || document.querySelector(".page");  
-        }  
+    if (currentActivePage && destinationPage) {
+        
+        // 3. Antique Sound Play Karo
+        const turnSound = document.getElementById("page-turn-sound");
+        if (turnSound) {
+            turnSound.currentTime = 0;
+            turnSound.play().catch(err => console.log("Audio play blocked:", err));
+        }
 
-        if (!destinationPage || currentActivePage === destinationPage) return;  
-          
-        if (window.stopZenModeGlobally) window.stopZenModeGlobally();  
-        if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();  
-          
-        globalState.vortexActive = true;   
-        document.body.style.overflowY = 'hidden';   
-          
-        if (targetPageId === "page-fragments") {  
-            const currentCombo = notesCombos[globalState.notesVisitCount % 5];  
-            const q1 = document.getElementById("combo-quote-1"); const q2 = document.getElementById("combo-quote-2"); const q3 = document.getElementById("combo-quote-3");  
-            if(q1) q1.innerText = currentCombo[0]; if(q2) q2.innerText = currentCombo[1]; if(q3) q3.innerText = currentCombo[2];  
-            globalState.notesVisitCount++;   
-            if(typeof checkUltimateVault === "function") checkUltimateVault();  
-        }  
+        // 4. Sirf Page ke andar ka text/content area pakdo (Buttons aur layout ko chhodkar)
+        // Yeh tumhare text tags (<p>, .content, .page-content) ko hi target karega
+        const currentContent = currentActivePage.querySelector('.page-content, .content, p, .poem-container') || currentActivePage;
+        const destinationContent = destinationPage.querySelector('.page-content, .content, p, .poem-container') || destinationPage;
 
-   try {  
-            if (currentActivePage) {  
-                currentActivePage.classList.remove("active");  
-                currentActivePage.style.display = "none";   
-                currentActivePage.classList.add("vortex-out");  
-                  
-                setTimeout(() => {  
-                    currentActivePage.classList.remove("vortex-out");   
-                    destinationPage.style.display = "block";   
-                    destinationPage.classList.add("vortex-in");   
-                    destinationPage.classList.add("active");  
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
-                      
-                    setTimeout(() => {  
-                        destinationPage.classList.remove("vortex-in");   
-                        globalState.vortexActive = false;   
-                        document.body.style.overflowY = 'auto';   
-                        if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);  
-                    }, 50);   
-                }, 400);   
-            } else {  
-                destinationPage.style.display = "block";  
-                destinationPage.classList.add("active");  
-                if(typeof initTypewriterEngine === "function") initTypewriterEngine();  
-            }  
-        } catch(e) {  
-            if(currentActivePage) currentActivePage.style.display = "none";  
-            destinationPage.style.display = "block";  
-            destinationPage.classList.add("active");  
-            globalState.vortexActive = false;  
-            document.body.style.overflowY = 'auto';  
-        }  
-          
-        document.querySelectorAll(".nav-link").forEach(lnk => {   
-            let target = lnk.getAttribute("data-target");  
-            lnk.classList.toggle("active-nav", target === targetPageId);   
-        });  
-    }  
-}           
+        // 5. Sirf text content ko marodo (crush-out class lagao)
+        currentContent.classList.add("crush-out");
+
+        // 6. Jab animation aadha chal chuka ho (750ms par), tab piche se page badal do
+        setTimeout(() => {
+            currentActivePage.classList.remove("active");
+            currentActivePage.style.display = "none";
+            currentContent.classList.remove("crush-out"); // Agli baar ke liye reset
+
+            // Naye page ko display karo par abhi uska content safe state mein khulega
+            destinationPage.style.display = "block";
+            destinationPage.classList.add("active");
+            
+            // Naye content ko dustbin se upar laakar smoothly unfold karo
+            destinationContent.classList.add("un-crush-in");
+        }, 750);
+
+        // 7. Animation poora khatam hone par clean-up kar do
+        setTimeout(() => {
+            destinationContent.classList.remove("un-crush-in");
+        }, 1550);
+    } else {
+        // Fallback: Agar upar wala dynamic selector kaam na kare, toh bina animation ke seedhe page badal do taaki crash na ho
+        if (currentActivePage) {
+            currentActivePage.classList.remove("active");
+            currentActivePage.style.display = "none";
+        }
+        if (destinationPage) {
+            destinationPage.style.display = "block";
+            destinationPage.classList.add("active");
+        }
+    }
+}
+  
 
 function applyWhispers(el, poemIndex) {  
     const pData = POEM_DATABASE[poemIndex];  
