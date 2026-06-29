@@ -619,7 +619,7 @@ function initCosmicNavigation() {
             crushCurtain.classList.add("active", "run-curtain-crush");
         }
 
-        // ⏳ CENTER POINT SWAP (730ms)
+                // ⏳ CENTER POINT SWAP (730ms)
         setTimeout(() => {
             try {  
                 if (currentActivePage) {  
@@ -627,6 +627,13 @@ function initCosmicNavigation() {
                     currentActivePage.style.display = "none";   
                 }
                 
+                // EXTRA SAFETY CHECK: Agar hum Vault chhod rahe hain, toh uski style display saaf karo
+                const vaultPage = document.getElementById("page-secret");
+                if (vaultPage && targetPageId !== "page-secret") {
+                    vaultPage.classList.remove("active");
+                    vaultPage.style.display = "none";
+                }
+
                 destinationPage.style.display = "block";   
                 destinationPage.classList.add("active");  
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
@@ -637,6 +644,7 @@ function initCosmicNavigation() {
                 destinationPage.classList.add("active");  
             }  
         }, 730);
+
 
         // 🧹 LAYER REMOVAL CLEAN-UP (1480ms)
         setTimeout(() => {
