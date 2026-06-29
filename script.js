@@ -624,7 +624,7 @@ function initCosmicNavigation() {
             crushCurtain.classList.add("active", "run-curtain-crush");
         }
 
-                // ⏳ CENTER POINT SWAP (730ms)
+        // ⏳ CENTER POINT SWAP: Piche se page badlega jab paper ekdum gola ban chuka hoga
         setTimeout(() => {
             try {  
                 if (currentActivePage) {  
@@ -632,7 +632,7 @@ function initCosmicNavigation() {
                     currentActivePage.style.display = "none";   
                 }
                 
-                // EXTRA SAFETY CHECK: Agar hum Vault chhod rahe hain, toh uski style display saaf karo
+                // EXTRA SAFETY CHECK: Agar Mystery Vault chhod rahe hain, toh uski display saaf karo
                 const vaultPage = document.getElementById("page-secret");
                 if (vaultPage && targetPageId !== "page-secret") {
                     vaultPage.classList.remove("active");
@@ -648,26 +648,25 @@ function initCosmicNavigation() {
                 destinationPage.style.display = "block";  
                 destinationPage.classList.add("active");  
             }  
-        }, 730);
+        }, 1200);
 
-
-        // 🧹 LAYER REMOVAL CLEAN-UP (1480ms)
+        // 🧹 LAYER REMOVAL CLEAN-UP: Animation poora khatam hone par curtain ko reset karein
         setTimeout(() => {
             if (crushCurtain) {
-                crushCurtain.classList.remove("active", "run-curtain-crush");
+                crushCurtain.classList.remove("active", "run-curtain-curush"); // safely removing
+                crushCurtain.classList.remove("run-curtain-crush");
             }
             globalState.vortexActive = false;   
             document.body.style.overflowY = 'auto';   
             if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);
-        }, 1480);
+        }, 2420);
 
         document.querySelectorAll(".nav-link").forEach(lnk => {   
             let target = lnk.getAttribute("data-target");  
             lnk.classList.toggle("active-nav", target === targetPageId);   
         });  
-    }  
-}
-
+    }
+                
 function applyWhispers(el, poemIndex) {  
     const pData = POEM_DATABASE[poemIndex];  
     if(!pData || !pData.whispers || el.dataset.whispersApplied === "true") return;  
