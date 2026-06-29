@@ -1079,23 +1079,18 @@ document.addEventListener("click", (e) => {
     }
 });
 
-// 🚪 DIRECT FIX FOR OPEN THE GATES BUTTON
+// 🚪 DIRECT FIX FOR OPEN THE GATES BUTTON (With Smooth 3D Crumple Animation)
 document.addEventListener("click", (e) => {
     if (e.target && e.target.textContent.trim() === "OPEN THE GATES") {
         e.preventDefault();
         
-        if (typeof executePageFlip === "function") {
-            executePageFlip("poem-page-1"); 
-        } else {
-            const entrancePage = document.getElementById("page1");
-            const targetPage = document.getElementById("poem-page-1");
-            if (entrancePage && targetPage) {
-                entrancePage.classList.remove("active");
-                entrancePage.style.display = "none";
-                targetPage.style.display = "block";
-                targetPage.classList.add("active");
-                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-            }
+        // Tumhara entry button click hone par seedhe cinematic animation loop trigger hoga
+        const enterLibraryBtn = document.getElementById("enter-library-btn");
+        const visitorInput = document.getElementById("visitor-name");
+        
+        if (enterLibraryBtn) {
+            // Safe execution taaki sound aur states properly trigger ho jayein
+            executePageFlip("poem-page-1");
         }
     }
 });
