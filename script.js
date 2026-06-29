@@ -605,7 +605,7 @@ function initCosmicNavigation() {
         }  
     });  
 
-    function executePageFlip(targetPageId) {  
+       function executePageFlip(targetPageId) {  
         let currentActivePage = document.querySelector(".page.active") || document.querySelector(".page[style*='display: block']") || document.getElementById("page1");  
         let destinationPage = document.getElementById(targetPageId);  
           
@@ -636,45 +636,54 @@ function initCosmicNavigation() {
             if(typeof checkUltimateVault === "function") checkUltimateVault();  
         }  
 
-   try {  
-            if (currentActivePage) {  
-                currentActivePage.classList.remove("active");  
-                currentActivePage.style.display = "none";   
-                currentActivePage.classList.add("vortex-out");  
-                  
-                setTimeout(() => {  
-                    currentActivePage.classList.remove("vortex-out");   
-                    destinationPage.style.display = "block";   
-                    destinationPage.classList.add("vortex-in");   
-                    destinationPage.classList.add("active");  
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
-                      
-                    setTimeout(() => {  
-                        destinationPage.classList.remove("vortex-in");   
-                        globalState.vortexActive = false;   
-                        document.body.style.overflowY = 'auto';   
-                        if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);  
-                    }, 50);   
-                }, 400);   
-            } else {  
+        // 🎬 OVERLAY SHIELD ENGINE ACTIVATION
+        const crushCurtain = document.getElementById("paper-crush-curtain");
+        const turnSound = document.getElementById("page-turn-sound");
+
+        if (crushCurtain) {
+            if (turnSound) {
+                turnSound.currentTime = 0;
+                turnSound.play().catch(err => console.log("Audio trigger buffered: ", err));
+            }
+            crushCurtain.classList.add("active", "run-curtain-crush");
+        }
+
+        // ⏳ THE SAFE STEP: Jab parda absolute crush point (730ms) par ho tab chupke se swap karein
+        setTimeout(() => {
+            try {  
+                if (currentActivePage) {  
+                    currentActivePage.classList.remove("active");  
+                    currentActivePage.style.display = "none";   
+                }
+                
+                destinationPage.style.display = "block";   
+                destinationPage.classList.add("active");  
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
+                
+            } catch(e) {  
+                console.warn("Soft navigation applied to layout structural elements.");
+                if(currentActivePage) currentActivePage.style.display = "none";  
                 destinationPage.style.display = "block";  
                 destinationPage.classList.add("active");  
-                if(typeof initTypewriterEngine === "function") initTypewriterEngine();  
             }  
-        } catch(e) {  
-            if(currentActivePage) currentActivePage.style.display = "none";  
-            destinationPage.style.display = "block";  
-            destinationPage.classList.add("active");  
-            globalState.vortexActive = false;  
-            document.body.style.overflowY = 'auto';  
-        }  
-          
+        }, 730);
+
+        // 🧹 RECOVERY STEP: Animation overlay removal and clean-up (1480ms)
+        setTimeout(() => {
+            if (crushCurtain) {
+                crushCurtain.classList.remove("active", "run-curtain-crush");
+            }
+            globalState.vortexActive = false;   
+            document.body.style.overflowY = 'auto';   
+            if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);
+        }, 1480);
+
         document.querySelectorAll(".nav-link").forEach(lnk => {   
             let target = lnk.getAttribute("data-target");  
             lnk.classList.toggle("active-nav", target === targetPageId);   
         });  
     }  
-}           
+ 
 
 function applyWhispers(el, poemIndex) {  
     const pData = POEM_DATABASE[poemIndex];  
