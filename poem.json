@@ -1,6 +1,6 @@
 [
   {
-    "chapterLabel": "CHAPTER I",<br>
+    "chapterLabel": "CHAPTER I",\n
     "spineLabel": "ANCHOR - CH.I",
     "title": "ANCHOR",
     "subtitle": "A TRIBUTE TO MY FATHER",
@@ -14,7 +14,7 @@
     ]
   },
   {
-    "chapterLabel": "CHAPTER II",<br>
+    "chapterLabel": "CHAPTER II",\n
     "spineLabel": "SPORTSMAN - CH.II",
     "title": "SPORTSMAN<br>SPIRIT",
     "subtitle": "THE SPIRIT OF EXCELLENCE",
@@ -28,7 +28,7 @@
     ]
   },
   {
-    "chapterLabel": "CHAPTER III",<br>
+    "chapterLabel": "CHAPTER III",\n
     "spineLabel": "FRACTAL DREAMS- CH.III",
     "title": "FRACTAL<br>DREAMS", 
     "subtitle": "WHERE MATHS MEET CREATIVITY",
