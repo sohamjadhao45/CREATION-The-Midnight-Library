@@ -220,33 +220,38 @@ function buildLibrarySystem() {
         const cleanTitle = poem.title.replace('<br>', ' ');   
         const safeText = poem.text.replace(/\n/g, '\\n');  
 
-        const sectionHtml = `  
-        <section id="${pageId}" class="page direct-js-built" data-poem-index="${i}" style="display:none;">  
-          <div class="top-deco">✧ ─ ❦ ─ ✧</div>  
-          <span class="chapter-badge">${poem.chapterLabel}</span>  
-          <div class="heading-wrapper"><h2 class="page1-heading moon-glow">${poem.title}</h2></div>  
-          <p class="poem-subtitle">${poem.subtitle}</p>  
-          <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">  
-            <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>  
-            <span class="read-time">⏱️ 1 Min Read</span>  
-            <button class="bookmark-btn btn-utility" data-poem="${poem.spineLabel}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>  
-          </div>  
-          <div class="poetry-box antique-parchment dynamic-shadow" id="card-${pageId}">  
-            <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>  
-            <p class="royal-poem-text typewriter-poem" data-lines="${safeText}"></p><br>  
-            <p class="poem-date">${poem.dateText}</p>  
-            <span class="poem-greatvibes sign-animate">${poem.signature}</span>  
-            <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">  
-                <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>  
-                <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>  
-            </div>  
-          </div>  
-          <div class="button-row" style="margin-top: 15px;">  
-            <button class="btn-utility download-poem-btn" data-target="card-${pageId}" data-poem-index="${i}">📸 Save As A Memory</button>  
-            <button class="btn-utility share-poem-btn" data-poem-title="${cleanTitle}">🔗 Share Verse</button>  
-          </div>  
-          <div class="button-row mt-20"><button class="btn-outline trigger-nav" data-target="${prevPageId}">❮ Previous</button><button class="btn-solid trigger-nav" data-target="${nextPageId}">Next ❯</button></div>  
-        </section>`;  
+        // 📑 buildLibrarySystem ke andar is block ko replace karein taaki heading sahi ho jaye:
+const sectionHtml = `  
+<section id="${pageId}" class="page direct-js-built" data-poem-index="${i}" style="display:none;">  
+  <div class="top-deco">✧ ─ ❦ ─ ✧</div>  
+  
+  <div class="chapter-label-top" style="font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold); letter-spacing: 4px; margin-bottom: 5px;">${poem.chapterLabel}</div>
+  
+  <div class="heading-wrapper"><h2 class="page1-heading moon-glow" style="margin-top: 0;">${poem.title}</h2></div>  
+  
+  <p class="poem-subtitle">${poem.subtitle}</p>  
+  <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">  
+    <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>  
+    <span class="read-time">⏱️ 1 Min Read</span>  
+    <button class="bookmark-btn btn-utility" data-poem="${poem.spineLabel}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>  
+  </div>  
+  <div class="poetry-box antique-parchment dynamic-shadow" id="card-${pageId}">  
+    <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>  
+    <p class="royal-poem-text typewriter-poem" data-lines="${safeText}"></p><br>  
+    <p class="poem-date">${poem.dateText}</p>  
+    <span class="poem-greatvibes sign-animate">${poem.signature}</span>  
+    <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">  
+        <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>  
+        <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>  
+    </div>  
+  </div>  
+  <div class="button-row" style="margin-top: 15px;">  
+    <button class="btn-utility download-poem-btn" data-target="card-${pageId}" data-poem-index="${i}">📸 Save As A Memory</button>  
+    <button class="btn-utility share-poem-btn" data-poem-title="${cleanTitle}">🔗 Share Verse</button>  
+  </div>  
+  <div class="button-row mt-20"><button class="btn-outline trigger-nav" data-target="${prevPageId}">❮ Previous</button><button class="btn-solid trigger-nav" data-target="${nextPageId}">Next ❯</button></div>  
+</section>`;
+
           
         if (secretPage) {  
             secretPage.insertAdjacentHTML('beforebegin', sectionHtml);  
