@@ -3,22 +3,29 @@ THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFINITIVE EDITION)
 Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
 ===================================================================== */
 
-/* =====================================================================
-💥 EMERGENY MOBILE DEBUGGER (Sabse Upar Paste Karein)
-===================================================================== */
-// 1. Script load hote hi check karne ke liye (Cache Test)
-alert("🔄 System Check:\nSCRIPT.js HAVE SUCCESSFULLY NAVIGATED IN YOUR DEVICE , NOW YOU ARE FREE TO EXPLORE THE WONDER CREATIVITY \n' T H E - C R E A T I O N ! '");
+/* ======================================================  
+   📥 AUTOMATIC PWA APP INSTALLATION ENGINE (GLOBAL SCOPE)
+   ====================================================== */  
+let deferredPrompt;
 
-// 2. Normal code crash pakadne ke liye
-window.onerror = function(message, source, lineno, colno, error) {
-alert("🔴 CRITICAL CODE ERROR!\n\nMessage: " + message + "\nLine: " + lineno);
-return false;
-};
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    const installBtn = document.getElementById('install-app-btn');
+    if (installBtn) {
+        installBtn.style.display = 'inline-block';
+    }
+    console.log("🟢 PWA Install Prompt Ready!");
+});
 
-// 3. Network/Fetch/Promises fail pakadne ke liye
-window.onunhandledrejection = function(event) {
-alert("🔴 NETWORK/FETCH ERROR!\n\nReason: " + event.reason);
-};
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker Registered!', reg))
+        .catch(err => console.error('Service Worker Reg Failed!', err));
+    });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
 "use strict";
@@ -90,7 +97,6 @@ const notesCombos = [
 ];  
 const starCoords = [{top: 50, left: 20}, {top: 20, left: 50}, {top: 60, left: 80}, {top: 80, left: 40}, {top: 30, left: 85}, {top: 75, left: 15}];  
 
-// Protected Audio Elements  
 const audioPageTurn = findSafeElement("audio-page-turn");  
 const audioRain = findSafeElement("audio-rain");  
 const audioAmbient = findSafeElement("audio-ambient");  
@@ -112,9 +118,8 @@ initTimeCapsule();
 init1111Wish();  
 initZenMode();  
 initAudioSpeechEngine();   
-initMysticLedger();
+initMysticLedger();  
 
-// Fetch dynamic database from poem.json  
 fetch('poem.json')  
     .then(response => {  
         if (!response.ok) throw new Error("Poem database load nahi ho paya");  
@@ -127,7 +132,6 @@ fetch('poem.json')
         initLibraryFeatures();   
     })  
     .catch(error => {  
-        alert("🔴 JSON LOAD ERROR: " + error.message + "\nYaani poem.json file nahi mil rahi!");  
         console.error("Critical Error inside Library Fetch: ", error);  
     });  
 
@@ -153,7 +157,6 @@ function initPassport() {
             let name = input ? input.value.trim() : "";  
             if(!name) name = "Wanderer";  
               
-            // Secret logic matching your exact word condition  
             if(name.toLowerCase() === "silence") {  
                 globalState.hasTypedWord = true;  
                 checkUltimateVault();  
@@ -180,9 +183,6 @@ function initPassport() {
     }  
 }  
 
-/* ======================================================  
-    Universal Build System
-   ====================================================== */  
 function buildLibrarySystem() {  
     const nav = document.getElementById("library-nav") || document.querySelector(".library-nav") || document.querySelector("nav");   
     let bookshelf = document.getElementById("dynamic-bookshelf") || document.querySelector(".dynamic-bookshelf") || document.querySelector(".bookshelf");   
@@ -223,8 +223,11 @@ function buildLibrarySystem() {
         const sectionHtml = `  
         <section id="${pageId}" class="page direct-js-built" data-poem-index="${i}" style="display:none;">  
           <div class="top-deco">✧ ─ ❦ ─ ✧</div>  
-          <span class="chapter-badge">${poem.chapterLabel}</span>  
-          <div class="heading-wrapper"><h2 class="page1-heading moon-glow">${poem.title}</h2></div>  
+          
+          <div class="chapter-label-top" style="font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold); letter-spacing: 4px; margin-bottom: 5px;">${poem.chapterLabel}</div>
+          
+          <div class="heading-wrapper"><h2 class="page1-heading moon-glow" style="margin-top: 0;">${poem.title}</h2></div>  
+          
           <p class="poem-subtitle">${poem.subtitle}</p>  
           <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">  
             <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>  
@@ -289,7 +292,6 @@ function buildLibrarySystem() {
     if (authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter III: THE COSMOS WITHIN`;  
 }  
 
-// Floating Midnight Thought Button Logic
 const thoughtBtn = findSafeElement("reveal-thought-btn", "THOUGHT");  
 const thoughtDisplay = findSafeElement("midnight-thought-display");  
 if(thoughtBtn && thoughtDisplay) {  
@@ -378,6 +380,9 @@ function initSecretKeyboardVault() {
     });  
 }  
 
+/* ======================================================  
+   🔒 VISITOR GUESTBOOK LEDGER
+   ====================================================== */  
 function initLedger() {  
     const ledgerList = findSafeElement("ledger-list");   
     const submits = document.querySelectorAll(".ledger-submit");   
@@ -547,7 +552,7 @@ function bindWaxSeals(page) {
 }  
 
 /* ======================================================  
-   Cosmic Navigation
+   🎬 COSMIC ENGINE NAVIGATION & SMOOTH 3D TRANSITION
    ====================================================== */  
 function initCosmicNavigation() {  
     document.addEventListener("click", (e) => {  
@@ -573,7 +578,6 @@ function initCosmicNavigation() {
 
         if (targetPageId) {  
             e.preventDefault();  
-            if (audioPageTurn) { audioPageTurn.currentTime = 0; audioPageTurn.play().catch(() => {}); }  
             executePageFlip(targetPageId);  
         }  
     });  
@@ -608,47 +612,61 @@ function initCosmicNavigation() {
             globalState.notesVisitCount++;   
             if(typeof checkUltimateVault === "function") checkUltimateVault();  
         }  
-          
-        try {  
-            if (currentActivePage) {  
-                currentActivePage.classList.remove("active");  
-                currentActivePage.style.display = "none";   
-                currentActivePage.classList.add("vortex-out");  
-                  
-                setTimeout(() => {  
-                    currentActivePage.classList.remove("vortex-out");   
-                    destinationPage.style.display = "block";   
-                    destinationPage.classList.add("vortex-in");   
-                    destinationPage.classList.add("active");  
-                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
-                      
-                    setTimeout(() => {  
-                        destinationPage.classList.remove("vortex-in");   
-                        globalState.vortexActive = false;   
-                        document.body.style.overflowY = 'auto';   
-                        if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);  
-                    }, 50);   
-                }, 400);   
-            } else {  
+
+        const crushCurtain = document.getElementById("paper-crush-curtain");
+        const turnSound = document.getElementById("page-turn-sound");
+
+        if (crushCurtain) {
+            if (turnSound) {
+                turnSound.currentTime = 0;
+                turnSound.play().catch(err => console.log("Sound buffered safely"));
+            }
+            crushCurtain.classList.add("active", "run-curtain-crush");
+        }
+
+        // ⏳ 3D CRUMPLE MIDPOINT TRANSITION (1200ms)
+        setTimeout(() => {
+            try {  
+                if (currentActivePage) {  
+                    currentActivePage.classList.remove("active");  
+                    currentActivePage.style.display = "none";   
+                }
+                
+                const vaultPage = document.getElementById("page-secret");
+                if (vaultPage && targetPageId !== "page-secret") {
+                    vaultPage.classList.remove("active");
+                    vaultPage.style.display = "none";
+                }
+
+                destinationPage.style.display = "block";   
+                destinationPage.classList.add("active");  
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
+                
+            } catch(e) {  
+                if(currentActivePage) currentActivePage.style.display = "none";  
                 destinationPage.style.display = "block";  
                 destinationPage.classList.add("active");  
-                if(typeof initTypewriterEngine === "function") initTypewriterEngine();  
             }  
-        } catch(e) {  
-            if(currentActivePage) currentActivePage.style.display = "none";  
-            destinationPage.style.display = "block";  
-            destinationPage.classList.add("active");  
-            globalState.vortexActive = false;  
-            document.body.style.overflowY = 'auto';  
-        }  
-          
+        }, 1200);
+
+        // 🧹 LAYER REMOVAL CLEAN-UP (2420ms)
+        setTimeout(() => {
+            if (crushCurtain) {
+                crushCurtain.classList.remove("active");
+                crushCurtain.classList.remove("run-curtain-crush");
+            }
+            globalState.vortexActive = false;   
+            document.body.style.overflowY = 'auto';   
+            if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);
+        }, 2420);
+
         document.querySelectorAll(".nav-link").forEach(lnk => {   
             let target = lnk.getAttribute("data-target");  
             lnk.classList.toggle("active-nav", target === targetPageId);   
         });  
-    }  
-}  
-
+    }
+}
+                
 function applyWhispers(el, poemIndex) {  
     const pData = POEM_DATABASE[poemIndex];  
     if(!pData || !pData.whispers || el.dataset.whispersApplied === "true") return;  
@@ -931,9 +949,6 @@ function initAudioSpeechEngine() {
     };  
 }
 
-// =====================================================================
-// 🌐 LIVE FIREBASE MYSTIC LEDGER (GUESTBOOK)
-// =====================================================================
 function initMysticLedger() {
     const firebaseConfig = {
       apiKey: "AIzaSyDj32kF9AJ9d3ibw1uZLtXeSDIBUa9ctE4",
@@ -1027,4 +1042,50 @@ function initMysticLedger() {
         });
     }
 }
+
+const installBtn = document.getElementById('install-app-btn');
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to the install prompt: ${outcome}`);
+        deferredPrompt = null;
+        installBtn.style.display = 'none';
+    });
+}
+
+window.addEventListener('appinstalled', (evt) => {
+    showToast("🎉 Creation App installed successfully on your device!");
+});
+
+/* ======================================================  
+   🎯 ARMED DIRECT INTERACTION CONTROLLERS
+   ====================================================== */  
+document.addEventListener("click", (e) => {
+    if (!e.target) return;
+    const text = e.target.textContent.trim().toUpperCase();
+
+    // Direct Catch For Leave the Vault
+    if (text === "LEAVE THE VAULT") {
+        e.preventDefault();
+        const vaultPage = document.getElementById("page-secret");
+        if (vaultPage) {
+            vaultPage.classList.remove("active");
+            vaultPage.style.display = "none";
+        }
+        if (typeof executePageFlip === "function") {
+            executePageFlip("page1");
+        }
+    }
+
+    // Direct Catch For Open the Gates (Cinematic Flow Bound)
+    if (text === "OPEN THE GATES") {
+        e.preventDefault();
+        if (typeof executePageFlip === "function") {
+            executePageFlip("poem-page-1");
+        }
+    }
+});
+
 });
