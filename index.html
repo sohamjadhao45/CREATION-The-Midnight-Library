@@ -2,13 +2,19 @@
 <head>  
   <meta charset="UTF-8">  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <meta name="google-site-verification" content="Vx8IsdG1wGlLCqoyxPfwXWCTIMZLISZcwHQ3GueazV4" />
   <title>CREATION — The Midnight Library</title>  
-  <link rel="stylesheet" href="style.css">  
+  <link rel="stylesheet" href="style.css"> 
+  <link rel="manifest" href="manifest.json">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>  
 <body class="custom-cursor">  
+  
+  <div id="paper-crush-curtain"><div id="paper-crush-ball"></div></div>
+
   <audio id="audio-page-turn" src="https://assets.mixkit.co/active_storage/sfx/211/211-preview.mp3" preload="auto"></audio>
+  <audio id="page-turn-sound" src="https://www.soundjay.com/human/sounds/page-flip-01a.mp3" preload="auto"></audio>
   <audio id="audio-rain" src="https://assets.mixkit.co/active_storage/sfx/1230/1230-preview.mp3" loop preload="auto"></audio>
   <audio id="audio-ambient" src="https://assets.mixkit.co/active_storage/sfx/2458/2458-preview.mp3" loop preload="auto"></audio>
 
@@ -85,6 +91,7 @@
       </p>  
 
       <button id="enter-library-btn" class="btn-solid" style="margin-top: 20px;">OPEN THE GATES</button>  
+      <button id="install-app-btn" class="btn-outline" style="margin-top: 10px; display: none;">INSTALL APP</button>
     </div>
   </div>  
 
@@ -175,9 +182,9 @@
           </div>  
         </div>  
       </div>  
-      <div class="button-row mt-20" style="position: relative; z-index: 10;">  
+      <div class="button-row mt-20" style="position: relative; z-index: 10000;">  
         <button class="btn-outline trigger-nav" data-target="page1">Leave the Vault</button>  
-  </div>  
+      </div>  
     </section>  
 
     <section id="page-fragments" class="page">  
@@ -267,6 +274,6 @@
     <div class="footer-sub">The Midnight Library • ©copyright • All rights reserved • 2026 • Fluid & AntiLag • Completely created by Soham Madan Jadhao</div>  
   </footer>    
 
-  <script src="script.js?v=2"></script>  
+  <script src="script.js?v=3"></script>  
 </body>  
 </html>
