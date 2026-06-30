@@ -3,33 +3,6 @@ THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFINITIVE EDITION)
 Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
 ===================================================================== */
 
-/* ======================================================  
-   📥 AUTOMATIC PWA APP INSTALLATION ENGINE (GLOBAL SCOPE)
-   ====================================================== */  
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Browser ke default prompt ko roko
-    e.preventDefault();
-    deferredPrompt = e;
-    
-    // Dynamically look for the button when the event fires
-    const installBtn = document.getElementById('install-app-btn');
-    if (installBtn) {
-        installBtn.style.display = 'inline-block';
-    }
-    console.log("🟢 PWA Install Prompt Ready!");
-});
-
-// SERVICE WORKER REGISTRATION
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Service Worker Registered!', reg))
-        .catch(err => console.error('Service Worker Reg Failed!', err));
-    });
-}
-
 /* =====================================================================
 💥 EMERGENY MOBILE DEBUGGER (Sabse Upar Paste Karein)
 ===================================================================== */
@@ -958,6 +931,9 @@ function initAudioSpeechEngine() {
     };  
 }
 
+// =====================================================================
+// 🌐 LIVE FIREBASE MYSTIC LEDGER (GUESTBOOK)
+// =====================================================================
 function initMysticLedger() {
     const firebaseConfig = {
       apiKey: "AIzaSyDj32kF9AJ9d3ibw1uZLtXeSDIBUa9ctE4",
@@ -1051,32 +1027,4 @@ function initMysticLedger() {
         });
     }
 }
-
-/* ======================================================  
-   📥 CLICK HANDLER FOR PWA BUTTON
-   ====================================================== */  
-const installBtn = document.getElementById('install-app-btn');
-if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-        if (!deferredPrompt) return;
-        
-        // Browser ka install prompt dikhao
-        deferredPrompt.prompt();
-        
-        // Wanderer ka choice check karo
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`User response to the install prompt: ${outcome}`);
-        
-        // Prompt ko clear karo
-        deferredPrompt = null;
-        
-        // Button ko wapas chhupa do
-        installBtn.style.display = 'none';
-    });
-}
-
-window.addEventListener('appinstalled', (evt) => {
-    showToast("🎉 Creation App installed successfully on your device!");
-});
-
 });
