@@ -1,8 +1,8 @@
 
 {
-  "name": "CREATION — The Midnight Library",
+  "name": "CREATION — The Cosmic Library",
   "short_name": "Creation",
-  "description": "The Midnight Library — A digital sanctuary for wandering souls.",
+  "description": "Creation — A digital sanctuary for wandering souls.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#050507",
