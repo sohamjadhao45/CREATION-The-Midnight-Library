@@ -1108,4 +1108,25 @@ document.addEventListener("click", (e) => {
     }
 });
 
+ // 🌐 Offline Connection Alert Engine
+window.addEventListener('load', () => {
+    function checkNetworkStatus() {
+        if (!navigator.onLine) {
+            showToast("📱⚠️ NETWORK CONNECTION LOST ! Try connecting for Wondering through the Library");
+        }
+    }
+
+    // Jab page load ho tab check kare
+    checkNetworkStatus();
+
+    // Jab network jaye ya aaye tab live detect kare
+    window.addEventListener('online', () => {
+        showToast("✨ INTERNET CONNECTED ! Now you are free to Wonder");
+    });
+
+    window.addEventListener('offline', () => {
+        showToast("⚠️ CONNECTION LOST ! Either connect or No more Wondering");
+    });
+});
+  
 });
