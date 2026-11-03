@@ -277,3 +277,37 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     flex-direction: column !important;
     align-items: center !important;
 }
+/* ☀️ Day Mode Fix for Mystic Ledger Modal */
+[data-theme="light"] .feedback-modal-content,
+[data-theme="light"] .antique-parchment {
+    background-color: #f4ebd0 !important;
+    color: #3b2210 !important;
+}
+
+[data-theme="light"] .public-comment {
+    background: rgba(232, 220, 199, 0.6) !important;
+    border: 1px solid rgba(191, 164, 111, 0.4) !important;
+    color: #3b2210 !important;
+}
+
+[data-theme="light"] .pc-name {
+    color: #5c4033 !important;
+}
+
+[data-theme="light"] .pc-date {
+    color: rgba(92, 64, 51, 0.6) !important;
+}
+
+[data-theme="light"] .pc-text {
+    color: #3b2210 !important;
+}
+
+[data-theme="light"] #feedback-input {
+    background: rgba(255, 255, 255, 0.6) !important;
+    color: #3b2210 !important;
+    border: 1px solid rgba(191, 164, 111, 0.5) !important;
+}
+
+[data-theme="light"] #feedback-input::placeholder {
+    color: rgba(59, 34, 16, 0.5) !important;
+}
