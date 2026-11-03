@@ -171,6 +171,20 @@ function initPassport() {
             const letterTitle = findSafeElement("reader-letter-title");  
             if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;  
 
+            // 🕒 Time-Based Automatic Theme Switch (5:00 AM to 8:00 PM -> Day Mode, Else -> Night Mode)
+            const currentHour = new Date().getHours();
+            const themeBtn = findSafeElement("theme-toggle");
+            
+            if (currentHour >= 5 && currentHour < 20) {
+                document.documentElement.setAttribute("data-theme", "light");
+                if (themeBtn) themeBtn.innerText = "☀️ Day";
+                globalState.activeTheme = "light";
+            } else {
+                document.documentElement.setAttribute("data-theme", "dark");
+                if (themeBtn) themeBtn.innerText = "🌙 Night";
+                globalState.activeTheme = "dark";
+            }
+
             const introScreen = findSafeElement("intro-screen");  
             if(introScreen) introScreen.classList.add("fade-out");  
               
@@ -182,6 +196,7 @@ function initPassport() {
         });  
     }  
 }  
+
 
 function buildLibrarySystem() {  
     const nav = document.getElementById("library-nav") || document.querySelector(".library-nav") || document.querySelector("nav");   
