@@ -949,6 +949,17 @@ function initAudioSpeechEngine() {
     };  
 }
 
+
+    if(openBtn && modal) {
+        openBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.style.display = 'flex';
+            loadLiveComments();
+        });
+    }
+
+    if(closeBtn && modal) {
+    
 function initMysticLedger() {
     const firebaseConfig = {
       apiKey: "AIzaSyDj32kF9AJ9d3ibw1uZLtXeSDIBUa9ctE4",
@@ -993,8 +1004,11 @@ function initMysticLedger() {
 
     function loadLiveComments() {
         if(!commentsList) return;
+        commentsList.innerHTML = '<p style="text-align:center; opacity:0.5; font-style:italic; margin-top: 20px;">Listening to the whispers...</p>';
+        
         const commentsRef = db.ref('mystic_ledger_comments');
         
+        // Added error callback to catch permission/network failures
         commentsRef.on('value', (snapshot) => {
             commentsList.innerHTML = ''; 
             const data = snapshot.val();
@@ -1016,6 +1030,9 @@ function initMysticLedger() {
             } else {
                 commentsList.innerHTML = '<p style="text-align:center; opacity:0.5; font-style:italic; margin-top: 20px; font-family:\'Cormorant Garamond\', serif;">The room is silent. Be the first to speak.</p>';
             }
+        }, (error) => {
+            console.error("Firebase Read Error:", error);
+            commentsList.innerHTML = `<p style="text-align:center; color:#e74c3c; font-style:italic; margin-top: 20px; font-family:\'Cormorant Garamond\', serif;">⚠️ Permission Denied. Please check Firebase Database Rules.</p>`;
         });
     }
 
@@ -1033,8 +1050,8 @@ function initMysticLedger() {
                     input.value = '';
                     showToast("✨ Your whisper has been added to the library.");
                 }).catch((error) => {
-                    console.error("Firebase Error: ", error);
-                    showToast("🔴 Failed to add whisper.");
+                    console.error("Firebase Write Error: ", error);
+                    showToast("🔴 Failed to add whisper (Permission Denied).");
                 });
             } else {
                 showToast("Please write something before sending.");
