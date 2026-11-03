@@ -949,17 +949,6 @@ function initAudioSpeechEngine() {
     };  
 }
 
-
-    if(openBtn && modal) {
-        openBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            modal.style.display = 'flex';
-            loadLiveComments();
-        });
-    }
-
-    if(closeBtn && modal) {
-    
 function initMysticLedger() {
     const firebaseConfig = {
       apiKey: "AIzaSyDj32kF9AJ9d3ibw1uZLtXeSDIBUa9ctE4",
@@ -1008,7 +997,6 @@ function initMysticLedger() {
         
         const commentsRef = db.ref('mystic_ledger_comments');
         
-        // Added error callback to catch permission/network failures
         commentsRef.on('value', (snapshot) => {
             commentsList.innerHTML = ''; 
             const data = snapshot.val();
