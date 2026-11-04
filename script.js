@@ -299,35 +299,15 @@ function buildLibrarySystem() {
 
         let cIndex = i % spineColors.length;
 
+            if (bookshelf) {   
         bookshelf.innerHTML += `   
-            <div class="book-spine trigger-nav" data-target="${pageId}" style="
-                position: relative !important;
-                display: inline-flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important;
-                align-items: center !important;
-                writing-mode: vertical-rl !important;
-                text-orientation: mixed !important;
-                height: ${spineHeights[cIndex]} !important;
-                width: ${spineWidths[cIndex]} !important;
-                background: ${spineColors[cIndex]} !important;
-                color: #f2eee9 !important;
-                transform: rotate(${spineRotations[cIndex]}) !important;
-                border-radius: 4px 6px 3px 3px !important;
-                padding: 15px 6px !important;
-                margin-right: 8px !important;
-                cursor: pointer !important;
-                flex-shrink: 0 !important;
-                box-shadow: -4px 4px 12px rgba(0,0,0,0.7), inset 2px 0 6px rgba(255,255,255,0.15) !important;
-                border: 1px solid rgba(191, 164, 111, 0.4) !important;
-                font-family: 'Cinzel', serif !important;
-                transition: transform 0.3s ease, filter 0.3s ease !important;
-            ">   
-                <span style="font-size: 9px !important; color: #bfa46f !important; letter-spacing: 2px !important; text-transform: uppercase; margin-bottom: 8px;">${poem.chapterLabel}</span>   
-                <strong style="font-size: 11px !important; color: inherit !important; font-family: 'Cinzel', serif !important; letter-spacing: 1.5px !important; text-align: center !important; white-space: nowrap !important; margin: auto 0 !important;">${cleanTitle}</strong>   
-                <span style="font-size: 8px !important; opacity: 0.6 !important; margin-top: 8px; text-transform: uppercase;">${poem.spineLabel}</span>   
+            <div class="book-spine trigger-nav" data-target="${pageId}" style="display:inline-block !important; min-width:150px !important; height:180px !important; background:linear-gradient(45deg, #1a1a24, #2c2c3b) !important; border:1px solid #bfa46f !important; border-radius:8px !important; padding:15px !important; margin-right:15px !important; cursor:pointer !important; flex-shrink:0 !important; text-align:center !important; white-space:normal !important;">   
+                <span style="font-size:10px; color:#bfa46f; display:block; margin-bottom:10px;">${poem.chapterLabel}</span>   
+                <strong style="font-size:13px; display:block; color:#f2eee9; font-family:'Cinzel', serif; line-height:1.3;">${cleanTitle}</strong>   
+                <span style="font-size:9px; position:absolute; bottom:15px; left:0; width:100%; color:rgba(255,255,255,0.4); text-align:center;">${poem.spineLabel}</span>   
             </div>`;   
     }
+
 
 
     let svgLines = ''; let starsHtml = '';  
