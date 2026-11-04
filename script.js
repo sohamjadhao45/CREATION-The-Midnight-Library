@@ -1,7 +1,7 @@
 /* =====================================================================
 THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFINITIVE EDITION)
 Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
-===================================================================== */
+==================================================================== */
 
 /* ======================================================  
    📥 AUTOMATIC PWA APP INSTALLATION ENGINE (GLOBAL SCOPE)
