@@ -286,18 +286,7 @@ function buildLibrarySystem() {
 
     if (nav) nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;  
       
-        if (bookshelf) {
-        const spineColors = [
-            "linear-gradient(135deg, #4a2c17, #2d1a0e)", 
-            "linear-gradient(135deg, #5c1d1d, #381010)", 
-            "linear-gradient(135deg, #1b3b2b, #0f2118)", 
-            "linear-gradient(135deg, #2a2a36, #14141c)"  
-        ];
-        const spineHeights = ["190px", "215px", "180px", "225px"];
-        const spineWidths = ["38px", "45px", "35px", "48px"];
-        const spineRotations = ["-3deg", "2deg", "-1.5deg", "1.5deg"];
-
-        let cIndex = i % spineColors.length;
+        
 
             if (bookshelf) {   
         bookshelf.innerHTML += `   
