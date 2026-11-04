@@ -286,14 +286,49 @@ function buildLibrarySystem() {
 
     if (nav) nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;  
       
-    if (bookshelf) {  
-        bookshelf.innerHTML += `  
-            <div class="book-spine spine-locked" style="display:inline-block !important; min-width:150px !important; height:180px !important; background:rgba(255,255,255,0.02) !important; border:1px dashed rgba(191,164,111,0.3) !important; border-radius:8px !important; padding:15px !important; flex-shrink:0 !important; text-align:center !important; opacity:0.5;">  
-                <span style="font-size:10px; display:block; margin-bottom:10px;">CHAPTER III</span>  
-                <strong style="font-size:12px; display:block; color:gray;">THE COSMOS WITHIN</strong>  
-                <span style="font-size:9px; position: absolute; bottom: 15px; width: 100%; left:0; text-align: center; color: rgba(255,255,255,0.3);">COMING SOON</span>  
-            </div>`;  
-    }  
+        if (bookshelf) {
+        const spineColors = [
+            "linear-gradient(135deg, #4a2c17, #2d1a0e)", 
+            "linear-gradient(135deg, #5c1d1d, #381010)", 
+            "linear-gradient(135deg, #1b3b2b, #0f2118)", 
+            "linear-gradient(135deg, #2a2a36, #14141c)"  
+        ];
+        const spineHeights = ["190px", "215px", "180px", "225px"];
+        const spineWidths = ["38px", "45px", "35px", "48px"];
+        const spineRotations = ["-3deg", "2deg", "-1.5deg", "1.5deg"];
+
+        let cIndex = i % spineColors.length;
+
+        bookshelf.innerHTML += `   
+            <div class="book-spine trigger-nav" data-target="${pageId}" style="
+                position: relative !important;
+                display: inline-flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                writing-mode: vertical-rl !important;
+                text-orientation: mixed !important;
+                height: ${spineHeights[cIndex]} !important;
+                width: ${spineWidths[cIndex]} !important;
+                background: ${spineColors[cIndex]} !important;
+                color: #f2eee9 !important;
+                transform: rotate(${spineRotations[cIndex]}) !important;
+                border-radius: 4px 6px 3px 3px !important;
+                padding: 15px 6px !important;
+                margin-right: 8px !important;
+                cursor: pointer !important;
+                flex-shrink: 0 !important;
+                box-shadow: -4px 4px 12px rgba(0,0,0,0.7), inset 2px 0 6px rgba(255,255,255,0.15) !important;
+                border: 1px solid rgba(191, 164, 111, 0.4) !important;
+                font-family: 'Cinzel', serif !important;
+                transition: transform 0.3s ease, filter 0.3s ease !important;
+            ">   
+                <span style="font-size: 9px !important; color: #bfa46f !important; letter-spacing: 2px !important; text-transform: uppercase; margin-bottom: 8px;">${poem.chapterLabel}</span>   
+                <strong style="font-size: 11px !important; color: inherit !important; font-family: 'Cinzel', serif !important; letter-spacing: 1.5px !important; text-align: center !important; white-space: nowrap !important; margin: auto 0 !important;">${cleanTitle}</strong>   
+                <span style="font-size: 8px !important; opacity: 0.6 !important; margin-top: 8px; text-transform: uppercase;">${poem.spineLabel}</span>   
+            </div>`;   
+    }
+
 
     let svgLines = ''; let starsHtml = '';  
     for (let i = 0; i < POEM_DATABASE.length; i++) {  
