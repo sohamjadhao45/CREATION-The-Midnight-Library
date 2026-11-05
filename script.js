@@ -659,6 +659,7 @@ function bindWaxSeals(page) {
 /* ======================================================  
    🎬 COSMIC ENGINE NAVIGATION & SMOOTH 3D TRANSITION
    ====================================================== */  
+
 function initCosmicNavigation() {  
     document.addEventListener("click", (e) => {  
         let targetBtn = e.target.closest("[data-target]") || e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node") || e.target.closest("button");  
@@ -727,7 +728,7 @@ function initCosmicNavigation() {
             crushCurtain.classList.add("active", "run-curtain-crush");
         }
 
-        // ⏳ Optimized Fast Transition Timing (400ms for zero lag)
+        // ⏳ 3D Book Hinge Transition Timing (350ms)
         setTimeout(() => {
             try {  
                 if (currentActivePage) {  
@@ -750,9 +751,9 @@ function initCosmicNavigation() {
                 destinationPage.style.display = "block";  
                 destinationPage.classList.add("active");  
             }  
-        }, 300);
+        }, 350);
 
-        // 🧹 Clean-up
+        // 🧹 Clean-up (700ms)
         setTimeout(() => {
             if (crushCurtain) {
                 crushCurtain.classList.remove("active");
@@ -760,7 +761,7 @@ function initCosmicNavigation() {
             }
             globalState.vortexActive = false;   
             if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);
-        }, 600);
+        }, 700);
 
         document.querySelectorAll(".nav-link").forEach(lnk => {   
             let target = lnk.getAttribute("data-target");  
