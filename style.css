@@ -453,3 +453,88 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     align-items: center;
     backdrop-filter: blur(5px);
 }
+
+/* ======================================================  
+   📖 ULTRA-REALISTIC 3D PAGE FLIP & PAPER CURL ENGINE  
+   ====================================================== */  
+
+/* Perspective container for 3D realism */
+body {
+    perspective: 1600px !important;
+    overflow-x: hidden !important;
+}
+
+/* Page base state with hardware acceleration & smooth shadow depth */
+.page {
+    transform-style: preserve-3d !important;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease !important;
+    backface-visibility: hidden !important;
+}
+
+/* 🌀 Realistic 3D Curled Leaf Effect during transition */
+.page.active {
+    animation: realPageOpen 0.6s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+}
+
+@keyframes realPageOpen {
+    0% {
+        transform: rotateY(-25deg) translateZ(-50px) scale(0.96);
+        opacity: 0.2;
+        filter: brightness(0.7);
+    }
+    50% {
+        transform: rotateY(10deg) translateZ(30px) scale(1.01);
+        filter: brightness(1.05);
+    }
+    100% {
+        transform: rotateY(0deg) translateZ(0) scale(1);
+        opacity: 1;
+        filter: brightness(1);
+    }
+}
+
+/* 📜 Paper Crumple / Curtain Curl Enhancement */
+#paper-crush-curtain {
+    background: radial-gradient(circle, rgba(15, 12, 8, 0.95) 0%, rgba(3, 3, 5, 0.98) 100%) !important;
+    backdrop-filter: blur(8px) !important;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out !important;
+}
+
+#paper-crush-curtain.run-curtain-crush {
+    animation: paperFoldCurtain 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards !important;
+}
+
+@keyframes paperFoldCurtain {
+    0% {
+        transform: scaleX(0.001) scaleY(1);
+        opacity: 0;
+    }
+    40% {
+        transform: scaleX(1) scaleY(1);
+        opacity: 1;
+        box-shadow: inset 0 0 100px rgba(191, 164, 111, 0.4);
+    }
+    70% {
+        transform: scaleX(1) scaleY(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scaleX(0.001) scaleY(1);
+        opacity: 0;
+    }
+}
+
+/* 🌟 Realistic Parchment Lighting & Edge Gloss */
+.antique-parchment {
+    position: relative;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 0 40px rgba(74, 44, 17, 0.15) !important;
+}
+
+.antique-parchment::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.15) 100%);
+    pointer-events: none;
+    border-radius: inherit;
+}
