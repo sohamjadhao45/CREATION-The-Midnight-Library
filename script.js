@@ -443,30 +443,109 @@ function toggleRain() {
         if(audioRain) { audioRain.pause(); }  
     }  
 }  
+function init1111Wish() {   
+    const modal = findSafeElement("wish-modal");   
+    const submitBtn = findSafeElement("submit-wish-btn", "WISH");   
+    const input = findSafeElement("wish-input");   
 
-function init1111Wish() {  
-    const modal = findSafeElement("wish-modal");  
-    const submitBtn = findSafeElement("submit-wish-btn", "WISH");  
-    const input = findSafeElement("wish-input");  
+    // Check on load if user is already a Wishmaker
+    if (localStorage.getItem("isWishmaker") === "true") {
+        applyWishmakerBranding();
+    }
 
-    setInterval(() => {  
-        const d = new Date();  
-        if (d.getHours() === 23 && d.getMinutes() === 11 && !globalState.elevenElevenTriggered) {  
-            globalState.elevenElevenTriggered = true;  
-            if(modal) { modal.style.display = "flex"; }  
-        }  
-        if (d.getMinutes() !== 11) globalState.elevenElevenTriggered = false;   
-    }, 10000);  
+    setInterval(() => {   
+        const d = new Date();   
+        if (d.getHours() === 23 && d.getMinutes() === 11 && !globalState.elevenElevenTriggered) {   
+            globalState.elevenElevenTriggered = true;   
+            if(modal) { modal.style.display = "flex"; }   
+        }   
+        if (d.getMinutes() !== 11) globalState.elevenElevenTriggered = false;    
+    }, 10000);   
 
-    if(submitBtn) {  
-        submitBtn.addEventListener("click", () => {  
-            if(input && input.value.trim() !== "") {  
-                if(modal) modal.style.display = "none";  
-                showToast("Keep visiting, your wish will be completed soon wanderer. ✨");  
-            }  
-        });  
-    }  
-}  
+    if(submitBtn) {   
+        submitBtn.addEventListener("click", () => {   
+            if(input && input.value.trim() !== "") {   
+                if(modal) modal.style.display = "none";   
+                
+                // Track 3 consecutive days wish streak
+                handleWishStreak();
+                
+                input.value = "";   
+                showToast("Keep visiting, your wish will be completed soon wanderer. ✨");   
+            }   
+        });   
+    }   
+}
+
+function handleWishStreak() {
+    const today = new Date().toDateString();
+    const lastWishDate = localStorage.getItem("lastWishDate");
+    let streak = parseInt(localStorage.getItem("wishStreakCount") || "0");
+
+    if (lastWishDate) {
+        const lastDate = new Date(lastWishDate);
+        const currentDate = new Date(today);
+        const diffTime = Math.abs(currentDate - lastDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+            streak++;
+        } else if (diffDays > 1) {
+            streak = 1; // Reset if streak broken
+        }
+        // If diffDays === 0, same day, do nothing to streak
+    } else {
+        streak = 1;
+    }
+
+    localStorage.setItem("lastWishDate", today);
+    localStorage.setItem("wishStreakCount", streak);
+
+    // If streak reaches 3 consecutive days
+    if (streak >= 3) {
+        localStorage.setItem("isWishmaker", "true");
+        showWishmakerSanctuary();
+        applyWishmakerBranding();
+    }
+}
+
+function showWishmakerSanctuary() {
+    let roomModal = document.getElementById("wishmaker-room-modal");
+    if (!roomModal) {
+        roomModal = document.createElement("div");
+        roomModal.id = "wishmaker-room-modal";
+        roomModal.innerHTML = `
+            <div class="feedback-modal-content antique-parchment dynamic-shadow" style="text-align: center; max-width: 520px; padding: 30px; border: 2px solid var(--gold);">
+                <div class="top-deco">✧ ─ ❦ ─ ✧</div>
+                <h2 class="moon-glow" style="color: var(--gold); font-family: 'Cinzel', serif; margin: 15px 0; font-size: 22px;">THE SANCTUARY OF THE WISHMAKER</h2>
+                <p style="font-family: 'Cormorant Garamond', serif; font-size: 19px; line-height: 1.6; color: inherit; margin-bottom: 25px; font-style: italic;">
+                    "Tune lagataar teen raaton tak is aakash ko apne dil ke armaan saumpe hain, wanderer. Aasman aur ye purani kitaabein tujhe aaj se 'The Wishmaker' ke roop mein sthapit karti hain. Yeh gupt kaksh ab sada ke liye tere naam hai."
+                </p>
+                <button class="btn-utility" id="enter-wishmaker-room" style="padding: 10px 25px; cursor: pointer; font-family: 'Cinzel', serif;">Enter Your Sanctuary ✨</button>
+            </div>
+        `;
+        document.body.appendChild(roomModal);
+        document.getElementById("enter-wishmaker-room").addEventListener("click", () => {
+            roomModal.style.display = "none";
+            showToast("✨ Swagat hai, Wishmaker!");
+        });
+    }
+    roomModal.style.display = "flex";
+}
+
+function applyWishmakerBranding() {
+    const greeting = findSafeElement("vault-greeting");
+    if (greeting) {
+        greeting.innerHTML = `Swagat hai <span style="color:var(--gold); font-family:'Cinzel',serif; font-weight:bold;">The Wishmaker</span> ka! Yeh aakash aur rahasya ab aapke hain.`;
+    }
+    
+    // Also update entrance passport title dynamically if present
+    const passportHeader = document.querySelector(".intro-subtitle") || document.querySelector(".poem-subtitle");
+    if(passportHeader) {
+        passportHeader.innerText = "✦ Authorized Access: The Wishmaker ✦";
+    }
+}
+
 
 function initClockAndAtmosphere() {  
     const dateEl = findSafeElement("journal-date");   
