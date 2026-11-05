@@ -135,16 +135,17 @@ fetch('poem.json')
         console.error("Critical Error inside Library Fetch: ", error);  
     });  
 
-function initTouchRipple() {  
-    document.body.addEventListener('click', (e) => {  
-        const ripple = document.createElement('div');  
-        ripple.className = 'touch-ripple';  
-        ripple.style.left = e.clientX + 'px';  
-        ripple.style.top = e.clientY + 'px';  
-        document.body.appendChild(ripple);  
-        setTimeout(() => ripple.remove(), 800);  
-    });  
-}  
+function initTouchRipple() {   
+    document.body.addEventListener('click', (e) => {   
+        const ripple = document.createElement('div');   
+        ripple.className = 'touch-ripple';   
+        ripple.style.left = e.clientX + 'px';   
+        ripple.style.top = e.clientY + 'px';   
+        document.body.appendChild(ripple);   
+        setTimeout(() => ripple.remove(), 400);   
+    }, { passive: true });   
+}
+
 
 function initPassport() {  
     const input = findSafeElement("visitor-name", "visitor");  
