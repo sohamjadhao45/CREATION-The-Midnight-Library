@@ -454,3 +454,48 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     backdrop-filter: blur(5px);
 }
 
+/* ======================================================  
+   📖 NON-LAGGY SMOOTH 3D PAGE FLIP ENGINE  
+   ====================================================== */  
+body {
+    perspective: 1200px !important;
+    overflow-x: hidden !important;
+}
+
+.page {
+    transform-style: preserve-3d !important;
+    backface-visibility: hidden !important;
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.page.active {
+    animation: smoothPageFadeIn 0.4s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+}
+
+@keyframes smoothPageFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Crisp Paper Curtain Transition */
+#paper-crush-curtain {
+    background: rgba(3, 3, 8, 0.92) !important;
+    backdrop-filter: blur(6px) !important;
+    transition: transform 0.3s ease, opacity 0.3s ease !important;
+}
+
+#paper-crush-curtain.run-curtain-crush {
+    animation: curtainSnap 0.5s cubic-bezier(0.77, 0, 0.175, 1) forwards !important;
+}
+
+@keyframes curtainSnap {
+    0% { transform: scaleX(0); opacity: 0; }
+    50% { transform: scaleX(1); opacity: 1; }
+    100% { transform: scaleX(0); opacity: 0; }
+}
