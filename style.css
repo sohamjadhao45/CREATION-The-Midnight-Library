@@ -522,3 +522,32 @@ body {
         opacity: 0;
     }
 }
+/* 🛠️ Page Flip Layout Stabilization & Anti-Jitter Fix */
+html, body {
+    overflow-x: hidden !important;
+    scroll-behavior: auto !important;
+}
+
+.page {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 850px !important;
+    margin: 0 auto !important;
+    transform: none !important;
+    transition: opacity 0.3s ease-in-out !important;
+}
+
+.page:not(.active) {
+    display: none !important;
+}
+
+.page.active {
+    display: flex !important;
+    opacity: 1 !important;
+    animation: fadeInClean 0.4s ease forwards !important;
+}
+
+@keyframes fadeInClean {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
