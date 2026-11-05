@@ -692,13 +692,12 @@ function initCosmicNavigation() {
         let destinationPage = document.getElementById(targetPageId);  
           
         if (!destinationPage) {  
-            if (targetPageId === "page-about") destinationPage = document.getElementById("author-chamber") || document.querySelector(".page-about") || document.querySelector("[id*='about']");  
-            if (targetPageId === "page-fragments") destinationPage = document.getElementById("notes-room") || document.querySelector(".page-fragments") || document.querySelector("[id*='fragment']");  
-            if (targetPageId === "page-archive") destinationPage = document.getElementById("ancient-shelf") || document.querySelector(".page-archive") || document.querySelector("[id*='archive']");  
+            if (targetPageId === "page-about") destinationPage = document.getElementById("author-chamber") || document.querySelector(".page-about");  
+            if (targetPageId === "page-fragments") destinationPage = document.getElementById("notes-room") || document.querySelector(".page-fragments");  
+            if (targetPageId === "page-archive") destinationPage = document.getElementById("ancient-shelf") || document.querySelector(".page-archive");  
         }  
 
         if (!destinationPage) {  
-            console.error("Target page not found: " + targetPageId + ". Resetting to entrance.");  
             destinationPage = document.getElementById("page1") || document.querySelector(".page");  
         }  
 
@@ -708,7 +707,6 @@ function initCosmicNavigation() {
         if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();  
           
         globalState.vortexActive = true;   
-        document.body.style.overflowY = 'hidden';   
           
         if (targetPageId === "page-fragments") {  
             const currentCombo = notesCombos[globalState.notesVisitCount % 5];  
@@ -724,12 +722,12 @@ function initCosmicNavigation() {
         if (crushCurtain) {
             if (turnSound) {
                 turnSound.currentTime = 0;
-                turnSound.play().catch(err => console.log("Sound buffered safely"));
+                turnSound.play().catch(err => console.log("Sound played safely"));
             }
             crushCurtain.classList.add("active", "run-curtain-crush");
         }
 
-        // ⏳ 3D CRUMPLE MIDPOINT TRANSITION (1200ms)
+        // ⏳ Optimized Fast Transition Timing (400ms for zero lag)
         setTimeout(() => {
             try {  
                 if (currentActivePage) {  
@@ -752,18 +750,17 @@ function initCosmicNavigation() {
                 destinationPage.style.display = "block";  
                 destinationPage.classList.add("active");  
             }  
-        }, 1200);
+        }, 300);
 
-        // 🧹 LAYER REMOVAL CLEAN-UP (2420ms)
+        // 🧹 Clean-up
         setTimeout(() => {
             if (crushCurtain) {
                 crushCurtain.classList.remove("active");
                 crushCurtain.classList.remove("run-curtain-crush");
             }
             globalState.vortexActive = false;   
-            document.body.style.overflowY = 'auto';   
             if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);
-        }, 2420);
+        }, 600);
 
         document.querySelectorAll(".nav-link").forEach(lnk => {   
             let target = lnk.getAttribute("data-target");  
@@ -771,6 +768,7 @@ function initCosmicNavigation() {
         });  
     }
 }
+
                 
 function applyWhispers(el, poemIndex) {  
     const pData = POEM_DATABASE[poemIndex];  
