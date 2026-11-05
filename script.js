@@ -533,16 +533,35 @@ function showWishmakerSanctuary() {
     roomModal.style.display = "flex";
 }
 
+
 function applyWishmakerBranding() {
     const greeting = findSafeElement("vault-greeting");
     if (greeting) {
         greeting.innerHTML = `Swagat hai <span style="color:var(--gold); font-family:'Cinzel',serif; font-weight:bold;">The Wishmaker</span> ka! Yeh aakash aur rahasya ab aapke hain.`;
     }
     
-    // Also update entrance passport title dynamically if present
     const passportHeader = document.querySelector(".intro-subtitle") || document.querySelector(".poem-subtitle");
     if(passportHeader) {
         passportHeader.innerText = "✦ Authorized Access: The Wishmaker ✦";
+    }
+
+    // ✨ Permanent Flex Button for Friends & Quick Access
+    let navContainer = document.querySelector(".library-nav") || document.querySelector("nav") || document.querySelector(".top-buttons") || document.querySelector("header");
+    let existingFlexBtn = document.getElementById("permanent-wishmaker-btn");
+    
+    if (!existingFlexBtn && navContainer) {
+        const flexBtn = document.createElement("button");
+        flexBtn.id = "permanent-wishmaker-btn";
+        flexBtn.className = "nav-link btn-utility";
+        flexBtn.style.cssText = "color: var(--gold) !important; border: 1px solid var(--gold) !important; background: rgba(191,164,111,0.1) !important; font-family: 'Cinzel', serif; margin: 5px; cursor: pointer;";
+        flexBtn.innerHTML = "✨ Wishmaker Room";
+        
+        flexBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            showWishmakerSanctuary();
+        });
+        
+        navContainer.appendChild(flexBtn);
     }
 }
 
