@@ -419,3 +419,37 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     margin-top: 8px !important;
     margin-bottom: 0 !important;
 }
+/* ⚡ Optimized Non-Laggy Touch Ripple */
+.touch-ripple {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: rippleAnim 0.4s ease-out forwards;
+    pointer-events: none;
+    z-index: 99999;
+}
+
+@keyframes rippleAnim {
+    to {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+}
+
+/* 🏛️ Wishmaker Sanctuary Room Modal Styling */
+#wishmaker-room-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(3, 3, 8, 0.85);
+    z-index: 100000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
