@@ -659,7 +659,6 @@ function bindWaxSeals(page) {
 /* ======================================================  
    🎬 COSMIC ENGINE NAVIGATION & SMOOTH 3D TRANSITION
    ====================================================== */  
-
 function initCosmicNavigation() {  
     document.addEventListener("click", (e) => {  
         let targetBtn = e.target.closest("[data-target]") || e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node") || e.target.closest("button");  
@@ -693,12 +692,13 @@ function initCosmicNavigation() {
         let destinationPage = document.getElementById(targetPageId);  
           
         if (!destinationPage) {  
-            if (targetPageId === "page-about") destinationPage = document.getElementById("author-chamber") || document.querySelector(".page-about");  
-            if (targetPageId === "page-fragments") destinationPage = document.getElementById("notes-room") || document.querySelector(".page-fragments");  
-            if (targetPageId === "page-archive") destinationPage = document.getElementById("ancient-shelf") || document.querySelector(".page-archive");  
+            if (targetPageId === "page-about") destinationPage = document.getElementById("author-chamber") || document.querySelector(".page-about") || document.querySelector("[id*='about']");  
+            if (targetPageId === "page-fragments") destinationPage = document.getElementById("notes-room") || document.querySelector(".page-fragments") || document.querySelector("[id*='fragment']");  
+            if (targetPageId === "page-archive") destinationPage = document.getElementById("ancient-shelf") || document.querySelector(".page-archive") || document.querySelector("[id*='archive']");  
         }  
 
         if (!destinationPage) {  
+            console.error("Target page not found: " + targetPageId + ". Resetting to entrance.");  
             destinationPage = document.getElementById("page1") || document.querySelector(".page");  
         }  
 
@@ -708,6 +708,7 @@ function initCosmicNavigation() {
         if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();  
           
         globalState.vortexActive = true;   
+        document.body.style.overflowY = 'hidden';   
           
         if (targetPageId === "page-fragments") {  
             const currentCombo = notesCombos[globalState.notesVisitCount % 5];  
@@ -723,12 +724,12 @@ function initCosmicNavigation() {
         if (crushCurtain) {
             if (turnSound) {
                 turnSound.currentTime = 0;
-                turnSound.play().catch(err => console.log("Sound played safely"));
+                turnSound.play().catch(err => console.log("Sound buffered safely"));
             }
             crushCurtain.classList.add("active", "run-curtain-crush");
         }
 
-        // ⏳ 3D Book Hinge Transition Timing (350ms)
+        // ⏳ 3D CRUMPLE MIDPOINT TRANSITION (1200ms)
         setTimeout(() => {
             try {  
                 if (currentActivePage) {  
@@ -751,17 +752,18 @@ function initCosmicNavigation() {
                 destinationPage.style.display = "block";  
                 destinationPage.classList.add("active");  
             }  
-        }, 350);
+        }, 1200);
 
-        // 🧹 Clean-up (700ms)
+        // 🧹 LAYER REMOVAL CLEAN-UP (2420ms)
         setTimeout(() => {
             if (crushCurtain) {
                 crushCurtain.classList.remove("active");
                 crushCurtain.classList.remove("run-curtain-crush");
             }
             globalState.vortexActive = false;   
+            document.body.style.overflowY = 'auto';   
             if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);
-        }, 700);
+        }, 2420);
 
         document.querySelectorAll(".nav-link").forEach(lnk => {   
             let target = lnk.getAttribute("data-target");  
@@ -769,7 +771,6 @@ function initCosmicNavigation() {
         });  
     }
 }
-
                 
 function applyWhispers(el, poemIndex) {  
     const pData = POEM_DATABASE[poemIndex];  
