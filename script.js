@@ -286,19 +286,6 @@ function buildLibrarySystem() {
 
     if (nav) nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;  
       
-        
-
-            if (bookshelf) {   
-        bookshelf.innerHTML += `   
-            <div class="book-spine trigger-nav" data-target="${pageId}" style="display:inline-block !important; min-width:150px !important; height:180px !important; background:linear-gradient(45deg, #1a1a24, #2c2c3b) !important; border:1px solid #bfa46f !important; border-radius:8px !important; padding:15px !important; margin-right:15px !important; cursor:pointer !important; flex-shrink:0 !important; text-align:center !important; white-space:normal !important;">   
-                <span style="font-size:10px; color:#bfa46f; display:block; margin-bottom:10px;">${poem.chapterLabel}</span>   
-                <strong style="font-size:13px; display:block; color:#f2eee9; font-family:'Cinzel', serif; line-height:1.3;">${cleanTitle}</strong>   
-                <span style="font-size:9px; position:absolute; bottom:15px; left:0; width:100%; color:rgba(255,255,255,0.4); text-align:center;">${poem.spineLabel}</span>   
-            </div>`;   
-    }
-
-
-
     let svgLines = ''; let starsHtml = '';  
     for (let i = 0; i < POEM_DATABASE.length; i++) {  
         if(!starCoords[i]) break;   
