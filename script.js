@@ -153,7 +153,7 @@ function initPassport() {
     const savedName = localStorage.getItem("midnightVisitor");  
     if(savedName && input) input.value = savedName;  
 
-        if(enterBtn) {  
+    if(enterBtn) {  
         enterBtn.addEventListener("click", () => {  
             let name = input ? input.value.trim() : "";  
             if(!name) name = "Wanderer";  
@@ -172,7 +172,7 @@ function initPassport() {
             const letterTitle = findSafeElement("reader-letter-title");  
             if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;  
 
-            // 🕒 Time-Based Automatic Theme Switch
+            // 🕒 Time-Based Automatic Theme Switch (5:00 AM to 8:00 PM -> Day Mode, Else -> Night Mode)
             const currentHour = new Date().getHours();
             const themeBtn = findSafeElement("theme-toggle");
             
@@ -197,6 +197,7 @@ function initPassport() {
             }  
         });  
     }  
+}
 
 
 function buildLibrarySystem() {  
