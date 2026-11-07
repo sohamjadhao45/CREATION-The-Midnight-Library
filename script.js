@@ -189,14 +189,16 @@ function initPassport() {
             const introScreen = findSafeElement("intro-screen");  
             if(introScreen) introScreen.classList.add("fade-out");  
               
+            // 🎶 Play Original Ambience Track on "OPEN THE GATES"
             if(audioAmbient && !globalState.isAudioPlaying) {  
-                audioAmbient.volume = 0.2;  
+                audioAmbient.volume = 0.4;  
                 audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));  
                 globalState.isAudioPlaying = true;  
             }  
         });  
     }  
-}  
+}
+
 
 
 function buildLibrarySystem() {  
