@@ -149,7 +149,7 @@ function initTouchRipple() {
 
 function initPassport() {  
     const input = findSafeElement("visitor-name", "visitor");  
-    const enterBtn = findSafeElement("enter-library-btn", "OPEN THE GATES");  
+    const enterBtn = findSafeElement("enter-library-btn", "ENTER THE WONDER OF COSMIC CREATIVITY");  
     const savedName = localStorage.getItem("midnightVisitor");  
     if(savedName && input) input.value = savedName;  
 
@@ -189,7 +189,7 @@ function initPassport() {
             const introScreen = findSafeElement("intro-screen");  
             if(introScreen) introScreen.classList.add("fade-out");  
               
-            // 🎶 Play Original Ambience Track on "OPEN THE GATES"
+            // 🎶 Play Original Ambience Track on Entry
             if(audioAmbient && !globalState.isAudioPlaying) {  
                 audioAmbient.volume = 0.4;  
                 audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));  
@@ -197,7 +197,7 @@ function initPassport() {
             }  
         });  
     }  
-}
+}  
 
 
 function buildLibrarySystem() {  
@@ -449,7 +449,6 @@ function init1111Wish() {
     const submitBtn = findSafeElement("submit-wish-btn", "WISH");   
     const input = findSafeElement("wish-input");   
 
-    // Check on load if user is already a Wishmaker
     if (localStorage.getItem("isWishmaker") === "true") {
         applyWishmakerBranding();
     }
@@ -467,10 +466,7 @@ function init1111Wish() {
         submitBtn.addEventListener("click", () => {   
             if(input && input.value.trim() !== "") {   
                 if(modal) modal.style.display = "none";   
-                
-                // Track 3 consecutive days wish streak
                 handleWishStreak();
-                
                 input.value = "";   
                 showToast("Keep visiting, your wish will be completed soon wanderer. ✨");   
             }   
@@ -492,9 +488,8 @@ function handleWishStreak() {
         if (diffDays === 1) {
             streak++;
         } else if (diffDays > 1) {
-            streak = 1; // Reset if streak broken
+            streak = 1; 
         }
-        // If diffDays === 0, same day, do nothing to streak
     } else {
         streak = 1;
     }
@@ -502,7 +497,6 @@ function handleWishStreak() {
     localStorage.setItem("lastWishDate", today);
     localStorage.setItem("wishStreakCount", streak);
 
-    // If streak reaches 3 consecutive days
     if (streak >= 3) {
         localStorage.setItem("isWishmaker", "true");
         showWishmakerSanctuary();
@@ -546,7 +540,6 @@ function applyWishmakerBranding() {
         passportHeader.innerText = "✦ Authorized Access: The Wishmaker ✦";
     }
 
-    // ✨ Permanent Flex Button for Friends & Quick Access
     let navContainer = document.querySelector(".library-nav") || document.querySelector("nav") || document.querySelector(".top-buttons") || document.querySelector("header");
     let existingFlexBtn = document.getElementById("permanent-wishmaker-btn");
     
@@ -699,7 +692,6 @@ function initCosmicNavigation() {
         }  
 
         if (!destinationPage) {  
-            console.error("Target page not found: " + targetPageId + ". Resetting to entrance.");  
             destinationPage = document.getElementById("page1") || document.querySelector(".page");  
         }  
 
@@ -730,7 +722,6 @@ function initCosmicNavigation() {
             crushCurtain.classList.add("active", "run-curtain-crush");
         }
 
-        // ⏳ 3D CRUMPLE MIDPOINT TRANSITION (1200ms)
         setTimeout(() => {
             try {  
                 if (currentActivePage) {  
@@ -755,7 +746,6 @@ function initCosmicNavigation() {
             }  
         }, 1200);
 
-        // 🧹 LAYER REMOVAL CLEAN-UP (2420ms)
         setTimeout(() => {
             if (crushCurtain) {
                 crushCurtain.classList.remove("active");
@@ -1177,7 +1167,6 @@ document.addEventListener("click", (e) => {
     if (!e.target) return;
     const text = e.target.textContent.trim().toUpperCase();
 
-    // Direct Catch For Leave the Vault
     if (text === "LEAVE THE VAULT") {
         e.preventDefault();
         const vaultPage = document.getElementById("page-secret");
@@ -1190,8 +1179,7 @@ document.addEventListener("click", (e) => {
         }
     }
 
-    // Direct Catch For Open the Gates (Cinematic Flow Bound)
-    if (text === "OPEN THE GATES") {
+    if (text.includes("ENTER THE WONDER OF COSMIC CREATIVITY")) {
         e.preventDefault();
         if (typeof executePageFlip === "function") {
             executePageFlip("poem-page-1");
@@ -1199,18 +1187,15 @@ document.addEventListener("click", (e) => {
     }
 });
 
- // 🌐 Offline Connection Alert Engine
-window.addEventListener('load', () => {
+ window.addEventListener('load', () => {
     function checkNetworkStatus() {
         if (!navigator.onLine) {
             showToast("📱⚠️ NETWORK CONNECTION LOST ! Try connecting for Wondering through the Library");
         }
     }
 
-    // Jab page load ho tab check kare
     checkNetworkStatus();
 
-    // Jab network jaye ya aaye tab live detect kare
     window.addEventListener('online', () => {
         showToast("✨ INTERNET CONNECTED ! Now you are free to Wonder");
     });
@@ -1221,4 +1206,3 @@ window.addEventListener('load', () => {
 });
   
 });
-
