@@ -82,29 +82,49 @@
     </div>
   </div>
 
-  <div id="intro-screen">  
-    <div class="intro-content">  
-      <h1 class="intro-title moon-glow">CREATION</h1>  
-      <div class="intro-line"></div>  
-      <div class="intro-prose">  
-        <p>CREATION is a digital sanctuary crafted by Soham Madan Jadhao — a space where thoughts, emotions, memories, and imagination find their voice through words.</p>  
-        <p>This library was created to explore the beauty of creativity in its many forms. Here, every poem, note, and fragment stands as a reminder that even the simplest moments can inspire something meaningful.</p>  
-        <p>Within these pages, you will find reflections on life, love, time, growth, dreams, and the countless emotions that shape our journeys. Some pieces are complete stories, while others are merely whispers of a thought waiting to bloom.</p>  
-        <p class="intro-highlight">"May these words remind you that creativity is not reserved for a chosen few—it lives quietly within every soul willing to listen." 🌙✨</p>  
-      </div>  
-
-      <div class="passport-section mt-20">  
-          <input type="text" id="visitor-name" class="passport-input" placeholder="Your name please?" autocomplete="off" spellcheck="false">  
-      </div>  
+  
+<div id="intro-screen">  
+  <div class="intro-visual-container">
+    <div class="intro-bg-image"></div>
+    <div class="intro-camera-rig">
+      <div class="book-3d-wrapper">
+        <div class="flipping-pages-stack">
+          <div class="f-page f-page-1"></div>
+          <div class="f-page f-page-2"></div>
+          <div class="f-page f-page-3"></div>
+        </div>
         
-      <p class="secret-hint" style="font-size: 12px; letter-spacing: 4px; margin-top: 15px; color: var(--text-muted);">  
-        moon : <span id="secret-word" style="color: var(--gold); font-weight: bold;">silence</span>  
-      </p>  
+        <div class="final-open-page antique-parchment">
+          <div class="top-deco">✧ ─ ❦ ─ ✧</div>
+          <p class="story-pretitle">The Abandoned Story About...</p>
+          <h1 class="intro-title moon-glow">CREATION</h1>
+          <h2 class="intro-subtitle-library">THE MIDNIGHT LIBRARY</h2>
+          
+          <div class="intro-line"></div>
+          
+          <p class="intro-tagline-quote">"In the silence of creation, the soul discovers itself."</p>
+          
+          <div class="intro-poetic-addition">
+            <p>"Written upon forgotten leaves, where time stands still and whispers glow..."</p>
+          </div>
+          
+          <p class="author-signature-intro">— Soham Madan Jadhao</p>
 
-      <button id="enter-library-btn" class="btn-solid" style="margin-top: 20px;">OPEN THE GATES</button>  
-      <button id="install-app-btn" class="btn-outline" style="margin-top: 10px; display: none;">INSTALL APP</button>
+          <div class="passport-section mt-20">  
+              <input type="text" id="visitor-name" class="passport-input" placeholder="Wanderer, enter your name..." autocomplete="off" spellcheck="false">  
+          </div>  
+            
+          <p class="secret-hint" style="font-size: 11px; letter-spacing: 3px; margin-top: 10px; color: var(--text-muted);">  
+            moon : <span id="secret-word" style="color: var(--gold); font-weight: bold;">silence</span>  
+          </p>  
+
+          <button id="enter-library-btn" class="btn-solid enter-cosmic-btn">ENTER THE WONDER OF COSMIC CREATIVITY ✦</button>  
+          <button id="install-app-btn" class="btn-outline" style="margin-top: 10px; display: none;">INSTALL APP</button>
+        </div>
+      </div>
     </div>
-  </div>  
+  </div>
+</div>
 
   <canvas id="universe"></canvas>
 
