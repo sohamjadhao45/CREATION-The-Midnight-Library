@@ -305,5 +305,18 @@
   </footer>    
 
   <script src="script.js?v=3"></script>  
+  <!-- 📱 Custom PWA Install Pop-up Modal -->
+  <div id="custom-install-modal" class="modal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);">  
+    <div class="modal-content antique-parchment dynamic-shadow" style="padding: 35px 30px; text-align: center; max-width: 420px; width: 90%;">  
+      <div class="top-deco">✧ ─ ❦ ─ ✧</div>
+      <h3 class="moon-glow" style="color:var(--gold); font-family:'Cinzel', serif; font-size: 22px; letter-spacing: 2px; margin-bottom: 15px;">INSTALL THE APP</h3>  
+      <p style="margin: 15px 0 25px; font-family:'Cormorant Garamond', serif; font-size: 18px; color: var(--parchment-text); line-height: 1.6;">Would you like to install the Creation app for your convenience?</p>  
+      <div class="button-row" style="justify-content: center; gap: 15px; margin-top: 0;">
+        <button id="modal-cancel-install" class="btn-outline" style="padding: 10px 20px;">Cancel</button>
+        <button id="modal-confirm-install" class="btn-solid" style="padding: 10px 20px;">Install</button>
+      </div>
+    </div>  
+  </div>
+
 </body>  
 </html>
