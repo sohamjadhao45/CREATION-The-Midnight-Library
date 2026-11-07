@@ -162,10 +162,15 @@ function initPassport() {
 
     if (enterBtn) {
         enterBtn.addEventListener("click", (e) => {
+            // Agar deferredPrompt available hai, toh modal dikhayein
             if (deferredPrompt && installModal) {
                 e.preventDefault();
                 installModal.style.display = "flex";
             } else {
+                // Fallback: Agar prompt ready nahi bhi hai, toh testing ke liye ya seedha entry ke liye 
+                // aap chahein toh modal dikha sakte hain ya seedha proceed kar sakte hain. 
+                // Yahan hum ensure kar rahe hain ki agar modal DOM mein hai aur forced test karni ho toh uncomment kar lein:
+                // e.preventDefault(); if(installModal) installModal.style.display = "flex"; else proceedIntoLibrary();
                 proceedIntoLibrary();
             }
         });
