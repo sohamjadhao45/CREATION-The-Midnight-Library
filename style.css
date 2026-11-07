@@ -69,7 +69,7 @@ body.reading-mode .exit-focus-btn { display: block; }
     width: 100vw; 
     height: 100vh; 
     background: #020203; 
-    z-index: 1000; 
+    z-index: 1000000; 
     overflow: hidden;
     transition: opacity 1.2s ease, visibility 1.2s ease;
 }
@@ -126,7 +126,6 @@ body.reading-mode .exit-focus-btn { display: block; }
     transform-style: preserve-3d;
 }
 
-/* Fast Page Flip Overlay Animation */
 .flipping-pages-stack {
     position: absolute;
     inset: 0;
@@ -155,7 +154,6 @@ body.reading-mode .exit-focus-btn { display: block; }
     100% { opacity: 0; transform: rotateY(-170deg); }
 }
 
-/* Final Open Page Reveal */
 .final-open-page {
     position: relative;
     z-index: 2;
@@ -360,9 +358,6 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
 .pc-date { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 12px; color: var(--text-muted); }
 .pc-text { font-family: 'Playfair Display', serif; font-size: 15.5px; color: var(--parchment-text); line-height: 1.6; word-wrap: break-word; }
 
-/* =====================================================================
-   🎬 REALISTIC 3D PAPER CRUMPLE ENGINE (EXTRA SMOOTH & CINEMATIC)
-   ===================================================================== */
 #paper-crush-curtain {
     position: fixed;
     top: 0;
@@ -412,7 +407,6 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     100% { opacity: 1; transform: scale(1) rotateX(0deg) rotateY(0deg) skew(0deg); border-radius: 4px; filter: contrast(1); }
 }
 
-/* 🏛️ ULTRA SCROLL-FRIENDLY MYSTERY VAULT FULLSCREEN LOOK */
 #page-secret.active {
     position: absolute !important; 
     top: 0 !important;
@@ -428,7 +422,7 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     flex-direction: column !important;
     align-items: center !important;
 }
-/* ☀️ Day Mode Fix for Mystic Ledger Modal */
+
 [data-theme="light"] .feedback-modal-content,
 [data-theme="light"] .antique-parchment {
     background-color: #f4ebd0 !important;
@@ -463,7 +457,6 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     color: rgba(59, 34, 16, 0.5) !important;
 }
 
-/* 📚 ANCIENT SHELF - VINTAGE BOOK SPINES WITH NAMES */
 .page-archive #dynamic-bookshelf,
 .page-archive .bookshelf-container {
     display: flex !important;
@@ -479,7 +472,6 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     min-height: 260px !important;
 }
 
-/* Individual Book Spine Styling */
 .page-archive .book-spine {
     position: relative !important;
     display: flex !important;
@@ -497,112 +489,37 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     border: 1px solid rgba(191, 164, 111, 0.4) !important;
 }
 
-/* Hover Effect */
 .page-archive .book-spine:hover {
     transform: translateY(-12px) rotate(0deg) !important;
     filter: brightness(1.25);
 }
 
-/* 🎨 Varied Antique Heights, Widths, Tilts & Rich Colors with Visible Text */
 .page-archive .book-spine:nth-child(1) {
-    height: 200px !important;
-    width: 40px !important;
-    background: linear-gradient(135deg, #4a2c17, #2d1a0e) !important;
-    color: #f2eee9 !important;
-    transform: rotate(-3deg);
+    height: 200px !important; width: 40px !important; background: linear-gradient(135deg, #4a2c17, #2d1a0e) !important; color: #f2eee9 !important; transform: rotate(-3deg);
 }
-
 .page-archive .book-spine:nth-child(2) {
-    height: 220px !important;
-    width: 46px !important;
-    background: linear-gradient(135deg, #5c1d1d, #381010) !important;
-    color: #f2eee9 !important;
-    transform: rotate(2deg);
+    height: 220px !important; width: 46px !important; background: linear-gradient(135deg, #5c1d1d, #381010) !important; color: #f2eee9 !important; transform: rotate(2deg);
 }
-
 .page-archive .book-spine:nth-child(3) {
-    height: 185px !important;
-    width: 38px !important;
-    background: linear-gradient(135deg, #1b3b2b, #0f2118) !important;
-    color: #bfa46f !important;
-    transform: rotate(-1.5deg);
+    height: 185px !important; width: 38px !important; background: linear-gradient(135deg, #1b3b2b, #0f2118) !important; color: #bfa46f !important; transform: rotate(-1.5deg);
 }
-
 .page-archive .book-spine:nth-child(4) {
-    height: 230px !important;
-    width: 50px !important;
-    background: linear-gradient(135deg, #2a2a36, #14141c) !important;
-    color: #dfc28d !important;
-    transform: rotate(1.5deg);
+    height: 230px !important; width: 50px !important; background: linear-gradient(135deg, #2a2a36, #14141c) !important; color: #dfc28d !important; transform: rotate(1.5deg);
 }
-
 .page-archive .book-spine:nth-child(n+5) {
-    height: 210px !important;
-    width: 42px !important;
-    background: linear-gradient(135deg, #3d2612, #211408) !important;
-    color: #d4af37 !important;
-    transform: rotate(-2deg);
+    height: 210px !important; width: 42px !important; background: linear-gradient(135deg, #3d2612, #211408) !important; color: #d4af37 !important; transform: rotate(-2deg);
 }
 
-/* ✍️ Book Spine Text Styling (Chapter & Names Visible) */
 .page-archive .book-spine span {
-    font-size: 9px !important;
-    color: #bfa46f !important;
-    letter-spacing: 2px !important;
-    margin-bottom: 8px !important;
-    text-transform: uppercase !important;
+    font-size: 9px !important; color: #bfa46f !important; letter-spacing: 2px !important; margin-bottom: 8px !important; text-transform: uppercase !important;
 }
-
 .page-archive .book-spine strong {
-    font-size: 11px !important;
-    color: inherit !important;
-    font-family: 'Cinzel', serif !important;
-    letter-spacing: 1.5px !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-    margin: auto 0 !important;
+    font-size: 11px !important; color: inherit !important; font-family: 'Cinzel', serif !important; letter-spacing: 1.5px !important; text-align: center !important; white-space: nowrap !important; margin: auto 0 !important;
 }
-
-/* Footer tag inside spine */
 .page-archive .book-spine span:last-of-type {
-    font-size: 8px !important;
-    opacity: 0.6 !important;
-    margin-top: 8px !important;
-    margin-bottom: 0 !important;
-}
-/* ⚡ Optimized Non-Laggy Touch Ripple */
-.touch-ripple {
-    position: fixed;
-    width: 30px;
-    height: 30px;
-    border: 1px solid var(--gold);
-    border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    animation: rippleAnim 0.4s ease-out forwards;
-    pointer-events: none;
-    z-index: 99999;
+    font-size: 8px !important; opacity: 0.6 !important; margin-top: 8px !important; margin-bottom: 0 !important;
 }
 
-@keyframes rippleAnim {
-    to {
-        transform: translate(-50%, -50%) scale(4);
-        opacity: 0;
-    }
-}
-
-/* 🏛️ Wishmaker Sanctuary Room Modal Styling */
 #wishmaker-room-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(3, 3, 8, 0.85);
-    z-index: 100000;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(5px);
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 3, 8, 0.85); z-index: 100000; justify-content: center; align-items: center; backdrop-filter: blur(5px);
 }
-
-
