@@ -101,6 +101,12 @@ const audioPageTurn = findSafeElement("audio-page-turn");
 const audioRain = findSafeElement("audio-rain");  
 const audioAmbient = findSafeElement("audio-ambient");  
 
+// 🔊 Preload and buffer ambient audio smoothly
+if (audioAmbient) {
+    audioAmbient.preload = "auto";
+    audioAmbient.load();
+}
+
 // =====================================================================  
 // 🚀 INITIALIZATION SEQUENCE  
 // =====================================================================  
@@ -188,13 +194,6 @@ function initPassport() {
 
             const introScreen = findSafeElement("intro-screen");  
             if(introScreen) introScreen.classList.add("fade-out");  
-              
-            // 🎶 Play Original Ambience Track on Entry
-            if(audioAmbient && !globalState.isAudioPlaying) {  
-                audioAmbient.volume = 0.4;  
-                audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));  
-                globalState.isAudioPlaying = true;  
-            }  
         });  
     }  
 }  
@@ -653,6 +652,8 @@ function bindWaxSeals(page) {
 /* ======================================================  
    🎬 COSMIC ENGINE NAVIGATION & SMOOTH 3D TRANSITION
    ====================================================== */  
+let executePageFlip; // Declared globally for interaction control
+
 function initCosmicNavigation() {  
     document.addEventListener("click", (e) => {  
         let targetBtn = e.target.closest("[data-target]") || e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node") || e.target.closest("button");  
@@ -681,7 +682,7 @@ function initCosmicNavigation() {
         }  
     });  
 
-    function executePageFlip(targetPageId) {  
+    executePageFlip = function(targetPageId) {  
         let currentActivePage = document.querySelector(".page.active") || document.querySelector(".page[style*='display: block']") || document.getElementById("page1");  
         let destinationPage = document.getElementById(targetPageId);  
           
@@ -760,7 +761,7 @@ function initCosmicNavigation() {
             let target = lnk.getAttribute("data-target");  
             lnk.classList.toggle("active-nav", target === targetPageId);   
         });  
-    }
+    };
 }
                 
 function applyWhispers(el, poemIndex) {  
@@ -1161,7 +1162,7 @@ window.addEventListener('appinstalled', (evt) => {
 });
 
 /* ======================================================  
-   🎯 ARMED DIRECT INTERACTION CONTROLLERS
+   🎯 ARMED DIRECT INTERACTION CONTROLLERS (AUDIO & PAGE FLIP)
    ====================================================== */  
 document.addEventListener("click", (e) => {
     if (!e.target) return;
@@ -1182,11 +1183,14 @@ document.addEventListener("click", (e) => {
     if (text.includes("ENTER THE WONDER OF COSMIC CREATIVITY")) {
         e.preventDefault();
         
-        // 🎶 Play Original Ambience Track on Entry
-        if(audioAmbient && !globalState.isAudioPlaying) {  
+        // 🎶 Play Original Ambience Track Smoothly with buffer fallback
+        if (audioAmbient && !globalState.isAudioPlaying) {  
             audioAmbient.volume = 0.4;  
-            audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));  
-            globalState.isAudioPlaying = true;  
+            audioAmbient.play().then(() => {
+                globalState.isAudioPlaying = true;
+            }).catch(err => {
+                console.log("Audio autoplay restricted, will resume on next user interaction:", err);
+            });  
         }
 
         if (typeof executePageFlip === "function") {
@@ -1195,4 +1199,22 @@ document.addEventListener("click", (e) => {
     }
 });
 
+window.addEventListener('load', () => {
+    function checkNetworkStatus() {
+        if (!navigator.onLine) {
+            showToast("📱⚠️ NETWORK CONNECTION LOST ! Try connecting for Wondering through the Library");
+        }
+    }
+
+    checkNetworkStatus();
+
+    window.addEventListener('online', () => {
+        showToast("✨ INTERNET CONNECTED ! Now you are free to Wonder");
+    });
+
+    window.addEventListener('offline', () => {
+        showToast("⚠️ CONNECTION LOST ! Either connect or No more Wondering");
+    });
+});
+  
 });
