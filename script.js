@@ -1181,28 +1181,18 @@ document.addEventListener("click", (e) => {
 
     if (text.includes("ENTER THE WONDER OF COSMIC CREATIVITY")) {
         e.preventDefault();
+        
+        // 🎶 Play Original Ambience Track on Entry
+        if(audioAmbient && !globalState.isAudioPlaying) {  
+            audioAmbient.volume = 0.4;  
+            audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));  
+            globalState.isAudioPlaying = true;  
+        }
+
         if (typeof executePageFlip === "function") {
             executePageFlip("poem-page-1");
         }
     }
 });
 
- window.addEventListener('load', () => {
-    function checkNetworkStatus() {
-        if (!navigator.onLine) {
-            showToast("📱⚠️ NETWORK CONNECTION LOST ! Try connecting for Wondering through the Library");
-        }
-    }
-
-    checkNetworkStatus();
-
-    window.addEventListener('online', () => {
-        showToast("✨ INTERNET CONNECTED ! Now you are free to Wonder");
-    });
-
-    window.addEventListener('offline', () => {
-        showToast("⚠️ CONNECTION LOST ! Either connect or No more Wondering");
-    });
-});
-  
 });
