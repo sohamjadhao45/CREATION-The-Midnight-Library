@@ -147,97 +147,56 @@ function initTouchRipple() {
 }
 
 
-/* ======================================================  
-   📱 CUSTOM INSTALL PROMPT & PASSPORT LOGIC  
-   ====================================================== */  
 function initPassport() {  
     const input = findSafeElement("visitor-name", "visitor");  
-    const enterBtn = findSafeElement("enter-library-btn", "ENTER THE WONDER");  
-    const installModal = document.getElementById("custom-install-modal");
-    const confirmInstallBtn = document.getElementById("modal-confirm-install");
-    const cancelInstallBtn = document.getElementById("modal-cancel-install");
-
+    const enterBtn = findSafeElement("enter-library-btn", "OPEN THE GATES");  
     const savedName = localStorage.getItem("midnightVisitor");  
     if(savedName && input) input.value = savedName;  
 
-    if (enterBtn) {
-        enterBtn.addEventListener("click", (e) => {
-            // Agar deferredPrompt available hai, toh modal dikhayein
-            if (deferredPrompt && installModal) {
-                e.preventDefault();
-                installModal.style.display = "flex";
+    if(enterBtn) {  
+        enterBtn.addEventListener("click", () => {  
+            let name = input ? input.value.trim() : "";  
+            if(!name) name = "Wanderer";  
+              
+            if(name.toLowerCase() === "silence") {  
+                globalState.hasTypedWord = true;  
+                checkUltimateVault();  
+            }  
+
+            localStorage.setItem("midnightVisitor", name);  
+            globalState.visitorName = name;  
+              
+            const greeting = findSafeElement("vault-greeting");  
+            if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;  
+
+            const letterTitle = findSafeElement("reader-letter-title");  
+            if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;  
+
+            // 🕒 Time-Based Automatic Theme Switch (5:00 AM to 8:00 PM -> Day Mode, Else -> Night Mode)
+            const currentHour = new Date().getHours();
+            const themeBtn = findSafeElement("theme-toggle");
+            
+            if (currentHour >= 5 && currentHour < 20) {
+                document.documentElement.setAttribute("data-theme", "light");
+                if (themeBtn) themeBtn.innerText = "☀️ Day";
+                globalState.activeTheme = "light";
             } else {
-                // Fallback: Agar prompt ready nahi bhi hai, toh testing ke liye ya seedha entry ke liye 
-                // aap chahein toh modal dikha sakte hain ya seedha proceed kar sakte hain. 
-                // Yahan hum ensure kar rahe hain ki agar modal DOM mein hai aur forced test karni ho toh uncomment kar lein:
-                // e.preventDefault(); if(installModal) installModal.style.display = "flex"; else proceedIntoLibrary();
-                proceedIntoLibrary();
+                document.documentElement.setAttribute("data-theme", "dark");
+                if (themeBtn) themeBtn.innerText = "🌙 Night";
+                globalState.activeTheme = "dark";
             }
-        });
-    }
 
-    if (confirmInstallBtn) {
-        confirmInstallBtn.addEventListener("click", async () => {
-            if (installModal) installModal.style.display = "none";
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
-                deferredPrompt = null;
-            }
-            proceedIntoLibrary();
-        });
-    }
-
-    if (cancelInstallBtn) {
-        cancelInstallBtn.addEventListener("click", () => {
-            if (installModal) installModal.style.display = "none";
-            proceedIntoLibrary();
-        });
-    }
-}
-
-function proceedIntoLibrary() {
-    let input = findSafeElement("visitor-name", "visitor");
-    let name = input ? input.value.trim() : "";  
-    if(!name) name = "Wanderer";  
-      
-    if(name.toLowerCase() === "silence") {  
-        globalState.hasTypedWord = true;  
-        checkUltimateVault();  
+            const introScreen = findSafeElement("intro-screen");  
+            if(introScreen) introScreen.classList.add("fade-out");  
+              
+            // 🎶 Play Original Ambience Track on "OPEN THE GATES"
+            if(audioAmbient && !globalState.isAudioPlaying) {  
+                audioAmbient.volume = 0.4;  
+                audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));  
+                globalState.isAudioPlaying = true;  
+            }  
+        });  
     }  
-
-    localStorage.setItem("midnightVisitor", name);  
-    globalState.visitorName = name;  
-      
-    const greeting = findSafeElement("vault-greeting");  
-    if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;  
-
-    const letterTitle = findSafeElement("reader-letter-title");  
-    if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;  
-
-    // 🕒 Time-Based Automatic Theme Switch
-    const currentHour = new Date().getHours();
-    const themeBtn = findSafeElement("theme-toggle");
-    
-    if (currentHour >= 5 && currentHour < 20) {
-        document.documentElement.setAttribute("data-theme", "light");
-        if (themeBtn) themeBtn.innerText = "☀️ Day";
-        globalState.activeTheme = "light";
-    } else {
-        document.documentElement.setAttribute("data-theme", "dark");
-        if (themeBtn) themeBtn.innerText = "🌙 Night";
-        globalState.activeTheme = "dark";
-    }
-
-    const introScreen = findSafeElement("intro-screen");  
-    if(introScreen) introScreen.classList.add("fade-out");  
-      
-    if(audioAmbient && !globalState.isAudioPlaying) {  
-        audioAmbient.volume = 0.4;  
-        audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));  
-        globalState.isAudioPlaying = true;  
-    }
 }
 
 
@@ -281,8 +240,11 @@ function buildLibrarySystem() {
         const sectionHtml = `  
         <section id="${pageId}" class="page direct-js-built" data-poem-index="${i}" style="display:none;">  
           <div class="top-deco">✧ ─ ❦ ─ ✧</div>  
+          
           <div class="chapter-label-top" style="font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold); letter-spacing: 4px; margin-bottom: 5px;">${poem.chapterLabel}</div>
+          
           <div class="heading-wrapper"><h2 class="page1-heading moon-glow" style="margin-top: 0;">${poem.title}</h2></div>  
+          
           <p class="poem-subtitle">${poem.subtitle}</p>  
           <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">  
             <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>  
@@ -487,6 +449,7 @@ function init1111Wish() {
     const submitBtn = findSafeElement("submit-wish-btn", "WISH");   
     const input = findSafeElement("wish-input");   
 
+    // Check on load if user is already a Wishmaker
     if (localStorage.getItem("isWishmaker") === "true") {
         applyWishmakerBranding();
     }
@@ -504,7 +467,10 @@ function init1111Wish() {
         submitBtn.addEventListener("click", () => {   
             if(input && input.value.trim() !== "") {   
                 if(modal) modal.style.display = "none";   
+                
+                // Track 3 consecutive days wish streak
                 handleWishStreak();
+                
                 input.value = "";   
                 showToast("Keep visiting, your wish will be completed soon wanderer. ✨");   
             }   
@@ -526,8 +492,9 @@ function handleWishStreak() {
         if (diffDays === 1) {
             streak++;
         } else if (diffDays > 1) {
-            streak = 1; 
+            streak = 1; // Reset if streak broken
         }
+        // If diffDays === 0, same day, do nothing to streak
     } else {
         streak = 1;
     }
@@ -535,6 +502,7 @@ function handleWishStreak() {
     localStorage.setItem("lastWishDate", today);
     localStorage.setItem("wishStreakCount", streak);
 
+    // If streak reaches 3 consecutive days
     if (streak >= 3) {
         localStorage.setItem("isWishmaker", "true");
         showWishmakerSanctuary();
@@ -578,6 +546,7 @@ function applyWishmakerBranding() {
         passportHeader.innerText = "✦ Authorized Access: The Wishmaker ✦";
     }
 
+    // ✨ Permanent Flex Button for Friends & Quick Access
     let navContainer = document.querySelector(".library-nav") || document.querySelector("nav") || document.querySelector(".top-buttons") || document.querySelector("header");
     let existingFlexBtn = document.getElementById("permanent-wishmaker-btn");
     
@@ -761,6 +730,7 @@ function initCosmicNavigation() {
             crushCurtain.classList.add("active", "run-curtain-crush");
         }
 
+        // ⏳ 3D CRUMPLE MIDPOINT TRANSITION (1200ms)
         setTimeout(() => {
             try {  
                 if (currentActivePage) {  
@@ -785,6 +755,7 @@ function initCosmicNavigation() {
             }  
         }, 1200);
 
+        // 🧹 LAYER REMOVAL CLEAN-UP (2420ms)
         setTimeout(() => {
             if (crushCurtain) {
                 crushCurtain.classList.remove("active");
@@ -1129,6 +1100,7 @@ function initMysticLedger() {
     function loadLiveComments() {
         if(!commentsList) return;
         commentsList.innerHTML = '<p style="text-align:center; opacity:0.5; font-style:italic; margin-top: 20px;">Listening to the whispers...</p>';
+        
         const commentsRef = db.ref('mystic_ledger_comments');
         
         commentsRef.on('value', (snapshot) => {
@@ -1150,11 +1122,11 @@ function initMysticLedger() {
                     commentsList.appendChild(div);
                 });
             } else {
-                commentsList.innerHTML = '<p style="text-align:center; opacity:0.5; font-style:italic; margin-top: 20px;">The room is silent. Be the first to speak.</p>';
+                commentsList.innerHTML = '<p style="text-align:center; opacity:0.5; font-style:italic; margin-top: 20px; font-family:\'Cormorant Garamond\', serif;">The room is silent. Be the first to speak.</p>';
             }
         }, (error) => {
             console.error("Firebase Read Error:", error);
-            commentsList.innerHTML = `<p style="text-align:center; color:#e74c3c; font-style:italic; margin-top: 20px;">⚠️ Permission Denied. Please check Firebase Database Rules.</p>`;
+            commentsList.innerHTML = `<p style="text-align:center; color:#e74c3c; font-style:italic; margin-top: 20px; font-family:\'Cormorant Garamond\', serif;">⚠️ Permission Denied. Please check Firebase Database Rules.</p>`;
         });
     }
 
@@ -1163,6 +1135,7 @@ function initMysticLedger() {
             const feedbackText = input.value;
             if(feedbackText.trim() !== '') {
                 const commentsRef = db.ref('mystic_ledger_comments');
+                
                 commentsRef.push({
                     name: globalState.visitorName || "Wanderer",
                     text: feedbackText.trim(),
@@ -1197,10 +1170,14 @@ window.addEventListener('appinstalled', (evt) => {
     showToast("🎉 Creation App installed successfully on your device!");
 });
 
+/* ======================================================  
+   🎯 ARMED DIRECT INTERACTION CONTROLLERS
+   ====================================================== */  
 document.addEventListener("click", (e) => {
     if (!e.target) return;
     const text = e.target.textContent.trim().toUpperCase();
 
+    // Direct Catch For Leave the Vault
     if (text === "LEAVE THE VAULT") {
         e.preventDefault();
         const vaultPage = document.getElementById("page-secret");
@@ -1213,6 +1190,7 @@ document.addEventListener("click", (e) => {
         }
     }
 
+    // Direct Catch For Open the Gates (Cinematic Flow Bound)
     if (text === "OPEN THE GATES") {
         e.preventDefault();
         if (typeof executePageFlip === "function") {
@@ -1221,19 +1199,26 @@ document.addEventListener("click", (e) => {
     }
 });
 
+ // 🌐 Offline Connection Alert Engine
 window.addEventListener('load', () => {
     function checkNetworkStatus() {
         if (!navigator.onLine) {
             showToast("📱⚠️ NETWORK CONNECTION LOST ! Try connecting for Wondering through the Library");
         }
     }
+
+    // Jab page load ho tab check kare
     checkNetworkStatus();
+
+    // Jab network jaye ya aaye tab live detect kare
     window.addEventListener('online', () => {
         showToast("✨ INTERNET CONNECTED ! Now you are free to Wonder");
     });
+
     window.addEventListener('offline', () => {
         showToast("⚠️ CONNECTION LOST ! Either connect or No more Wondering");
     });
 });
   
 });
+
