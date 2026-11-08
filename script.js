@@ -30,6 +30,11 @@ if ('serviceWorker' in navigator) {
 document.addEventListener("DOMContentLoaded", () => {
 "use strict";
 
+/* 🛡️ Escapes user text before it goes into innerHTML (stops script injection) */
+function escapeHTML(str) {
+    return String(str).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+
 /* ======================================================  
    🛡️ GLOBAL DEFENSIVE ENGINE HELPER (THE ARMOR)  
    ====================================================== */  
@@ -167,7 +172,7 @@ function initPassport() {
             globalState.visitorName = name;  
               
             const greeting = findSafeElement("vault-greeting");  
-            if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;  
+            if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${escapeHTML(name)}</span>... welcome to the Secret Vault.`;  
 
             const letterTitle = findSafeElement("reader-letter-title");  
             if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;  
@@ -403,7 +408,7 @@ function initLedger() {
         if(entries.length === 0) {   
             ledgerList.innerHTML = `<p style="margin-bottom: 8px; font-style: italic; opacity:0.5;">No wandering souls have left a mark yet...</p>`;   
         } else {   
-            entries.forEach(e => { ledgerList.innerHTML += `<p style="margin-bottom: 8px; font-style: italic;">"${e.text}" <span style="font-size:11px; opacity:0.5;">— ${e.date}</span></p>`; });   
+            entries.forEach(e => { ledgerList.innerHTML += `<p style="margin-bottom: 8px; font-style: italic;">"${escapeHTML(e.text)}" <span style="font-size:11px; opacity:0.5;">— ${escapeHTML(e.date)}</span></p>`; });   
         }  
     }  
       
@@ -661,7 +666,8 @@ function bindWaxSeals(page) {
 /* ======================================================  
    🎬 COSMIC ENGINE NAVIGATION & SMOOTH 3D TRANSITION
    ====================================================== */  
-function initCosmicNavigation() {  
+function initCosmicNavigation() {
+    window.executePageFlip = (id, dir) => executePageFlip(id, dir);   // exposed so the buttons at the bottom can reach it  
     document.addEventListener("click", (e) => {  
         let targetBtn = e.target.closest("[data-target]") || e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node") || e.target.closest("button");  
         if (!targetBtn) return;  
@@ -685,11 +691,11 @@ function initCosmicNavigation() {
 
         if (targetPageId) {  
             e.preventDefault();  
-            executePageFlip(targetPageId);  
+            executePageFlip(targetPageId, targetBtn.classList.contains("btn-outline") ? "prev" : "next");  
         }  
     });  
 
-    function executePageFlip(targetPageId) {  
+    function executePageFlip(targetPageId, dir = "next") {  
         let currentActivePage = document.querySelector(".page.active") || document.querySelector(".page[style*='display: block']") || document.getElementById("page1");  
         let destinationPage = document.getElementById(targetPageId);  
           
@@ -720,52 +726,34 @@ function initCosmicNavigation() {
             if(typeof checkUltimateVault === "function") checkUltimateVault();  
         }  
 
-        const crushCurtain = document.getElementById("paper-crush-curtain");
         const turnSound = document.getElementById("page-turn-sound");
+        if (turnSound) { turnSound.currentTime = 0; turnSound.play().catch(() => {}); }
 
-        if (crushCurtain) {
-            if (turnSound) {
-                turnSound.currentTime = 0;
-                turnSound.play().catch(err => console.log("Sound buffered safely"));
+        const vaultPage = document.getElementById("page-secret");
+
+        // move the "active" state now so the typewriter and other features see the new page
+        if (currentActivePage) currentActivePage.classList.remove("active");
+        destinationPage.classList.add("active");
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+        // 📖 REAL PAGE-FLIP TRANSITION (page-flip.js)
+        const finishFlip = () => {
+            if (vaultPage && targetPageId !== "page-secret") {
+                vaultPage.classList.remove("active");
+                vaultPage.style.display = "none";
             }
-            crushCurtain.classList.add("active", "run-curtain-crush");
+            globalState.vortexActive = false;
+            document.body.style.overflowY = 'auto';
+            bindWaxSeals(destinationPage);
+        };
+        if (typeof window.flipPage === "function") {
+            window.flipPage(currentActivePage, destinationPage, dir, finishFlip);
+        } else {
+            // safety net: if page-flip.js failed to load, still change pages
+            if (currentActivePage) currentActivePage.style.display = "none";
+            destinationPage.style.display = "block";
+            finishFlip();
         }
-
-        // ⏳ 3D CRUMPLE MIDPOINT TRANSITION (1200ms)
-        setTimeout(() => {
-            try {  
-                if (currentActivePage) {  
-                    currentActivePage.classList.remove("active");  
-                    currentActivePage.style.display = "none";   
-                }
-                
-                const vaultPage = document.getElementById("page-secret");
-                if (vaultPage && targetPageId !== "page-secret") {
-                    vaultPage.classList.remove("active");
-                    vaultPage.style.display = "none";
-                }
-
-                destinationPage.style.display = "block";   
-                destinationPage.classList.add("active");  
-                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });  
-                
-            } catch(e) {  
-                if(currentActivePage) currentActivePage.style.display = "none";  
-                destinationPage.style.display = "block";  
-                destinationPage.classList.add("active");  
-            }  
-        }, 1200);
-
-        // 🧹 LAYER REMOVAL CLEAN-UP (2420ms)
-        setTimeout(() => {
-            if (crushCurtain) {
-                crushCurtain.classList.remove("active");
-                crushCurtain.classList.remove("run-curtain-crush");
-            }
-            globalState.vortexActive = false;   
-            document.body.style.overflowY = 'auto';   
-            if(typeof bindWaxSeals === "function") bindWaxSeals(destinationPage);
-        }, 2420);
 
         document.querySelectorAll(".nav-link").forEach(lnk => {   
             let target = lnk.getAttribute("data-target");  
@@ -886,7 +874,7 @@ function initBookmarksDrawer() {
             if (bookmarks.length === 0) {   
                 list.innerHTML = `<p style="opacity: 0.5; font-style: italic;">Your soul hasn't saved any verses yet...</p>`;   
             } else {   
-                bookmarks.forEach(bm => { list.innerHTML += `<div class="bookmark-item" style="padding:8px; border-bottom:1px solid rgba(191,164,111,0.1);">📖 ${bm}</div>`; });   
+                bookmarks.forEach(bm => { list.innerHTML += `<div class="bookmark-item" style="padding:8px; border-bottom:1px solid rgba(191,164,111,0.1);">📖 ${escapeHTML(bm)}</div>`; });   
             }  
         }  
     }  
@@ -908,7 +896,7 @@ function initFavouritesDrawer() {
             if (favs.length === 0) {   
                 list.innerHTML = `<p style="opacity: 0.5; font-style: italic; padding:10px;">No verses have resonated with you yet...</p>`;   
             } else {   
-                favs.forEach(fv => { list.innerHTML += `<div class="bookmark-item" style="padding:8px; border-bottom:1px solid rgba(191,164,111,0.1);">❤️ ${fv}</div>`; });   
+                favs.forEach(fv => { list.innerHTML += `<div class="bookmark-item" style="padding:8px; border-bottom:1px solid rgba(191,164,111,0.1);">❤️ ${escapeHTML(fv)}</div>`; });   
             }  
         }  
     }  
@@ -1067,6 +1055,7 @@ function initMysticLedger() {
       appId: "1:378812101045:web:1480c5c267c5eae6cce9fc"
     };
 
+    if (typeof firebase === 'undefined') { console.warn('Firebase not loaded - Mystic Ledger disabled.'); return; }
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
@@ -1104,6 +1093,7 @@ function initMysticLedger() {
         
         const commentsRef = db.ref('mystic_ledger_comments');
         
+        commentsRef.off('value');   // avoid stacking duplicate listeners
         commentsRef.on('value', (snapshot) => {
             commentsList.innerHTML = ''; 
             const data = snapshot.val();
@@ -1113,13 +1103,12 @@ function initMysticLedger() {
                 commentsArray.forEach(comment => {
                     const div = document.createElement('div');
                     div.className = 'public-comment';
-                    div.innerHTML = `
-                        <div class="pc-header">
-                            <span class="pc-name">${comment.name}</span>
-                            <span class="pc-date">${comment.timestamp}</span>
-                        </div>
-                        <div class="pc-text">${comment.text}</div>
-                    `;
+                    const header = document.createElement('div'); header.className = 'pc-header';
+                    const nameEl = document.createElement('span'); nameEl.className = 'pc-name'; nameEl.textContent = comment.name;
+                    const stampEl = document.createElement('span'); stampEl.className = 'pc-date'; stampEl.textContent = comment.timestamp;
+                    header.append(nameEl, stampEl);
+                    const textEl = document.createElement('div'); textEl.className = 'pc-text'; textEl.textContent = comment.text;
+                    div.append(header, textEl);
                     commentsList.appendChild(div);
                 });
             } else {
@@ -1138,8 +1127,8 @@ function initMysticLedger() {
                 const commentsRef = db.ref('mystic_ledger_comments');
                 
                 commentsRef.push({
-                    name: globalState.visitorName || "Wanderer",
-                    text: feedbackText.trim(),
+                    name: String(globalState.visitorName || "Wanderer").slice(0, 40),
+                    text: feedbackText.trim().slice(0, 500),
                     timestamp: formatDate(new Date())
                 }).then(() => {
                     input.value = '';
@@ -1181,23 +1170,12 @@ document.addEventListener("click", (e) => {
     // Direct Catch For Leave the Vault
     if (text === "LEAVE THE VAULT") {
         e.preventDefault();
-        const vaultPage = document.getElementById("page-secret");
-        if (vaultPage) {
-            vaultPage.classList.remove("active");
-            vaultPage.style.display = "none";
-        }
-        if (typeof executePageFlip === "function") {
-            executePageFlip("page1");
+        if (typeof window.executePageFlip === "function") {
+            window.executePageFlip("page1", "prev");   // the flip hides the vault itself
         }
     }
-
-    // Direct Catch For Open the Gates (Cinematic Flow Bound)
-    if (text === "OPEN THE GATES") {
-        e.preventDefault();
-        if (typeof executePageFlip === "function") {
-            executePageFlip("poem-page-1");
-        }
-    }
+    // (The old "OPEN THE GATES" branch was dead code and is removed: the gates
+    //  button is handled in initPassport(), which fades out the intro screen.)
 });
 
  // 🌐 Offline Connection Alert Engine
