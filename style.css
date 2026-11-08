@@ -453,7 +453,3 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     align-items: center;
     backdrop-filter: blur(5px);
 }
-
-/* ======================================================  
-   📖 NON-LAGGY SMOOTH 3D PAGE FLIP ENGINE  
-   ====================================================== */  
