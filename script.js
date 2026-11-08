@@ -154,14 +154,15 @@ function initTouchRipple() {
 
 function initPassport() {  
     const input = findSafeElement("visitor-name", "visitor");  
-    const enterBtn = findSafeElement("enter-library-btn", "OPEN THE GATES");  
+    const enterBtn = findSafeElement("enter-library-btn", "DIVE DEEP IN THE LIBRARY");  
     const savedName = localStorage.getItem("midnightVisitor");  
     if(savedName && input) input.value = savedName;  
 
     if(enterBtn) {  
         enterBtn.addEventListener("click", () => {  
-            let name = input ? input.value.trim() : "";  
-            if(!name) name = "Wanderer";  
+            let inputName = input ? input.value.trim() : "";  
+            // Agar user ne input khali chhoda hai, toh default 'Soham Jadhao' ya 'Wanderer' le lega
+            let name = inputName !== "" ? inputName : "Soham Jadhao";  
               
             if(name.toLowerCase() === "silence") {  
                 globalState.hasTypedWord = true;  
@@ -172,12 +173,12 @@ function initPassport() {
             globalState.visitorName = name;  
               
             const greeting = findSafeElement("vault-greeting");  
-            if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${escapeHTML(name)}</span>... welcome to the Secret Vault.`;  
+            if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;  
 
             const letterTitle = findSafeElement("reader-letter-title");  
             if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;  
 
-            // 🕒 Time-Based Automatic Theme Switch (5:00 AM to 8:00 PM -> Day Mode, Else -> Night Mode)
+            // 🕒 Time-Based Automatic Theme Switch
             const currentHour = new Date().getHours();
             const themeBtn = findSafeElement("theme-toggle");
             
@@ -194,16 +195,16 @@ function initPassport() {
             const introScreen = findSafeElement("intro-screen");  
             if(introScreen) introScreen.classList.add("fade-out");  
               
-            // 🎶 Play Original Ambience Track on "OPEN THE GATES"
+            // 🎶 Play Ambient Audio Smoothly on entry
             if(audioAmbient && !globalState.isAudioPlaying) {  
                 audioAmbient.volume = 0.4;  
-                audioAmbient.play().catch(e => console.log("Audio play blocked by browser."));  
-                globalState.isAudioPlaying = true;  
+                audioAmbient.play().then(() => {
+                    globalState.isAudioPlaying = true;
+                }).catch(e => console.log("Audio play blocked by browser:", e));  
             }  
         });  
     }  
 }
-
 
 
 function buildLibrarySystem() {  
@@ -1289,15 +1290,34 @@ document.addEventListener("click", (e) => {
     // Direct Catch For Leave the Vault
     if (text === "LEAVE THE VAULT") {
         e.preventDefault();
-        if (typeof window.executePageFlip === "function") {
-            window.executePageFlip("page1", "prev");   // the flip hides the vault itself
+        const vaultPage = document.getElementById("page-secret");
+        if (vaultPage) {
+            vaultPage.classList.remove("active");
+            vaultPage.style.display = "none";
+        }
+        if (typeof executePageFlip === "function") {
+            executePageFlip("page1");
         }
     }
-    // (The old "OPEN THE GATES" branch was dead code and is removed: the gates
-    //  button is handled in initPassport(), which fades out the intro screen.)
+
+    // Direct Catch For Enter Button (Match with Screenshot)
+    if (text.includes("ENTER THE WONDER OF COSMIC CREATIVITY")) {
+        e.preventDefault();
+        
+        if (audioAmbient && !globalState.isAudioPlaying) {  
+            audioAmbient.volume = 0.4;  
+            audioAmbient.play().then(() => {
+                globalState.isAudioPlaying = true;
+            }).catch(e => console.log("Audio play blocked:", e));  
+        }
+
+        if (typeof executePageFlip === "function") {
+            executePageFlip("poem-page-1");
+        }
+    }
 });
 
- // 🌐 Offline Connection Alert Engine
+// 🌐 Offline Connection Alert Engine
 window.addEventListener('load', () => {
     function checkNetworkStatus() {
         if (!navigator.onLine) {
@@ -1305,10 +1325,8 @@ window.addEventListener('load', () => {
         }
     }
 
-    // Jab page load ho tab check kare
     checkNetworkStatus();
 
-    // Jab network jaye ya aaye tab live detect kare
     window.addEventListener('online', () => {
         showToast("✨ INTERNET CONNECTED ! Now you are free to Wonder");
     });
@@ -1317,5 +1335,5 @@ window.addEventListener('load', () => {
         showToast("⚠️ CONNECTION LOST ! Either connect or No more Wondering");
     });
 });
-  
+
 });
