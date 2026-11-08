@@ -1290,13 +1290,9 @@ document.addEventListener("click", (e) => {
     // Direct Catch For Leave the Vault
     if (text === "LEAVE THE VAULT") {
         e.preventDefault();
-        const vaultPage = document.getElementById("page-secret");
-        if (vaultPage) {
-            vaultPage.classList.remove("active");
-            vaultPage.style.display = "none";
-        }
-        if (typeof executePageFlip === "function") {
-            executePageFlip("page1");
+        // the flip itself hides the vault, so do NOT hide it here first
+        if (typeof window.executePageFlip === "function") {
+            window.executePageFlip("page1", "prev");
         }
     }
 
@@ -1311,9 +1307,7 @@ document.addEventListener("click", (e) => {
             }).catch(e => console.log("Audio play blocked:", e));  
         }
 
-        if (typeof executePageFlip === "function") {
-            executePageFlip("poem-page-1");
-        }
+        // (No navigation here: after the intro fades, the Library Entrance page stays visible.)
     }
 });
 
