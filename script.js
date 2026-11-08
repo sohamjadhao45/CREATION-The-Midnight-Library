@@ -667,7 +667,8 @@ function bindWaxSeals(page) {
    🎬 COSMIC ENGINE NAVIGATION & SMOOTH 3D TRANSITION
    ====================================================== */  
 function initCosmicNavigation() {
-    window.executePageFlip = (id, dir) => executePageFlip(id, dir);   // exposed so the buttons at the bottom can reach it  
+    window.executePageFlip = (id, dir, pre) => executePageFlip(id, dir, pre);   // exposed for the swipe + bottom buttons
+    initSwipeTurning();
     document.addEventListener("click", (e) => {  
         let targetBtn = e.target.closest("[data-target]") || e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node") || e.target.closest("button");  
         if (!targetBtn) return;  
@@ -695,7 +696,7 @@ function initCosmicNavigation() {
         }  
     });  
 
-    function executePageFlip(targetPageId, dir = "next") {  
+    function executePageFlip(targetPageId, dir = "next", preAnimated = false) {  
         let currentActivePage = document.querySelector(".page.active") || document.querySelector(".page[style*='display: block']") || document.getElementById("page1");  
         let destinationPage = document.getElementById(targetPageId);  
           
@@ -710,7 +711,8 @@ function initCosmicNavigation() {
             destinationPage = document.getElementById("page1") || document.querySelector(".page");  
         }  
 
-        if (!destinationPage || currentActivePage === destinationPage) return;  
+        if (!destinationPage || currentActivePage === destinationPage) return;
+        if (window.PageTurn && window.PageTurn.isBusy()) return;   // a page is already turning
           
         if (window.stopZenModeGlobally) window.stopZenModeGlobally();  
         if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();  
@@ -727,16 +729,14 @@ function initCosmicNavigation() {
         }  
 
         const turnSound = document.getElementById("page-turn-sound");
-        if (turnSound) { turnSound.currentTime = 0; turnSound.play().catch(() => {}); }
+        if (!preAnimated && turnSound) { turnSound.currentTime = 0; turnSound.play().catch(() => {}); }
 
         const vaultPage = document.getElementById("page-secret");
 
-        // move the "active" state now so the typewriter and other features see the new page
-        if (currentActivePage) currentActivePage.classList.remove("active");
-        destinationPage.classList.add("active");
-        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-
-        // 📖 REAL PAGE-FLIP TRANSITION (page-flip.js)
+        const swapActive = () => {
+            if (currentActivePage) currentActivePage.classList.remove("active");
+            destinationPage.classList.add("active");
+        };
         const finishFlip = () => {
             if (vaultPage && targetPageId !== "page-secret") {
                 vaultPage.classList.remove("active");
@@ -746,12 +746,25 @@ function initCosmicNavigation() {
             document.body.style.overflowY = 'auto';
             bindWaxSeals(destinationPage);
         };
-        if (typeof window.flipPage === "function") {
-            window.flipPage(currentActivePage, destinationPage, dir, finishFlip);
-        } else {
-            // safety net: if page-flip.js failed to load, still change pages
+
+        if (preAnimated) {
+            // the finger-swipe already turned the page; just update the state
             if (currentActivePage) currentActivePage.style.display = "none";
             destinationPage.style.display = "block";
+            swapActive();
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            finishFlip();
+        } else if (typeof window.flipPage === "function") {
+            // 📖 REAL PAGE-TURN (page-flip.js). It photographs the old page first, so
+            // the "active" swap below can happen straight away.
+            window.flipPage(currentActivePage, destinationPage, dir, finishFlip);
+            swapActive();
+        } else {
+            // safety net: if page-flip.js did not load, still change pages
+            if (currentActivePage) currentActivePage.style.display = "none";
+            destinationPage.style.display = "block";
+            swapActive();
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
             finishFlip();
         }
 
@@ -762,6 +775,112 @@ function initCosmicNavigation() {
     }
 }
                 
+/* ======================================================
+   👆 HORIZONTAL SWIPE / DRAG = TURN THE PAGE (follows the finger)
+   Swipe right→left = next page, left→right = previous page.
+   ====================================================== */
+function initSwipeTurning() {
+    if (window.__swipeTurningReady) return;
+    window.__swipeTurningReady = true;
+
+    const BLOCK = 'input, textarea, select, [contenteditable], #dynamic-bookshelf, .book-spine, .star-node, .whisper-word, .modal, .feedback-modal-content, .drawer, #bookmarks-drawer, #favourites-drawer';
+    let sw = null;
+
+    function overlayOpen() {
+        const intro = document.getElementById("intro-screen");
+        if (intro && !intro.classList.contains("fade-out") && getComputedStyle(intro).display !== "none") return true;
+        return ["feedback-modal", "wish-modal", "wishmaker-room-modal", "bookmarks-drawer", "favourites-drawer"].some(id => {
+            const el = document.getElementById(id);
+            return el && (el.classList.contains("open") || (el.style.display && el.style.display !== "none"));
+        });
+    }
+    function resolvePage(id) {
+        let d = document.getElementById(id);
+        if (!d && id === "page-about") d = document.getElementById("author-chamber") || document.querySelector(".page-about");
+        if (!d && id === "page-fragments") d = document.getElementById("notes-room") || document.querySelector(".page-fragments");
+        if (!d && id === "page-archive") d = document.getElementById("ancient-shelf") || document.querySelector(".page-archive");
+        return d;
+    }
+    function targetsFor(page) {
+        const nb = page.querySelector(".btn-solid.trigger-nav[data-target]");
+        const pb = page.querySelector(".btn-outline.trigger-nav[data-target]");
+        let next = nb && nb.getAttribute("data-target");
+        const prev = pb && pb.getAttribute("data-target");
+        if (!next && page.id === "page1") next = "poem-page-1";
+        return { next, prev };
+    }
+    function swallowNextClick() {
+        const stop = (ev) => { ev.stopPropagation(); ev.preventDefault(); };
+        document.addEventListener("click", stop, true);
+        setTimeout(() => document.removeEventListener("click", stop, true), 350);
+    }
+
+    document.addEventListener("pointerdown", (e) => {
+        if (!e.isPrimary || (e.pointerType === "mouse" && e.button !== 0)) return;
+        if (sw || !window.PageTurn || window.PageTurn.isBusy() || globalState.vortexActive) return;
+        if (e.target.closest(BLOCK) || overlayOpen()) return;
+        const page = document.querySelector(".page.active");
+        if (!page || page.id === "page-secret") return;
+        sw = { id: e.pointerId, x: e.clientX, y: e.clientY, state: "pending", page, targets: targetsFor(page), hist: [] };
+    });
+
+    document.addEventListener("pointermove", (e) => {
+        if (!sw || e.pointerId !== sw.id) return;
+        const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+
+        if (sw.state === "pending") {
+            if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx)) { sw = null; return; }   // normal scrolling
+            if (Math.abs(dx) < 12 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
+
+            const dir = dx < 0 ? "next" : "prev";
+            const targetId = dir === "next" ? sw.targets.next : sw.targets.prev;
+            const dest = targetId && resolvePage(targetId);
+            if (!dest || dest === sw.page) { sw = null; return; }
+
+            if (window.stopZenModeGlobally) window.stopZenModeGlobally();
+            if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();
+            const session = window.PageTurn.begin(sw.page, dest, dir);
+            if (!session) { sw = null; return; }
+            const snd = document.getElementById("page-turn-sound");
+            if (snd) { snd.currentTime = 0; snd.play().catch(() => {}); }
+            document.body.classList.add("pt-dragging");
+            Object.assign(sw, { state: "drag", dir, targetId, session, startX: e.clientX, width: Math.max(260, sw.page.getBoundingClientRect().width || window.innerWidth) });
+        }
+
+        if (sw.state === "drag") {
+            const d = sw.dir === "next" ? (sw.startX - e.clientX) : (e.clientX - sw.startX);
+            sw.p = Math.max(0, Math.min(1, d / (sw.width * 0.85)));
+            sw.hist.push({ t: e.timeStamp, p: sw.p });
+            if (sw.hist.length > 6) sw.hist.shift();
+            sw.session.setProgress(sw.p);
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    function endSwipe(e, cancelled) {
+        if (!sw || (e && e.pointerId !== sw.id)) return;
+        const s = sw; sw = null;
+        if (s.state !== "drag") return;
+        swallowNextClick();
+
+        const a = s.hist[0], b = s.hist[s.hist.length - 1];
+        const vel = (a && b && b.t > a.t) ? (b.p - a.p) / (b.t - a.t) : 0;          // progress per ms
+        const commit = !cancelled && (s.p > 0.35 || (vel > 0.0015 && s.p > 0.06));
+
+        if (commit) {
+            s.session.animateTo(1, () => {
+                s.session.commit();
+                window.executePageFlip(s.targetId, s.dir, true);
+            }, 600);
+        } else {
+            s.session.animateTo(0, () => s.session.cancel(), 600);
+        }
+    }
+    document.addEventListener("pointerup", (e) => endSwipe(e, false));
+    document.addEventListener("pointercancel", (e) => endSwipe(e, true));
+    window.addEventListener("blur", () => endSwipe(null, true));
+}
+
 function applyWhispers(el, poemIndex) {  
     const pData = POEM_DATABASE[poemIndex];  
     if(!pData || !pData.whispers || el.dataset.whispersApplied === "true") return;  
