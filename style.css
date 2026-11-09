@@ -542,3 +542,69 @@ button:not(.nav-link):hover { transform: translateY(-2px); box-shadow: 0 6px 20p
     align-items: center;
     backdrop-filter: blur(5px);
 }
+/* ===== ⤢ FULLSCREEN SWITCH (day + night) ===== */
+:root{
+  --fs-track-off:#14141c; --fs-track-on:var(--gold);
+  --fs-knob-off:#f2eee9;  --fs-knob-on:#050507;
+}
+[data-theme="light"]{
+  --fs-track-off:#d8c9a6; --fs-track-on:#896d38;
+  --fs-knob-off:#3B2210;  --fs-knob-on:#f4ebd0;
+}
+#fullscreen-toggle{ display:inline-flex; align-items:center; gap:8px; vertical-align:middle; }
+.fs-track{ position:relative; display:inline-block; width:42px; height:22px; flex-shrink:0;
+  border-radius:999px; background:var(--fs-track-off); border:1px solid var(--gold);
+  box-shadow:inset 0 0 6px rgba(0,0,0,.5); transition:background .35s ease, box-shadow .35s ease; }
+.fs-knob{ position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%;
+  background:var(--fs-knob-off); box-shadow:0 0 8px var(--gold-glow);
+  transition:transform .35s cubic-bezier(.25,1,.5,1), background .35s ease; }
+#fullscreen-toggle[aria-checked="true"] .fs-track,
+#fs-exit .fs-track{ background:var(--fs-track-on); box-shadow:0 0 12px var(--gold-glow); }
+#fullscreen-toggle[aria-checked="true"] .fs-knob,
+#fs-exit .fs-knob{ transform:translateX(20px); background:var(--fs-knob-on); }
+
+/* floating exit switch */
+#fs-exit{ position:fixed; top:calc(env(safe-area-inset-top,0px) + 12px); right:14px; z-index:99999;
+  display:none; padding:7px 9px; background:rgba(0,0,0,.35); border:1px solid rgba(191,164,111,.35);
+  border-radius:999px; cursor:pointer; opacity:0; pointer-events:none;
+  backdrop-filter:blur(6px); transition:opacity .4s ease; }
+[data-theme="light"] #fs-exit{ background:rgba(244,235,208,.65); }
+body.fs-mode #fs-exit{ display:block; }
+body.fs-mode #fs-exit.show{ opacity:1; pointer-events:auto; }
+
+/* ===== FULLSCREEN READING MODE ===== */
+body.fs-mode .library-header,
+body.fs-mode .library-nav,
+body.fs-mode .library-footer,
+body.fs-mode #reading-progress,
+body.fs-mode .exit-focus-btn{ display:none !important; }
+
+body.fs-mode .content{ padding:24px 16px; }
+body.fs-mode .content:has(.direct-js-built.active){ padding:0; }
+
+/* poem page: sirf title, tagline, poem, date, naam */
+body.fs-mode .direct-js-built .top-deco,
+body.fs-mode .direct-js-built .chapter-label-top,
+body.fs-mode .direct-js-built .meta-strip,
+body.fs-mode .direct-js-built .poem-interactions,
+body.fs-mode .direct-js-built .button-row{ display:none !important; }
+
+body.fs-mode .page.direct-js-built.active{
+  display:flex !important; flex-direction:column; align-items:center; justify-content:center;
+  width:100%; min-height:100vh; min-height:100dvh;
+  padding:max(28px, env(safe-area-inset-top)) 18px max(28px, env(safe-area-inset-bottom));
+  background-color:var(--parchment-bg);
+  background-image:url('https://www.transparenttextures.com/patterns/aged-paper.png');
+  background-blend-mode:overlay;
+  box-shadow:var(--parchment-shadow);
+}
+body.fs-mode .direct-js-built .poetry-box{
+  width:100%; max-width:none; margin:10px 0; padding:24px 6px !important;
+  background:transparent !important; border:none !important;
+  box-shadow:none !important; border-radius:0 !important;
+}
+body.fs-mode .direct-js-built .poetry-box::after{ display:none; }
+body.fs-mode .direct-js-built .poem-subtitle{
+  font-family:'Cormorant Garamond',serif; font-style:italic; letter-spacing:2px; opacity:.85;
+}
+body.fs-mode .direct-js-built .royal-poem-text{ font-size:clamp(19px,4.6vw,28px); }
