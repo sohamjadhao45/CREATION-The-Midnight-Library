@@ -3,50 +3,31 @@ THE MIDNIGHT LIBRARY ENGINE (ULTIMATE PRO DEFINITIVE EDITION)
 Linter-Safe | Armor-Plated Fallbacks | 100% Feature Complete
 ==================================================================== */
 
-/* ======================================================  
-   📥 AUTOMATIC PWA APP INSTALLATION ENGINE (GLOBAL SCOPE)
-   ====================================================== */  
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    
     const installBtn = document.getElementById('install-app-btn');
-    if (installBtn) {
-        installBtn.style.display = 'inline-block';
-    }
-    console.log("🟢 PWA Install Prompt Ready!");
+    const installBtnSide = document.getElementById('install-app-btn-side');
+    if (installBtn) installBtn.style.display = 'inline-block';
+    if (installBtnSide) installBtnSide.style.display = 'inline-block';
 });
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Service Worker Registered!', reg))
-        .catch(err => console.error('Service Worker Reg Failed!', err));
-    });
-}
 
 document.addEventListener("DOMContentLoaded", () => {
 "use strict";
 
-/* 🛡️ Escapes user text before it goes into innerHTML (stops script injection) */
 function escapeHTML(str) {
     return String(str).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
 
-/* ======================================================  
-   🛡️ GLOBAL DEFENSIVE ENGINE HELPER (THE ARMOR)  
-   ====================================================== */  
 function findSafeElement(id, textFallback = null, selectorFallback = null) {  
     let el = document.getElementById(id);  
     if (el) return el;  
-
     if (selectorFallback) {  
         el = document.querySelector(selectorFallback);  
         if (el) return el;  
     }  
-
     if (textFallback) {  
         el = Array.from(document.querySelectorAll("button, .nav-link, div, span, a, input, label, p, h1, h2, h3")).find(node => {  
             return node.textContent && node.textContent.toUpperCase().includes(textFallback.toUpperCase());  
@@ -56,13 +37,7 @@ function findSafeElement(id, textFallback = null, selectorFallback = null) {
     return null;  
 }  
 
-/* ======================================================  
-   📜 POEM ENGINE & ATMOSPHERE STATES  
-   ====================================================== */  
 let POEM_DATABASE = [];  
-const UPCOMING_CHAPTER = { chapterNum: "III", title: "THE COSMOS WITHIN" };  
-
-window.twMasterState = {};   
 const globalState = {   
     activeTheme: "dark",   
     isAudioPlaying: false,   
@@ -72,10 +47,8 @@ const globalState = {
     secretPassword: "silence",   
     hasTappedMoon: false,   
     hasTypedWord: false,   
-    rainActive: false,   
     visitorName: "Wanderer",   
-    elevenElevenTriggered: false,   
-    zenActive: false  
+    elevenElevenTriggered: false  
 };  
 
 const quoteDatabase = [  
@@ -96,14 +69,10 @@ const midnightThoughts = [
 const notesCombos = [  
     ["The hardest goodbyes are the ones that happen quietly.", "Some people become memories before they leave.", "Happiness often arrives disguised as ordinary moments."],  
     ["Words are the shadows of deep hidden emotions.", "The moon remembers everything we choose to forget.", "Ink writes the history of spirits navigating the dark."],  
-    ["A quiet mind hears the loudest truths.", "Echoes of yesterday build the walls of tomorrow.", "Time is a silent thief, taking only what we love."],  
-    ["Stars do not beg for attention, they just shine.", "Oceans hide their deepest secrets beneath calm waves.", "Mountains teach patience to those who climb them."],  
-    ["To feel deeply is both a curse and a blessing.", "Scars are just poetry written on the human skin.", "A single teardrop holds an entire ocean of sorrow."]  
+    ["A quiet mind hears the loudest truths.", "Echoes of yesterday build the walls of tomorrow.", "Time is a silent thief, taking only what we love."]  
 ];  
 const starCoords = [{top: 50, left: 20}, {top: 20, left: 50}, {top: 60, left: 80}, {top: 80, left: 40}, {top: 30, left: 85}, {top: 75, left: 15}];  
 
-const audioPageTurn = findSafeElement("audio-page-turn");  
-const audioRain = findSafeElement("audio-rain");  
 const audioAmbient = findSafeElement("audio-ambient");  
 
 // =====================================================================  
@@ -118,11 +87,8 @@ initScrollProgressBar();
 initSecretKeyboardVault();   
 initLedger();  
 initBookmarksDrawer();   
-initFavouritesDrawer();   
 initTimeCapsule();   
-init1111Wish();  
-initZenMode();  
-initAudioSpeechEngine();   
+initSideNavigationDrawer();
 initMysticLedger();  
 
 fetch('poem.json')  
@@ -151,6 +117,34 @@ function initTouchRipple() {
     }, { passive: true });   
 }
 
+function initSideNavigationDrawer() {
+    const hamburger = document.getElementById("hamburger-toggle");
+    const drawer = document.getElementById("side-nav-drawer");
+    const closeDrawer = document.getElementById("close-side-drawer");
+    const openBookmarks = document.getElementById("open-bookmarks-trigger");
+    const openFeedback = document.getElementById("open-feedback-trigger");
+    const bookmarksDrawer = document.getElementById("bookmarks-drawer");
+    const feedbackModal = document.getElementById("feedback-modal");
+
+    if (hamburger && drawer) {
+        hamburger.addEventListener("click", () => drawer.classList.add("open"));
+    }
+    if (closeDrawer && drawer) {
+        closeDrawer.addEventListener("click", () => drawer.classList.remove("open"));
+    }
+    if (openBookmarks && bookmarksDrawer) {
+        openBookmarks.addEventListener("click", () => {
+            drawer.classList.remove("open");
+            bookmarksDrawer.classList.add("open");
+        });
+    }
+    if (openFeedback && feedbackModal) {
+        openFeedback.addEventListener("click", () => {
+            drawer.classList.remove("open");
+            feedbackModal.style.display = "flex";
+        });
+    }
+}
 
 function initPassport() {  
     const input = findSafeElement("visitor-name", "visitor");  
@@ -161,8 +155,7 @@ function initPassport() {
     if(enterBtn) {  
         enterBtn.addEventListener("click", () => {  
             let inputName = input ? input.value.trim() : "";  
-            // Agar user ne input khali chhoda hai, toh default 'Soham Jadhao' ya 'Wanderer' le lega
-            let name = inputName !== "" ? inputName : "Soham Jadhao";  
+            let name = inputName !== "" ? inputName : "Soham Madan Jadhao";  
               
             if(name.toLowerCase() === "silence") {  
                 globalState.hasTypedWord = true;  
@@ -172,46 +165,43 @@ function initPassport() {
             localStorage.setItem("midnightVisitor", name);  
             globalState.visitorName = name;  
               
+            // Update simple visitor card info
+            const passName = document.getElementById("pass-display-name");
+            const passId = document.getElementById("pass-visitor-id");
+            if (passName) passName.innerText = name;
+            if (passId) passId.innerText = "CR-2026-" + Math.floor(1000000 + Math.random() * 9000000);
+
             const greeting = findSafeElement("vault-greeting");  
             if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;  
 
-            const letterTitle = findSafeElement("reader-letter-title");  
-            if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;  
-
-            // 🕒 Time-Based Automatic Theme Switch
-            const currentHour = new Date().getHours();
-            const themeBtn = findSafeElement("theme-toggle");
-            
-            if (currentHour >= 5 && currentHour < 20) {
-                document.documentElement.setAttribute("data-theme", "light");
-                if (themeBtn) themeBtn.innerText = "☀️ Day";
-                globalState.activeTheme = "light";
-            } else {
-                document.documentElement.setAttribute("data-theme", "dark");
-                if (themeBtn) themeBtn.innerText = "🌙 Night";
-                globalState.activeTheme = "dark";
+            // 🌟 Run smooth cinematic opening animation
+            const curtain = document.getElementById("paper-crush-curtain");
+            if(curtain) {
+                curtain.classList.add("active");
+                document.body.classList.add("run-curtain-crush");
+                setTimeout(() => {
+                    curtain.classList.remove("active");
+                    document.body.classList.remove("run-curtain-crush");
+                }, 2000);
             }
 
             const introScreen = findSafeElement("intro-screen");  
             if(introScreen) introScreen.classList.add("fade-out");  
               
-            // 🎶 Play Ambient Audio Smoothly on entry
             if(audioAmbient && !globalState.isAudioPlaying) {  
                 audioAmbient.volume = 0.4;  
                 audioAmbient.play().then(() => {
                     globalState.isAudioPlaying = true;
-                }).catch(e => console.log("Audio play blocked by browser:", e));  
+                }).catch(e => console.log("Audio play blocked:", e));  
             }  
         });  
     }  
 }
 
-
 function buildLibrarySystem() {  
     const nav = document.getElementById("library-nav") || document.querySelector(".library-nav") || document.querySelector("nav");   
     let bookshelf = document.getElementById("dynamic-bookshelf") || document.querySelector(".dynamic-bookshelf") || document.querySelector(".bookshelf");   
     const starMap = document.getElementById("star-map") || document.querySelector(".star-map");   
-    const authorScripting = document.getElementById("author-scripting-status") || document.querySelector(".author-status");   
     let secretPage = document.getElementById("page-secret") || document.querySelector(".page-secret");  
 
     if (!bookshelf) {  
@@ -247,30 +237,17 @@ function buildLibrarySystem() {
         const sectionHtml = `  
         <section id="${pageId}" class="page direct-js-built" data-poem-index="${i}" style="display:none;">  
           <div class="top-deco">✧ ─ ❦ ─ ✧</div>  
-          
           <div class="chapter-label-top" style="font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold); letter-spacing: 4px; margin-bottom: 5px;">${poem.chapterLabel}</div>
-          
           <div class="heading-wrapper"><h2 class="page1-heading moon-glow" style="margin-top: 0;">${poem.title}</h2></div>  
-          
           <p class="poem-subtitle">${poem.subtitle}</p>  
           <div class="meta-strip" style="margin: 15px 0; display:flex; justify-content:center; gap:15px; align-items:center;">  
-            <span class="mood-tag tag-motivation" style="background:rgba(191,164,111,0.1); padding:4px 10px; border-radius:4px; font-size:12px; border:1px solid rgba(191,164,111,0.2);">${poem.themeTag}</span>  
             <span class="read-time">⏱️ 1 Min Read</span>  
             <button class="bookmark-btn btn-utility" data-poem="${poem.spineLabel}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>  
           </div>  
           <div class="poetry-box antique-parchment dynamic-shadow" id="card-${pageId}">  
-            <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>  
             <p class="royal-poem-text typewriter-poem" data-lines="${safeText}"></p><br>  
             <p class="poem-date">${poem.dateText}</p>  
             <span class="poem-greatvibes sign-animate">${poem.signature}</span>  
-            <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">  
-                <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>  
-                <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>  
-            </div>  
-          </div>  
-          <div class="button-row" style="margin-top: 15px;">  
-            <button class="btn-utility download-poem-btn" data-target="card-${pageId}" data-poem-index="${i}">📸 Save As A Memory</button>  
-            <button class="btn-utility share-poem-btn" data-poem-title="${cleanTitle}">🔗 Share Verse</button>  
           </div>  
           <div class="button-row mt-20"><button class="btn-outline trigger-nav" data-target="${prevPageId}">❮ Previous</button><button class="btn-solid trigger-nav" data-target="${nextPageId}">Next ❯</button></div>  
         </section>`;  
@@ -284,16 +261,16 @@ function buildLibrarySystem() {
           
         if (bookshelf) {  
             bookshelf.innerHTML += `  
-                <div class="book-spine trigger-nav" data-target="${pageId}" style="display:inline-block !important; min-width:150px !important; height:180px !important; background:linear-gradient(45deg, #1a1a24, #2c2c3b) !important; border:1px solid #bfa46f !important; border-radius:8px !important; padding:15px !important; margin-right:15px !important; cursor:pointer !important; flex-shrink:0 !important; text-align:center !important; white-space:normal !important;">  
-                    <span style="font-size:10px; color:#bfa46f; display:block; margin-bottom:10px;">${poem.chapterLabel}</span>  
-                    <strong style="font-size:13px; display:block; color:#f2eee9; font-family:'Cinzel', serif; line-height:1.3;">${cleanTitle}</strong>  
-                    <span style="font-size:9px; position:absolute; bottom:15px; left:0; width:100%; color:rgba(255,255,255,0.4); text-align:center;">${poem.spineLabel}</span>  
+                <div class="book-spine trigger-nav" data-target="${pageId}">  
+                    <span>${poem.chapterLabel}</span>  
+                    <strong>${cleanTitle}</strong>  
+                    <span>${poem.spineLabel}</span>  
                 </div>`;  
         }  
         prevPageId = pageId;  
     });  
 
-    if (nav) nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Author's Chamber</button>`;  
+    if (nav) nav.innerHTML += `<button class="nav-link" data-target="page-fragments">Notes Room</button><button class="nav-link" data-target="page-archive">Ancient Shelf</button><button class="nav-link" data-target="page-about">Library Pass</button>`;  
       
     let svgLines = ''; let starsHtml = '';  
     for (let i = 0; i < POEM_DATABASE.length; i++) {  
@@ -304,7 +281,6 @@ function buildLibrarySystem() {
     if (POEM_DATABASE.length > 0 && starMap) {  
         starMap.innerHTML = `<svg width="100%" height="100%" style="position: absolute; top:0; left:0; z-index: 1;">${svgLines}</svg>${starsHtml}`;  
     }  
-    if (authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter III: THE COSMOS WITHIN`;  
 }  
 
 const thoughtBtn = findSafeElement("reveal-thought-btn", "THOUGHT");  
@@ -350,16 +326,9 @@ function checkUltimateVault() {
     const condMoon = findSafeElement("cond-moon");   
     const condNotes = findSafeElement("cond-notes");   
     const condWord = findSafeElement("cond-word");   
-      
-    if(condMoon) {  
-        condMoon.innerText = globalState.hasTappedMoon ? "✅ Moon Tapped (3/3)" : `❌ Moon Tapped (${globalState.secretClicks}/3)`;  
-    }  
-    if(condNotes) {  
-        condNotes.innerText = globalState.notesVisitCount >= 5 ? "✅ Notes Room Visits (5/5)" : `❌ Notes Room Visits (${globalState.notesVisitCount}/5)`;  
-    }  
-    if(globalState.hasTypedWord && condWord) {  
-        condWord.innerText = "✅ Secret Word Typed";  
-    }  
+    if(condMoon) condMoon.innerText = globalState.hasTappedMoon ? "✅ Moon Tapped (3/3)" : `❌ Moon Tapped (${globalState.secretClicks}/3)`;  
+    if(condNotes) condNotes.innerText = globalState.notesVisitCount >= 5 ? "✅ Notes Room Visits (5/5)" : `❌ Notes Room Visits (${globalState.notesVisitCount}/5)`;  
+    if(globalState.hasTypedWord && condWord) condWord.innerText = "✅ Secret Word Typed";  
 
     if(globalState.hasTappedMoon && globalState.notesVisitCount >= 5 && globalState.hasTypedWord) {  
         const hiddenContainer = findSafeElement("hidden-poem-container");  
@@ -367,9 +336,7 @@ function checkUltimateVault() {
         const secretLog = findSafeElement("ultimate-secret-log");  
         if(conditionsContainer) conditionsContainer.style.display = "none";   
         if(hiddenContainer) hiddenContainer.style.display = "block";   
-        if(secretLog && secretLog.querySelector("strong")) {  
-            secretLog.querySelector("strong").innerText = "🔓 Vault Log #003 (Status: Unlocked)";  
-        }  
+        if(secretLog && secretLog.querySelector("strong")) secretLog.querySelector("strong").innerText = "🔓 Vault Log #003 (Status: Unlocked)";  
     }  
 }  
 
@@ -382,22 +349,18 @@ function initSecretKeyboardVault() {
     let inputBuffer = "";  
     window.addEventListener("keydown", (e) => {  
         if (e.key.length === 1 && e.key.match(/[a-z]/i)) inputBuffer += e.key.toLowerCase();  
-        if (inputBuffer.endsWith("rain") && !globalState.rainActive) toggleRain();  
         if (inputBuffer.length > globalState.secretPassword.length) inputBuffer = inputBuffer.substring(inputBuffer.length - globalState.secretPassword.length);  
         if (inputBuffer === globalState.secretPassword) {  
             globalState.hasTypedWord = true;   
             checkUltimateVault();   
             showToast("👁️ The Vault Opens...");  
             const vaultBtn = document.querySelector(".trigger-nav[data-target='page-secret']");  
-            if (vaultBtn) { vaultBtn.click(); } else { const secPage = findSafeElement('page-secret'); if(secPage) secPage.classList.add('active'); }  
+            if (vaultBtn) vaultBtn.click();  
             inputBuffer = "";   
         }  
     });  
 }  
 
-/* ======================================================  
-   🔒 VISITOR GUESTBOOK LEDGER
-   ====================================================== */  
 function initLedger() {  
     const ledgerList = findSafeElement("ledger-list");   
     const submits = document.querySelectorAll(".ledger-submit");   
@@ -407,12 +370,11 @@ function initLedger() {
     function renderLedger() {  
         if(!ledgerList) return; ledgerList.innerHTML = "";  
         if(entries.length === 0) {   
-            ledgerList.innerHTML = `<p style="margin-bottom: 8px; font-style: italic; opacity:0.5;">No wandering souls have left a mark yet...</p>`;   
+            ledgerList.innerHTML = `<p style="margin-bottom: 8px; font-style: italic; opacity:0.5;">No wandering souls have left a mark yet...</p>";`;   
         } else {   
             entries.forEach(e => { ledgerList.innerHTML += `<p style="margin-bottom: 8px; font-style: italic;">"${escapeHTML(e.text)}" <span style="font-size:11px; opacity:0.5;">— ${escapeHTML(e.date)}</span></p>`; });   
         }  
     }  
-      
     renderLedger();  
       
     submits.forEach((btn, index) => {  
@@ -428,151 +390,9 @@ function initLedger() {
             }  
         };  
         btn.addEventListener("click", handleLedgerSubmission);  
-        if(input) {  
-            input.addEventListener("keypress", (e) => { if(e.key === 'Enter') handleLedgerSubmission(); });  
-        }  
+        if(input) input.addEventListener("keypress", (e) => { if(e.key === 'Enter') handleLedgerSubmission(); });  
     });  
 }  
-
-function toggleRain() {  
-    globalState.rainActive = !globalState.rainActive;   
-    const rCanvas = findSafeElement("rain-canvas");  
-    const rainToggleBtn = findSafeElement("rain-toggle");  
-    if(globalState.rainActive) {   
-        if(rCanvas) rCanvas.classList.add("raining");   
-        if(rainToggleBtn) rainToggleBtn.innerHTML = "🌧️ Stop Rain";  
-        startRainVisuals();   
-        showToast("🌧️ The sky begins to weep...");   
-        if(audioRain) { audioRain.volume = 0.5; audioRain.play().catch(()=>{}); }  
-    } else {   
-        if(rCanvas) rCanvas.classList.remove("raining");   
-        if(rainToggleBtn) rainToggleBtn.innerHTML = "🌧️ Rain";  
-        showToast("🌤️ The storm has passed.");   
-        if(audioRain) { audioRain.pause(); }  
-    }  
-}  
-function init1111Wish() {   
-    const modal = findSafeElement("wish-modal");   
-    const submitBtn = findSafeElement("submit-wish-btn", "WISH");   
-    const input = findSafeElement("wish-input");   
-
-    // Check on load if user is already a Wishmaker
-    if (localStorage.getItem("isWishmaker") === "true") {
-        applyWishmakerBranding();
-    }
-
-    setInterval(() => {   
-        const d = new Date();   
-        if (d.getHours() === 23 && d.getMinutes() === 11 && !globalState.elevenElevenTriggered) {   
-            globalState.elevenElevenTriggered = true;   
-            if(modal) { modal.style.display = "flex"; }   
-        }   
-        if (d.getMinutes() !== 11) globalState.elevenElevenTriggered = false;    
-    }, 10000);   
-
-    if(submitBtn) {   
-        submitBtn.addEventListener("click", () => {   
-            if(input && input.value.trim() !== "") {   
-                if(modal) modal.style.display = "none";   
-                
-                // Track 3 consecutive days wish streak
-                handleWishStreak();
-                
-                input.value = "";   
-                showToast("Keep visiting, your wish will be completed soon wanderer. ✨");   
-            }   
-        });   
-    }   
-}
-
-function handleWishStreak() {
-    const today = new Date().toDateString();
-    const lastWishDate = localStorage.getItem("lastWishDate");
-    let streak = parseInt(localStorage.getItem("wishStreakCount") || "0");
-
-    if (lastWishDate) {
-        const lastDate = new Date(lastWishDate);
-        const currentDate = new Date(today);
-        const diffTime = Math.abs(currentDate - lastDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        if (diffDays === 1) {
-            streak++;
-        } else if (diffDays > 1) {
-            streak = 1; // Reset if streak broken
-        }
-        // If diffDays === 0, same day, do nothing to streak
-    } else {
-        streak = 1;
-    }
-
-    localStorage.setItem("lastWishDate", today);
-    localStorage.setItem("wishStreakCount", streak);
-
-    // If streak reaches 3 consecutive days
-    if (streak >= 3) {
-        localStorage.setItem("isWishmaker", "true");
-        showWishmakerSanctuary();
-        applyWishmakerBranding();
-    }
-}
-
-function showWishmakerSanctuary() {
-    let roomModal = document.getElementById("wishmaker-room-modal");
-    if (!roomModal) {
-        roomModal = document.createElement("div");
-        roomModal.id = "wishmaker-room-modal";
-        roomModal.innerHTML = `
-            <div class="feedback-modal-content antique-parchment dynamic-shadow" style="text-align: center; max-width: 520px; padding: 30px; border: 2px solid var(--gold);">
-                <div class="top-deco">✧ ─ ❦ ─ ✧</div>
-                <h2 class="moon-glow" style="color: var(--gold); font-family: 'Cinzel', serif; margin: 15px 0; font-size: 22px;">THE SANCTUARY OF THE WISHMAKER</h2>
-                <p style="font-family: 'Cormorant Garamond', serif; font-size: 19px; line-height: 1.6; color: inherit; margin-bottom: 25px; font-style: italic;">
-                    "Tune lagataar teen raaton tak is aakash ko apne dil ke armaan saumpe hain, wanderer. Aasman aur ye purani kitaabein tujhe aaj se 'The Wishmaker' ke roop mein sthapit karti hain. Yeh gupt kaksh ab sada ke liye tere naam hai."
-                </p>
-                <button class="btn-utility" id="enter-wishmaker-room" style="padding: 10px 25px; cursor: pointer; font-family: 'Cinzel', serif;">Enter Your Sanctuary ✨</button>
-            </div>
-        `;
-        document.body.appendChild(roomModal);
-        document.getElementById("enter-wishmaker-room").addEventListener("click", () => {
-            roomModal.style.display = "none";
-            showToast("✨ Swagat hai, Wishmaker!");
-        });
-    }
-    roomModal.style.display = "flex";
-}
-
-
-function applyWishmakerBranding() {
-    const greeting = findSafeElement("vault-greeting");
-    if (greeting) {
-        greeting.innerHTML = `Swagat hai <span style="color:var(--gold); font-family:'Cinzel',serif; font-weight:bold;">The Wishmaker</span> ka! Yeh aakash aur rahasya ab aapke hain.`;
-    }
-    
-    const passportHeader = document.querySelector(".intro-subtitle") || document.querySelector(".poem-subtitle");
-    if(passportHeader) {
-        passportHeader.innerText = "✦ Authorized Access: The Wishmaker ✦";
-    }
-
-    // ✨ Permanent Flex Button for Friends & Quick Access
-    let navContainer = document.querySelector(".library-nav") || document.querySelector("nav") || document.querySelector(".top-buttons") || document.querySelector("header");
-    let existingFlexBtn = document.getElementById("permanent-wishmaker-btn");
-    
-    if (!existingFlexBtn && navContainer) {
-        const flexBtn = document.createElement("button");
-        flexBtn.id = "permanent-wishmaker-btn";
-        flexBtn.className = "nav-link btn-utility";
-        flexBtn.style.cssText = "color: var(--gold) !important; border: 1px solid var(--gold) !important; background: rgba(191,164,111,0.1) !important; font-family: 'Cinzel', serif; margin: 5px; cursor: pointer;";
-        flexBtn.innerHTML = "✨ Wishmaker Room";
-        
-        flexBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            showWishmakerSanctuary();
-        });
-        
-        navContainer.appendChild(flexBtn);
-    }
-}
-
 
 function initClockAndAtmosphere() {  
     const dateEl = findSafeElement("journal-date");   
@@ -593,28 +413,14 @@ function initClockAndAtmosphere() {
     }  
       
     const themeBtn = findSafeElement("theme-toggle", "NIGHT");  
-    if(themeBtn) { themeBtn.addEventListener("click", () => { const nextTheme = globalState.activeTheme === "dark" ? "light" : "dark"; document.documentElement.setAttribute("data-theme", nextTheme); themeBtn.innerText = nextTheme === "dark" ? "🌙 Night" : "☀️ Day"; globalState.activeTheme = nextTheme; }); }  
-      
-    const rainToggleBtn = findSafeElement("rain-toggle", "RAIN");   
-    if(rainToggleBtn) rainToggleBtn.addEventListener("click", toggleRain);  
-      
-    const focusBtn = findSafeElement("reading-mode-toggle", "FOCUS");   
-    const exitFocusBtn = findSafeElement("exit-focus-btn", "NORMAL");  
-    function toggleFocus() { document.body.classList.toggle("reading-mode"); if(focusBtn) focusBtn.innerText = document.body.classList.contains("reading-mode") ? "👁️ Normal" : "📖 Focus"; }  
-    if(focusBtn) focusBtn.addEventListener("click", toggleFocus);   
-    if(exitFocusBtn) exitFocusBtn.addEventListener("click", toggleFocus);  
-}  
-
-function startRainVisuals() {  
-    const rCanvas = findSafeElement("rain-canvas"); if(!rCanvas) return;  
-    const rCtx = rCanvas.getContext("2d"); rCanvas.width = window.innerWidth; rCanvas.height = window.innerHeight;  
-    const drops = []; for(let i=0; i<100; i++) drops.push({x: Math.random()*rCanvas.width, y: Math.random()*rCanvas.height, l: Math.random()*20+10, v: Math.random()*4+4});  
-    function drawRain() {  
-        if(!globalState.rainActive) return; rCtx.clearRect(0,0,rCanvas.width,rCanvas.height); rCtx.strokeStyle = "rgba(191,164,111,0.2)"; rCtx.lineWidth = 1; rCtx.beginPath();  
-        for(let i=0; i<drops.length; i++) { let d = drops[i]; rCtx.moveTo(d.x, d.y); rCtx.lineTo(d.x+1, d.y+d.l); d.y += d.v; d.x += 0.5; if(d.y > rCanvas.height) { d.y = -20; d.x = Math.random()*rCanvas.width; } }  
-        rCtx.stroke(); requestAnimationFrame(drawRain);  
+    if(themeBtn) {   
+        themeBtn.addEventListener("click", () => {   
+            const nextTheme = globalState.activeTheme === "dark" ? "light" : "dark";   
+            document.documentElement.setAttribute("data-theme", nextTheme);   
+            themeBtn.innerText = nextTheme === "dark" ? "🌙 Night" : "☀️ Day";   
+            globalState.activeTheme = nextTheme;   
+        });   
     }  
-    drawRain();  
 }  
 
 function initUltimateUniverseBackground() {  
@@ -623,17 +429,13 @@ function initUltimateUniverseBackground() {
     window.addEventListener("resize", () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });  
 
     const backgroundStars = []; const goldenDust = [];  
-    const hour = new Date().getHours(); const isLateNight = hour >= 23 || hour <= 4;  
-    const darkThemeBgColor = isLateNight ? "#030308" : "#050507";   
-      
     for(let i = 0; i < 60; i++) backgroundStars.push({ x: Math.random() * width, y: Math.random() * height, radius: Math.random() * 1.2 + 0.3, baseAlpha: Math.random() * 0.5 + 0.2, phase: Math.random() * Math.PI });  
     for(let i = 0; i < 25; i++) goldenDust.push({ x: Math.random() * width, y: Math.random() * height, radius: Math.random() * 1.5 + 0.5, vy: -Math.random() * 0.2 - 0.1, vx: (Math.random() - 0.5) * 0.1, alpha: Math.random() * 0.4 + 0.1 });  
 
     function processRenderLoop() {  
-        ctx.fillStyle = globalState.activeTheme === "dark" ? darkThemeBgColor : "#f4ebd0"; ctx.fillRect(0, 0, width, height);  
+        ctx.fillStyle = globalState.activeTheme === "dark" ? "#030307" : "#f4ebd0"; ctx.fillRect(0, 0, width, height);  
         for(let star of backgroundStars) {  
-            if (globalState.vortexActive) { const dx = (width/2) - star.x; const dy = (height/2) - star.y; star.x += dx * 0.05; star.y += dy * 0.05; if(Math.abs(dx) < 5 && Math.abs(dy) < 5) { star.x = Math.random() * width; star.y = Math.random() * height; }  
-            } else { star.phase += 0.02; }  
+            star.phase += 0.02;  
             let a = star.baseAlpha + Math.sin(star.phase) * 0.2; ctx.beginPath(); ctx.fillStyle = globalState.activeTheme === "dark" ? `rgba(242,238,233,${Math.max(0.1, a)})` : `rgba(28, 22, 12,${Math.max(0.1, a)})`; ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2); ctx.fill();  
         }  
         for(let d of goldenDust) { d.y += d.vy; d.x += d.vx; if(d.y < 0) d.y = height; ctx.beginPath(); ctx.fillStyle = globalState.activeTheme === "dark" ? `rgba(191,164,111,${d.alpha})` : `rgba(74, 44, 17,${d.alpha})`; ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2); ctx.fill(); }  
@@ -642,36 +444,9 @@ function initUltimateUniverseBackground() {
     requestAnimationFrame(processRenderLoop);  
 }  
 
-function bindWaxSeals(page) {  
-    if (!page) return;  
-    const sealWrap = page.querySelector(".wax-seal-wrapper:not(.broken)");  
-    if (!sealWrap) { initTypewriterEngine(); return; }  
-      
-    if (sealWrap.dataset.isBroken === "true") {  
-        sealWrap.classList.add("broken"); initTypewriterEngine(); return;  
-    }  
-
-    const sealBtn = sealWrap.querySelector(".wax-seal");  
-    showToast("👆 Break the wax seal to view verse...");  
-
-    if(sealBtn) {  
-        sealBtn.addEventListener('click', () => {  
-            sealWrap.dataset.isBroken = "true";  
-            sealWrap.classList.add("broken");  
-            showToast("🔓 The seal is broken.");  
-            setTimeout(initTypewriterEngine, 800);  
-        });  
-    }  
-}  
-
-/* ======================================================  
-   🎬 COSMIC ENGINE NAVIGATION & SMOOTH 3D TRANSITION
-   ====================================================== */  
 function initCosmicNavigation() {
-    window.executePageFlip = (id, dir, pre) => executePageFlip(id, dir, pre);   // exposed for the swipe + bottom buttons
-    initSwipeTurning();
     document.addEventListener("click", (e) => {  
-        let targetBtn = e.target.closest("[data-target]") || e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node") || e.target.closest("button");  
+        let targetBtn = e.target.closest("[data-target]") || e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node");  
         if (!targetBtn) return;  
 
         let targetPageId = targetBtn.getAttribute("data-target");  
@@ -680,94 +455,44 @@ function initCosmicNavigation() {
         if (!targetPageId) {  
             if (targetBtn.id === "btn-explore" || btnText.includes("EXPLORE") || btnText.includes("CHAPTER")) {  
                 targetPageId = "poem-page-1";  
-            } else if (btnText.includes("AUTHOR") || btnText.includes("CHAMBER") || targetBtn.id === "btn-about" || btnText.includes("ABOUT")) {  
+            } else if (btnText.includes("AUTHOR") || btnText.includes("CHAMBER") || btnText.includes("LIBRARY PASS")) {  
                 targetPageId = "page-about";  
-            } else if (btnText.includes("NOTES") || btnText.includes("ROOM") || btnText.includes("FRAGMENT")) {  
+            } else if (btnText.includes("NOTES") || btnText.includes("ROOM")) {  
                 targetPageId = "page-fragments";  
-            } else if (btnText.includes("ANCIENT") || btnText.includes("SHELF") || btnText.includes("ARCHIVE")) {  
+            } else if (btnText.includes("ANCIENT") || btnText.includes("SHELF")) {  
                 targetPageId = "page-archive";  
-            } else if (btnText.includes("ENTRANCE") || btnText.includes("LIBRARY")) {  
+            } else if (btnText.includes("ENTRANCE")) {  
                 targetPageId = "page1";  
             }  
         }  
 
         if (targetPageId) {  
             e.preventDefault();  
-            executePageFlip(targetPageId, targetBtn.classList.contains("btn-outline") ? "prev" : "next");  
+            executePageFlip(targetPageId);  
         }  
     });  
 
-    function executePageFlip(targetPageId, dir = "next", preAnimated = false) {  
-        let currentActivePage = document.querySelector(".page.active") || document.querySelector(".page[style*='display: block']") || document.getElementById("page1");  
+    function executePageFlip(targetPageId) {  
+        let currentActivePage = document.querySelector(".page.active") || document.getElementById("page1");  
         let destinationPage = document.getElementById(targetPageId);  
           
-        if (!destinationPage) {  
-            if (targetPageId === "page-about") destinationPage = document.getElementById("author-chamber") || document.querySelector(".page-about") || document.querySelector("[id*='about']");  
-            if (targetPageId === "page-fragments") destinationPage = document.getElementById("notes-room") || document.querySelector(".page-fragments") || document.querySelector("[id*='fragment']");  
-            if (targetPageId === "page-archive") destinationPage = document.getElementById("ancient-shelf") || document.querySelector(".page-archive") || document.querySelector("[id*='archive']");  
-        }  
+        if (!destinationPage) destinationPage = document.getElementById("page1");  
+        if (!destinationPage || currentActivePage === destinationPage) return;  
 
-        if (!destinationPage) {  
-            console.error("Target page not found: " + targetPageId + ". Resetting to entrance.");  
-            destinationPage = document.getElementById("page1") || document.querySelector(".page");  
-        }  
-
-        if (!destinationPage || currentActivePage === destinationPage) return;
-        if (window.PageTurn && window.PageTurn.isBusy()) return;   // a page is already turning
-          
-        if (window.stopZenModeGlobally) window.stopZenModeGlobally();  
-        if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();  
-          
-        globalState.vortexActive = true;   
-        document.body.style.overflowY = 'hidden';   
-          
         if (targetPageId === "page-fragments") {  
-            const currentCombo = notesCombos[globalState.notesVisitCount % 5];  
+            const currentCombo = notesCombos[globalState.notesVisitCount % 3];  
             const q1 = document.getElementById("combo-quote-1"); const q2 = document.getElementById("combo-quote-2"); const q3 = document.getElementById("combo-quote-3");  
             if(q1) q1.innerText = currentCombo[0]; if(q2) q2.innerText = currentCombo[1]; if(q3) q3.innerText = currentCombo[2];  
             globalState.notesVisitCount++;   
-            if(typeof checkUltimateVault === "function") checkUltimateVault();  
+            checkUltimateVault();  
         }  
 
         const turnSound = document.getElementById("page-turn-sound");
-        if (!preAnimated && turnSound) { turnSound.currentTime = 0; turnSound.play().catch(() => {}); }
+        if (turnSound) { turnSound.currentTime = 0; turnSound.play().catch(() => {}); }
 
-        const vaultPage = document.getElementById("page-secret");
-
-        const swapActive = () => {
-            if (currentActivePage) currentActivePage.classList.remove("active");
-            destinationPage.classList.add("active");
-        };
-        const finishFlip = () => {
-            if (vaultPage && targetPageId !== "page-secret") {
-                vaultPage.classList.remove("active");
-                vaultPage.style.display = "none";
-            }
-            globalState.vortexActive = false;
-            document.body.style.overflowY = 'auto';
-            bindWaxSeals(destinationPage);
-        };
-
-        if (preAnimated) {
-            // the finger-swipe already turned the page; just update the state
-            if (currentActivePage) currentActivePage.style.display = "none";
-            destinationPage.style.display = "block";
-            swapActive();
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-            finishFlip();
-        } else if (typeof window.flipPage === "function") {
-            // 📖 REAL PAGE-TURN (page-flip.js). It photographs the old page first, so
-            // the "active" swap below can happen straight away.
-            window.flipPage(currentActivePage, destinationPage, dir, finishFlip);
-            swapActive();
-        } else {
-            // safety net: if page-flip.js did not load, still change pages
-            if (currentActivePage) currentActivePage.style.display = "none";
-            destinationPage.style.display = "block";
-            swapActive();
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-            finishFlip();
-        }
+        if (currentActivePage) currentActivePage.classList.remove("active");
+        destinationPage.classList.add("active");
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 
         document.querySelectorAll(".nav-link").forEach(lnk => {   
             let target = lnk.getAttribute("data-target");  
@@ -775,217 +500,12 @@ function initCosmicNavigation() {
         });  
     }
 }
-                
-/* ======================================================
-   👆 HORIZONTAL SWIPE / DRAG = TURN THE PAGE (follows the finger)
-   Swipe right→left = next page, left→right = previous page.
-   ====================================================== */
-function initSwipeTurning() {
-    if (window.__swipeTurningReady) return;
-    window.__swipeTurningReady = true;
-
-    const BLOCK = 'input, textarea, select, [contenteditable], #dynamic-bookshelf, .book-spine, .star-node, .whisper-word, .modal, .feedback-modal-content, .drawer, #bookmarks-drawer, #favourites-drawer';
-    let sw = null;
-
-    function overlayOpen() {
-        const intro = document.getElementById("intro-screen");
-        if (intro && !intro.classList.contains("fade-out") && getComputedStyle(intro).display !== "none") return true;
-        return ["feedback-modal", "wish-modal", "wishmaker-room-modal", "bookmarks-drawer", "favourites-drawer"].some(id => {
-            const el = document.getElementById(id);
-            return el && (el.classList.contains("open") || (el.style.display && el.style.display !== "none"));
-        });
-    }
-    function resolvePage(id) {
-        let d = document.getElementById(id);
-        if (!d && id === "page-about") d = document.getElementById("author-chamber") || document.querySelector(".page-about");
-        if (!d && id === "page-fragments") d = document.getElementById("notes-room") || document.querySelector(".page-fragments");
-        if (!d && id === "page-archive") d = document.getElementById("ancient-shelf") || document.querySelector(".page-archive");
-        return d;
-    }
-    function targetsFor(page) {
-        const nb = page.querySelector(".btn-solid.trigger-nav[data-target]");
-        const pb = page.querySelector(".btn-outline.trigger-nav[data-target]");
-        let next = nb && nb.getAttribute("data-target");
-        const prev = pb && pb.getAttribute("data-target");
-        if (!next && page.id === "page1") next = "poem-page-1";
-        return { next, prev };
-    }
-    function swallowNextClick() {
-        const stop = (ev) => { ev.stopPropagation(); ev.preventDefault(); };
-        document.addEventListener("click", stop, true);
-        setTimeout(() => document.removeEventListener("click", stop, true), 350);
-    }
-
-    document.addEventListener("pointerdown", (e) => {
-        if (!e.isPrimary || (e.pointerType === "mouse" && e.button !== 0)) return;
-        if (sw || !window.PageTurn || window.PageTurn.isBusy() || globalState.vortexActive) return;
-        if (e.target.closest(BLOCK) || overlayOpen()) return;
-        const page = document.querySelector(".page.active");
-        if (!page || page.id === "page-secret") return;
-        sw = { id: e.pointerId, x: e.clientX, y: e.clientY, state: "pending", page, targets: targetsFor(page), hist: [] };
-    });
-
-    document.addEventListener("pointermove", (e) => {
-        if (!sw || e.pointerId !== sw.id) return;
-        const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
-
-        if (sw.state === "pending") {
-            if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx)) { sw = null; return; }   // normal scrolling
-            if (Math.abs(dx) < 12 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
-
-            const dir = dx < 0 ? "next" : "prev";
-            const targetId = dir === "next" ? sw.targets.next : sw.targets.prev;
-            const dest = targetId && resolvePage(targetId);
-            if (!dest || dest === sw.page) { sw = null; return; }
-
-            if (window.stopZenModeGlobally) window.stopZenModeGlobally();
-            if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();
-            const session = window.PageTurn.begin(sw.page, dest, dir);
-            if (!session) { sw = null; return; }
-            const snd = document.getElementById("page-turn-sound");
-            if (snd) { snd.currentTime = 0; snd.play().catch(() => {}); }
-            document.body.classList.add("pt-dragging");
-            Object.assign(sw, { state: "drag", dir, targetId, session, startX: e.clientX, width: Math.max(260, sw.page.getBoundingClientRect().width || window.innerWidth) });
-        }
-
-        if (sw.state === "drag") {
-            const d = sw.dir === "next" ? (sw.startX - e.clientX) : (e.clientX - sw.startX);
-            sw.p = Math.max(0, Math.min(1, d / (sw.width * 0.85)));
-            sw.hist.push({ t: e.timeStamp, p: sw.p });
-            if (sw.hist.length > 6) sw.hist.shift();
-            sw.session.setProgress(sw.p);
-            e.preventDefault();
-        }
-    }, { passive: false });
-
-    function endSwipe(e, cancelled) {
-        if (!sw || (e && e.pointerId !== sw.id)) return;
-        const s = sw; sw = null;
-        if (s.state !== "drag") return;
-        swallowNextClick();
-
-        const a = s.hist[0], b = s.hist[s.hist.length - 1];
-        const vel = (a && b && b.t > a.t) ? (b.p - a.p) / (b.t - a.t) : 0;          // progress per ms
-        const commit = !cancelled && (s.p > 0.35 || (vel > 0.0015 && s.p > 0.06));
-
-        if (commit) {
-            s.session.animateTo(1, () => {
-                s.session.commit();
-                window.executePageFlip(s.targetId, s.dir, true);
-            }, 600);
-        } else {
-            s.session.animateTo(0, () => s.session.cancel(), 600);
-        }
-    }
-    document.addEventListener("pointerup", (e) => endSwipe(e, false));
-    document.addEventListener("pointercancel", (e) => endSwipe(e, true));
-    window.addEventListener("blur", () => endSwipe(null, true));
-}
-
-function applyWhispers(el, poemIndex) {  
-    const pData = POEM_DATABASE[poemIndex];  
-    if(!pData || !pData.whispers || el.dataset.whispersApplied === "true") return;  
-    let html = el.innerHTML;  
-    pData.whispers.forEach(w => { const regex = new RegExp(`\\b${w.word}\\b`, 'gi'); html = html.replace(regex, `<span class="whisper-word" style="border-bottom:1px dotted var(--gold); color:#bfa46f; cursor:pointer;" data-original="${w.word}" data-hidden="${w.hidden}">${w.word}</span>`); });  
-    el.innerHTML = html; el.dataset.whispersApplied = "true";  
-
-    el.querySelectorAll('.whisper-word').forEach(span => {  
-        span.addEventListener('click', function() {  
-            let curr = this.innerText; this.style.opacity = 0;  
-            setTimeout(() => {   
-                this.innerText = (curr.toLowerCase() === this.dataset.original.toLowerCase()) ? this.dataset.hidden : this.dataset.original;   
-                this.style.opacity = 1;   
-                this.classList.toggle('whispered');   
-            }, 300);  
-        });  
-    });  
-}  
-
-function initTypewriterEngine() {  
-    const activePage = document.querySelector(".page.active"); if (!activePage) return;  
-    const poemIndex = activePage.getAttribute("data-poem-index");  
-    const poemEls = activePage.querySelectorAll(".typewriter-poem");  
-      
-    poemEls.forEach((el, index) => {  
-        const text = el.getAttribute("data-lines"); if (!text) return;  
-        const lines = text.replace(/\\n/g, '\n').split('\n');  
-        const signEl = activePage.querySelector(".sign-animate");  
-        const poemId = activePage.id + "-" + index;  
-
-        if (!window.twMasterState[poemId]) { window.twMasterState[poemId] = { lineIndex: 0, charIndex: 0, outHtml: "", status: "unstarted" }; el.innerHTML = ""; }  
-        let state = window.twMasterState[poemId];  
-          
-        if (state.status === "finished" || el.getAttribute("data-animated") === "true") {   
-            if(signEl) { signEl.classList.add("show-instantly"); }  
-            if(poemIndex !== null) applyWhispers(el, poemIndex); return;   
-        }  
-        if (state.status === "typing") return;   
-
-        state.status = "typing"; el.classList.add("is-typing");  
-
-        function typeNext() {  
-            if (!activePage.classList.contains("active")) { state.status = "paused"; el.classList.remove("is-typing"); return; }  
-            if (state.lineIndex < lines.length) {  
-                let currentLine = lines[state.lineIndex];  
-                if (currentLine === "") { state.outHtml += "<br><br>"; el.innerHTML = state.outHtml; state.lineIndex++; state.charIndex = 0; setTimeout(typeNext, 200); return; }  
-                if (state.charIndex === 0 && state.lineIndex === 0) {  
-                    let char = currentLine.charAt(0); state.outHtml += `<span class="drop-cap-antique" style="font-size:42px; font-family:'Cinzel',serif; color:var(--gold); float:left; line-height:1; margin-right:6px;">${char}</span>`; el.innerHTML = state.outHtml; state.charIndex++; setTimeout(typeNext, 40);  
-                } else if (state.charIndex < currentLine.length) {  
-                    let isFirstChar = (state.charIndex === 0 && state.lineIndex === 0);  
-                    el.innerHTML = state.outHtml + currentLine.substring(isFirstChar ? 1 : 0, state.charIndex + 1); state.charIndex++; setTimeout(typeNext, 35);   
-                } else { state.outHtml = el.innerHTML + "<br>"; el.innerHTML = state.outHtml; state.lineIndex++; state.charIndex = 0; setTimeout(typeNext, 400); }  
-            } else {   
-                state.status = "finished"; el.setAttribute("data-animated", "true"); el.classList.remove("is-typing");   
-                if(signEl) { signEl.classList.add("active-sign"); }   
-                if(poemIndex !== null) applyWhispers(el, poemIndex);  
-            }  
-        }  
-        setTimeout(typeNext, 200);  
-    });  
-}  
-
-document.body.addEventListener('click', async function(e) {  
-    if(e.target && e.target.classList.contains('download-poem-btn')) {  
-        const pIdx = e.target.getAttribute('data-poem-index'); if(pIdx === null) return;  
-        const poem = POEM_DATABASE[pIdx]; const canvas = document.createElement("canvas"); const ctx = canvas.getContext("2d");  
-        canvas.width = 1080; canvas.height = 1920;  
-        ctx.fillStyle = globalState.activeTheme === "dark" ? "#0b0b0f" : "#e8dcc7"; ctx.fillRect(0, 0, canvas.width, canvas.height);  
-        ctx.strokeStyle = "#bfa46f"; ctx.lineWidth = 4; ctx.strokeRect(50, 50, canvas.width - 100, canvas.height - 100);  
-        ctx.fillStyle = "#bfa46f"; ctx.textAlign = "center"; ctx.font = "bold 60px Cinzel, serif"; ctx.fillText("THE MIDNIGHT LIBRARY", canvas.width / 2, 180);  
-        ctx.font = "30px sans-serif"; ctx.fillText("✦  ✦  ✦", canvas.width / 2, 240);  
-        ctx.font = "bold 80px Cinzel, serif"; ctx.fillText(poem.title.replace('<br>', ' '), canvas.width / 2, 400);  
-        ctx.font = "35px Cinzel, serif"; ctx.fillStyle = globalState.activeTheme === "dark" ? "rgba(242,238,233,0.6)" : "rgba(59,34,16,0.6)"; ctx.fillText(poem.subtitle, canvas.width / 2, 460);  
-        ctx.fillStyle = globalState.activeTheme === "dark" ? "#f2eee9" : "#3B2210"; ctx.font = "40px 'Playfair Display', serif";  
-        let y = 600; const lines = poem.text.split('\n');  
-        lines.forEach(line => { if(line === "") y += 40; else { ctx.fillText(line.trim(), canvas.width / 2, y); y += 60; } });  
-        ctx.fillStyle = "#bfa46f"; ctx.font = "italic 60px cursive"; ctx.fillText("— Soham Madan Jadhao", canvas.width / 2, canvas.height - 200);  
-        const link = document.createElement("a"); link.download = `${poem.title.replace('<br>','')}-Memory.png`; link.href = canvas.toDataURL("image/png"); link.click();  
-        showToast("📸 Memory Saved Successfully!");  
-    }  
-
-    if(e.target && e.target.classList.contains('share-poem-btn')) {  
-        const title = e.target.getAttribute('data-poem-title');  
-        if (navigator.share) {  
-            try {  
-                await navigator.share({  
-                    title: `${title} | The Midnight Library`,  
-                    text: `Take a moment and read "${title}" at The Midnight Library.`,  
-                    url: window.location.href  
-                });  
-                showToast("✨ Shared with the world.");  
-            } catch (err) { console.log("Sharing cancelled."); }  
-        } else {  
-            showToast("Sharing is not supported on this browser.");  
-        }  
-    }  
-});  
 
 function initBookmarksDrawer() {  
     const drawer = findSafeElement("bookmarks-drawer");   
-    const openBtn = findSafeElement("open-bookmarks-btn");  
     const closeBtn = findSafeElement("close-drawer");   
     const list = findSafeElement("bookmarks-list");  
-    if(!drawer || !openBtn) return;  
+    if(!drawer) return;  
       
     function renderBookmarks() {  
         let bookmarks = JSON.parse(localStorage.getItem('midnightBookmarks') || '[]');   
@@ -998,58 +518,13 @@ function initBookmarksDrawer() {
             }  
         }  
     }  
-    openBtn.addEventListener("click", (e) => { e.preventDefault(); renderBookmarks(); drawer.classList.add("open"); });   
+    renderBookmarks();  
     if(closeBtn) closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });  
-}  
-
-function initFavouritesDrawer() {  
-    const drawer = findSafeElement("favourites-drawer");  
-    const openBtn = findSafeElement("open-fav-btn");  
-    const closeBtn = findSafeElement("close-fav-drawer");   
-    const list = findSafeElement("favourites-list");  
-    if(!drawer || !openBtn) return;  
-
-    function renderFavs() {  
-        let favs = JSON.parse(localStorage.getItem('midnightFavs') || '[]');   
-        if(list) {  
-            list.innerHTML = "";  
-            if (favs.length === 0) {   
-                list.innerHTML = `<p style="opacity: 0.5; font-style: italic; padding:10px;">No verses have resonated with you yet...</p>`;   
-            } else {   
-                favs.forEach(fv => { list.innerHTML += `<div class="bookmark-item" style="padding:8px; border-bottom:1px solid rgba(191,164,111,0.1);">❤️ ${escapeHTML(fv)}</div>`; });   
-            }  
-        }  
-    }  
-
-    openBtn.addEventListener("click", (e) => {  
-        e.preventDefault();  
-        renderFavs();   
-        drawer.classList.add("open");   
-    });   
-
-    if (closeBtn) closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });  
 }  
 
 function initLibraryFeatures() {  
     const footerQuote = findSafeElement("quote-rotator");   
     if(footerQuote) footerQuote.innerText = quoteDatabase[Math.floor(Math.random() * quoteDatabase.length)];  
-      
-    const moonTrigger = findSafeElement("moon-phase", "🌙", ".moon-phase");  
-    if(moonTrigger) {  
-        moonTrigger.addEventListener("click", () => {  
-            globalState.secretClicks++;   
-            checkUltimateVault();  
-            if(globalState.secretClicks === 3) {   
-                globalState.hasTappedMoon = true;   
-                checkUltimateVault();  
-                showToast("🏆 Achievement Unlocked: Moonwalker");  
-                  
-                const vaultBtn = document.querySelector(".trigger-nav[data-target='page-secret']");  
-                if (vaultBtn) { vaultBtn.click(); } else { const secPage = findSafeElement('page-secret'); if(secPage) secPage.classList.add('active'); }  
-                globalState.secretClicks = 0;  
-            }  
-        });  
-    }  
       
     document.body.addEventListener('click', function(e) {  
         if(e.target && e.target.classList.contains('bookmark-btn')) {  
@@ -1059,14 +534,6 @@ function initLibraryFeatures() {
             } else { showToast("✨ Verse already remembered."); }  
             e.target.innerText = "❤️ Saved";  
         }  
-
-        if(e.target && e.target.classList.contains('resonate-btn')) {  
-            const poemTitle = e.target.getAttribute('data-poem'); let favs = JSON.parse(localStorage.getItem('midnightFavs') || '[]');  
-            if (!favs.includes(poemTitle)) {   
-                favs.push(poemTitle); localStorage.setItem('midnightFavs', JSON.stringify(favs));   
-                showToast("❤️ Added to your Favourites.");   
-            } else { showToast("✨ Already in your Favourites."); }  
-        }  
     });  
 }  
 
@@ -1074,95 +541,8 @@ function showToast(msg) {
     const container = findSafeElement("toast-container");   
     if(!container) return;  
     const toast = document.createElement("div"); toast.className = "toast"; toast.innerText = msg;   
-    toast.style.cssText = "background:rgba(15,15,25,0.95); color:var(--gold); border:1px solid var(--gold); padding:10px 20px; border-radius:4px; margin-top:10px; font-family:'Cinzel',serif; box-shadow:0 4px 15px rgba(0,0,0,0.5);";  
     container.appendChild(toast); setTimeout(() => toast.remove(), 3500);  
 }  
-
-function initZenMode() {  
-    let zenBtn = findSafeElement("zen-mode-toggle", "ZEN MODE");  
-    if (!zenBtn) return;  
-    let zenScrollId;   
-
-    function smoothScroll() {  
-        if (!globalState.zenActive) return;  
-        window.scrollBy(0, 0.6);   
-        if (Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {  
-            stopZen(false); return;  
-        }  
-        zenScrollId = requestAnimationFrame(smoothScroll);  
-    }  
-
-    function startZen() {  
-        globalState.zenActive = true;  
-        zenBtn.innerHTML = "🛑 Stop Zen";  
-        showToast("🧘 Zen Mode Active...");  
-        zenScrollId = requestAnimationFrame(smoothScroll);  
-    }  
-
-    function stopZen(silent = false) {  
-        globalState.zenActive = false;  
-        zenBtn.innerHTML = "📜 Zen Mode";  
-        cancelAnimationFrame(zenScrollId);  
-        if (!silent) showToast("🛑 Zen Mode Paused.");  
-    }  
-
-    zenBtn.addEventListener("click", (e) => {  
-        e.preventDefault();  
-        if (!globalState.zenActive) { startZen(); } else { stopZen(false); }  
-    });  
-
-    window.stopZenModeGlobally = function() { if (globalState.zenActive) stopZen(true); };  
-    window.addEventListener("wheel", () => { if (globalState.zenActive) stopZen(true); });  
-    window.addEventListener("touchstart", (e) => {  
-        if (globalState.zenActive && !zenBtn.contains(e.target)) { stopZen(true); showToast("🖐️ Manual interaction detected."); }  
-    }, { passive: true });  
-}  
-
-function initAudioSpeechEngine() {  
-    if (window.audioSpeechEngineInitialized) return;  
-    window.audioSpeechEngineInitialized = true;  
-    let activeListenBtn = null;  
-
-    document.body.addEventListener('click', function(e) {  
-        if (e.target && e.target.classList.contains('listen-btn')) {  
-            const pIdx = e.target.getAttribute('data-poem-index');  
-            if (pIdx === null) return;  
-            const poem = POEM_DATABASE[pIdx];  
-
-            if (window.speechSynthesis.speaking && activeListenBtn === e.target) {  
-                window.speechSynthesis.cancel(); resetListenBtn(); return;  
-            }  
-
-            window.speechSynthesis.cancel();  
-            if (activeListenBtn) resetListenBtn();  
-
-            const cleanTitle = poem.title.replace(/<br\s*\/?>/gi, " ");  
-            const textToSpeak = `${poem.chapterLabel}. ${cleanTitle}. ${poem.subtitle}. ${poem.text}`;  
-            const utterance = new SpeechSynthesisUtterance(textToSpeak);  
-            utterance.rate = 0.85; utterance.pitch = 0.95;   
-
-            const voices = window.speechSynthesis.getVoices();  
-            const premiumVoice = voices.find(v => v.lang.startsWith('en-GB') || v.lang.startsWith('en-US'));  
-            if (premiumVoice) utterance.voice = premiumVoice;  
-
-            utterance.onend = () => resetListenBtn();  
-            utterance.onerror = () => resetListenBtn();  
-
-            activeListenBtn = e.target;  
-            activeListenBtn.innerText = "🛑 STOP VOICE";  
-
-            window.speechSynthesis.speak(utterance);  
-        }  
-    });  
-
-    function resetListenBtn() {  
-        if (activeListenBtn) { activeListenBtn.innerText = "🎙️ LISTEN TO VERSE"; activeListenBtn = null; }  
-    }  
-
-    window.stopAudioSpeechGlobally = function() {  
-        if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); resetListenBtn(); }  
-    };  
-}
 
 function initMysticLedger() {
     const firebaseConfig = {
@@ -1175,212 +555,68 @@ function initMysticLedger() {
       appId: "1:378812101045:web:1480c5c267c5eae6cce9fc"
     };
 
-    if (typeof firebase === 'undefined') { console.warn('Firebase not loaded - Mystic Ledger disabled.'); return; }
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
+    if (typeof firebase === 'undefined') return;
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const openBtn = findSafeElement('open-feedback-btn');
     const closeBtn = findSafeElement('close-feedback-btn');
     const submitBtn = findSafeElement('submit-feedback-btn');
     const modal = findSafeElement('feedback-modal');
     const input = findSafeElement('feedback-input');
     const commentsList = findSafeElement('public-comments-list');
 
-    function formatDate(date) {
-        return date.toLocaleDateString("en-US", { month: 'short', day: 'numeric' }) + " | " + date.toLocaleTimeString("en-US", { hour: '2-digit', minute:'2-digit' });
-    }
-
-    if(openBtn && modal) {
-        openBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            modal.style.display = 'flex';
-            loadLiveComments();
-        });
-    }
-
-    if(closeBtn && modal) {
-        closeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            modal.style.display = 'none';
-        });
-    }
+    if(closeBtn && modal) closeBtn.addEventListener('click', () => modal.style.display = 'none');
 
     function loadLiveComments() {
         if(!commentsList) return;
-        commentsList.innerHTML = '<p style="text-align:center; opacity:0.5; font-style:italic; margin-top: 20px;">Listening to the whispers...</p>';
-        
-        const commentsRef = db.ref('mystic_ledger_comments');
-        
-        commentsRef.off('value');   // avoid stacking duplicate listeners
-        commentsRef.on('value', (snapshot) => {
+        commentsList.innerHTML = '<p style="text-align:center; opacity:0.5; font-style:italic; margin-top: 20px;">Listening to whispers...</p>';
+        db.ref('mystic_ledger_comments').on('value', (snapshot) => {
             commentsList.innerHTML = ''; 
             const data = snapshot.val();
-            
             if (data) {
-                const commentsArray = Object.values(data).reverse();
-                commentsArray.forEach(comment => {
-                    const div = document.createElement('div');
-                    div.className = 'public-comment';
-                    const header = document.createElement('div'); header.className = 'pc-header';
-                    const nameEl = document.createElement('span'); nameEl.className = 'pc-name'; nameEl.textContent = comment.name;
-                    const stampEl = document.createElement('span'); stampEl.className = 'pc-date'; stampEl.textContent = comment.timestamp;
-                    header.append(nameEl, stampEl);
-                    const textEl = document.createElement('div'); textEl.className = 'pc-text'; textEl.textContent = comment.text;
-                    div.append(header, textEl);
+                Object.values(data).reverse().forEach(comment => {
+                    const div = document.createElement('div'); div.className = 'public-comment';
+                    div.innerHTML = `<div class="pc-header"><span class="pc-name">${escapeHTML(comment.name)}</span><span class="pc-date">${comment.timestamp}</span></div><div class="pc-text">${escapeHTML(comment.text)}</div>`;
                     commentsList.appendChild(div);
                 });
             } else {
-                commentsList.innerHTML = '<p style="text-align:center; opacity:0.5; font-style:italic; margin-top: 20px; font-family:\'Cormorant Garamond\', serif;">The room is silent. Be the first to speak.</p>';
+                commentsList.innerHTML = '<p style="text-align:center; opacity:0.5; font-style:italic;">No whispers yet.</p>';
             }
-        }, (error) => {
-            console.error("Firebase Read Error:", error);
-            commentsList.innerHTML = `<p style="text-align:center; color:#e74c3c; font-style:italic; margin-top: 20px; font-family:\'Cormorant Garamond\', serif;">⚠️ Permission Denied. Please check Firebase Database Rules.</p>`;
         });
     }
 
     if(submitBtn && input) {
         submitBtn.addEventListener('click', () => {
-            const feedbackText = input.value;
-            if(feedbackText.trim() !== '') {
-                const commentsRef = db.ref('mystic_ledger_comments');
-                
-                commentsRef.push({
+            if(input.value.trim() !== '') {
+                db.ref('mystic_ledger_comments').push({
                     name: String(globalState.visitorName || "Wanderer").slice(0, 40),
-                    text: feedbackText.trim().slice(0, 500),
-                    timestamp: formatDate(new Date())
+                    text: input.value.trim().slice(0, 500),
+                    timestamp: new Date().toLocaleDateString("en-US", { month: 'short', day: 'numeric' })
                 }).then(() => {
                     input.value = '';
-                    showToast("✨ Your whisper has been added to the library.");
-                }).catch((error) => {
-                    console.error("Firebase Write Error: ", error);
-                    showToast("🔴 Failed to add whisper (Permission Denied).");
+                    showToast("✨ Whisper added.");
                 });
-            } else {
-                showToast("Please write something before sending.");
             }
         });
     }
 }
 
-const installBtn = document.getElementById('install-app-btn');
-if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`User response to the install prompt: ${outcome}`);
-        deferredPrompt = null;
-        installBtn.style.display = 'none';
-    });
-}
-
-window.addEventListener('appinstalled', (evt) => {
-    showToast("🎉 Creation App installed successfully on your device!");
-});
-
-/* ======================================================  
-   🎯 ARMED DIRECT INTERACTION CONTROLLERS
-   ====================================================== */  
 document.addEventListener("click", (e) => {
     if (!e.target) return;
     const text = e.target.textContent.trim().toUpperCase();
 
-    // Direct Catch For Leave the Vault
     if (text === "LEAVE THE VAULT") {
         e.preventDefault();
-        // the flip itself hides the vault, so do NOT hide it here first
-        if (typeof window.executePageFlip === "function") {
-            window.executePageFlip("page1", "prev");
-        }
+        const vaultPage = document.getElementById("page-secret");
+        if (vaultPage) { vaultPage.classList.remove("active"); vaultPage.style.display = "none"; }
     }
 
-    // Direct Catch For Enter Button (Match with Screenshot)
     if (text.includes("ENTER THE WONDER OF COSMIC CREATIVITY")) {
         e.preventDefault();
-        
         if (audioAmbient && !globalState.isAudioPlaying) {  
             audioAmbient.volume = 0.4;  
-            audioAmbient.play().then(() => {
-                globalState.isAudioPlaying = true;
-            }).catch(e => console.log("Audio play blocked:", e));  
-        }
-
-        // (No navigation here: after the intro fades, the Library Entrance page stays visible.)
-    }
-});
-
-// 🌐 Offline Connection Alert Engine
-window.addEventListener('load', () => {
-    function checkNetworkStatus() {
-        if (!navigator.onLine) {
-            showToast("📱⚠️ NETWORK CONNECTION LOST ! Try connecting for Wondering through the Library");
+            audioAmbient.play().then(() => { globalState.isAudioPlaying = true; }).catch(e => {});  
         }
     }
-
-    checkNetworkStatus();
-
-    window.addEventListener('online', () => {
-        showToast("✨ INTERNET CONNECTED ! Now you are free to Wonder");
-    });
-
-    window.addEventListener('offline', () => {
-        showToast("⚠️ CONNECTION LOST ! Either connect or No more Wondering");
-    });
 });
-/* ======================================================
-   ⤢ FULLSCREEN READING MODE
-   ====================================================== */
-function initFullscreenMode() {
-    const root = document.documentElement;
-    const toggleBtn = document.getElementById("fullscreen-toggle");
-    const exitBtn = document.getElementById("fs-exit");
-    if (!toggleBtn || !exitBtn) return;
-
-    const nativeOn = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
-    const uiOn = () => document.body.classList.contains("fs-mode");
-    let hideTimer;
-
-    function revealExit() {
-        if (!uiOn()) return;
-        exitBtn.classList.add("show");
-        clearTimeout(hideTimer);
-        hideTimer = setTimeout(() => exitBtn.classList.remove("show"), 2500);
-    }
-
-    function setUI(on) {
-        document.body.classList.toggle("fs-mode", on);
-        toggleBtn.setAttribute("aria-checked", String(on));
-        if (on) revealExit(); else exitBtn.classList.remove("show");
-    }
-
-    async function enter() {
-        setUI(true);
-        try {
-            if (root.requestFullscreen) await root.requestFullscreen({ navigationUI: "hide" });
-            else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen();
-        } catch (e) { /* iPhone: sirf UI-mode chalega */ }
-    }
-
-    async function leave() {
-        setUI(false);
-        try {
-            if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen();
-            else if (document.webkitFullscreenElement && document.webkitExitFullscreen) document.webkitExitFullscreen();
-        } catch (e) {}
-    }
-
-    toggleBtn.addEventListener("click", () => (uiOn() ? leave() : enter()));
-    exitBtn.addEventListener("click", leave);
-
-    // Esc / back gesture se native fullscreen band ho to UI bhi normal ho jaye
-    const onFsChange = () => { if (!nativeOn() && uiOn()) setUI(false); };
-    document.addEventListener("fullscreenchange", onFsChange);
-    document.addEventListener("webkitfullscreenchange", onFsChange);
-
-    // screen tap par exit switch thodi der dikhe
-    document.addEventListener("click", revealExit, { passive: true });
-}
-initFullscreenMode();
 });
