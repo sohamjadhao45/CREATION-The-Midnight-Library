@@ -7,18 +7,18 @@
   <meta property="og:site_name" content="CREATION">
   <link rel="stylesheet" href="style.css"> 
   <link rel="manifest" href="manifest.json">
-  <script src="page-flip.js"></script>
+ <script src="page-flip.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <link rel="shortcut icon" href="favicon.png" type="image/png">
-  <script type="application/ld+json">
-  {
-    "@context" : "https://schema.org",
-    "@type" : "WebSite",
-    "name" : "CREATION",
-    "url" : "https://sohamjadhao45.github.io/"
-  }
-  </script>
+<link rel="shortcut icon" href="favicon.png" type="image/png">
+<script type="application/ld+json">
+{
+  "@context" : "https://schema.org",
+  "@type" : "WebSite",
+  "name" : "CREATION",
+  "url" : "https://sohamjadhao45.github.io/"
+}
+</script>
 </head>  
 <body class="custom-cursor">  
   
@@ -26,40 +26,47 @@
 
   <audio id="audio-page-turn" src="https://assets.mixkit.co/active_storage/sfx/211/211-preview.mp3" preload="auto"></audio>
   <audio id="page-turn-sound" src="https://www.soundjay.com/human/sounds/page-flip-01a.mp3" preload="auto"></audio>
-  <audio id="audio-ambient" src="CREATION_Dedicated_Midnight_Ambience.mp3" loop preload="auto"></audio>
+  <audio id="audio-rain" src="https://assets.mixkit.co/active_storage/sfx/1230/1230-preview.mp3" loop preload="auto"></audio>
+  <audio id="audio-ambient" src="CREATION_Midnight_Library_Original_Ambience.wav" loop preload="auto"></audio>
 
   <div id="reading-progress"></div>  
+  <canvas id="rain-canvas"></canvas>
   <div id="toast-container"></div>  
-
-  <!-- 🍔 SIDE NAVIGATION DRAWER (HAMBURGER MENU) -->
-  <div id="side-nav-drawer" class="drawer side-drawer">  
-    <div class="drawer-header">  
-      <h3>CREATION THE MIDNIGHT LIBRARY</h3>  
-      <button id="close-side-drawer" class="btn-icon">⤫</button>  
-    </div>  
-    <div class="drawer-content" style="padding-top: 10px;">  
-      <div class="side-nav-item trigger-nav" data-target="page-about">Library pass. <span>❯</span></div>  
-      <div class="side-nav-item" id="open-bookmarks-trigger">Saved archives. <span>❯</span></div>  
-      <div class="side-nav-item" id="open-feedback-trigger">My whispers. <span>❯</span></div>  
-      <div class="button-column mt-20" style="padding: 0 15px;">
-        <button id="install-app-btn-side" class="btn-outline" style="width: 100%; display: none;">INSTALL APP</button>
-      </div>
-    </div>  
-  </div>
+  
+  <button id="exit-focus-btn" class="exit-focus-btn" title="Exit Focus Mode">⨉ Exit Focus</button>    
 
   <div id="bookmarks-drawer" class="drawer">  
     <div class="drawer-header">  
-      <h3>My Saved Archives</h3>  
-      <button id="close-drawer" class="btn-icon">⤫</button>  
+      <h3>My Saved Echoes</h3>  
+      <button id="close-drawer" class="btn-icon">⨉</button>  
     </div>  
     <div id="bookmarks-list" class="drawer-content">  
       <p style="opacity: 0.5; font-style: italic;">Your soul hasn't saved any verses yet...</p>  
     </div>  
   </div>    
 
+  <div id="favourites-drawer" class="drawer">  
+    <div class="drawer-header">  
+      <h3>My Favourites ❤️</h3>  
+      <button id="close-fav-drawer" class="btn-icon">⨉</button>  
+    </div>  
+    <div id="favourites-list" class="drawer-content">  
+      <p style="opacity: 0.5; font-style: italic;">No verses have resonated with you yet...</p>  
+    </div>  
+  </div>    
+
+  <div id="wish-modal" class="modal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);">  
+    <div class="modal-content antique-parchment dynamic-shadow" style="padding: 40px; text-align: center;">  
+      <h3 class="moon-glow" style="color:var(--gold); font-family:'Cinzel', serif; font-size: 32px; letter-spacing: 4px;">11:11</h3>  
+      <p style="margin: 20px 0; font-family:'Cormorant Garamond', serif; font-size: 18px;">Make a wish, dear wanderer...</p>  
+      <input type="text" id="wish-input" class="passport-input" placeholder="Whisper your wish here..." autocomplete="off" spellcheck="false" style="width:100%; margin-bottom: 25px;">  
+      <button id="submit-wish-btn" class="btn-solid" style="width:100%;">Whisper to the Universe</button>  
+    </div>  
+  </div>  
+
   <div id="feedback-modal" class="modal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);">
     <div class="modal-content antique-parchment dynamic-shadow" style="padding: 30px; text-align: center; width: 95%; max-width: 500px; display: flex; flex-direction: column; max-height: 90vh;">
-      <h3 class="moon-glow" style="color:var(--gold); font-family:'Cinzel', serif; font-size: 24px; letter-spacing: 2px; margin-bottom: 10px;">My Whispers</h3>
+      <h3 class="moon-glow" style="color:var(--gold); font-family:'Cinzel', serif; font-size: 24px; letter-spacing: 2px; margin-bottom: 10px;">The Mystic Ledger</h3>
       <p style="font-family:'Cormorant Garamond', serif; font-size: 16px; color: var(--parchment-text); margin-bottom: 15px;">Read whispers from other wanderers, or leave your own legacy.</p>
   
       <div id="public-comments-list" style="flex: 1; overflow-y: auto; text-align: left; padding: 10px; border: 1px solid rgba(191,164,111,0.2); border-radius: 4px; margin-bottom: 15px; background: rgba(0,0,0,0.2);">
@@ -75,22 +82,21 @@
     </div>
   </div>
 
-  <!-- 🌟 OPENING CINEMATIC INTRO SCREEN WITH SMOOTH ANIMATION -->
   <div id="intro-screen">  
-    <div class="intro-content antique-parchment dynamic-shadow cinematic-intro-box">  
+    <div class="intro-content antique-parchment dynamic-shadow">  
       <div class="top-deco">✧ ─ ❦ ─ ✧</div>  
       <p class="intro-subtitle-top">The Abandoned Story About...</p>  
       <h1 class="intro-title moon-glow">CREATION</h1>  
       <h3 class="intro-sub-title">T H E &nbsp; M I D N I G H T &nbsp; L I B R A R Y</h3>  
       
       <div class="intro-prose">  
-        <p>"In the silence of creation, the soul discovers itself."</p>  
+        <p>IN THE SILENCE OF CREATION,THE SOUL DISCOVERS ITSELF</p>  
         <p>"Written upon forgotten leaves, where time stands still and whispers glow..."</p>  
         <p class="intro-author">— Soham Madan Jadhao</p>  
       </div>  
 
       <div class="passport-section mt-20">  
-          <input type="text" id="visitor-name" class="passport-input" placeholder="SOHAM MADAN JADHAO" autocomplete="off" spellcheck="false">  
+          <input type="text" id="visitor-name" class="passport-input" placeholder="YOUR NAME PLEASE..." autocomplete="off" spellcheck="false">  
       </div>  
         
       <p class="secret-hint" style="font-size: 12px; letter-spacing: 2px; margin: 15px 0; color: var(--text-muted);">  
@@ -108,17 +114,29 @@
 
   <header class="library-header">  
     <div class="header-left">  
-      <!-- ☰ Hamburger Trigger for Side Drawer -->
-      <button id="hamburger-toggle" class="btn-icon" title="Menu">☰ Menu</button>
       <span class="journal-date" id="journal-date">Journal Entry: Loading...</span>  
+      <span class="header-divider">|</span>  
+      <span class="moon-phase interactive-moon" id="moon-phase" title="Click me 3 times...">🌙 Waxing Gibbous</span>  
     </div>  
     <div class="header-right">  
+     <button id="fullscreen-toggle" class="btn-icon" role="switch" aria-checked="false" title="Fullscreen Reading">
+  <span>⤢ Full</span>
+  <span class="fs-track"><span class="fs-knob"></span></span>
+</button>
+      <button id="zen-mode-toggle" class="btn-icon" title="Zen Auto Scroll">📜 Zen Mode</button>  
+      <button id="open-fav-btn" class="btn-icon" title="View Favourites">❤️ Favs</button>  
+      <button id="rain-toggle" class="btn-icon" title="Summon the Rain">🌧️ Rain</button>  
+      <button id="open-bookmarks-btn" class="btn-icon" title="View Saved Poems">🔖 Archives</button>  
+      <button id="reading-mode-toggle" class="btn-icon" title="Focus Mode">📖 Focus</button>  
       <button id="theme-toggle" class="btn-icon" title="Switch Theme">🌙 Night</button> 
+      <button id="open-feedback-btn" class="btn-icon" title="View the Guestbook">🖋️ Feedback</button>
     </div>  
   </header>    
 
   <nav class="library-nav" id="library-nav"></nav>    
-
+<button id="fs-exit" role="switch" aria-checked="true" aria-label="Exit fullscreen">
+  <span class="fs-track"><span class="fs-knob"></span></span>
+</button>
   <main class="content" id="main-content">  
     <section id="page1" class="page active">  
       <div class="top-deco">✧✦✧ ──✦──✦── ✧✦✧</div>  
@@ -195,6 +213,7 @@
       <h2 class="page1-heading moon-glow">NOTES ROOM</h2>  
       <p class="poem-subtitle">RAW SILENT FRAGMENTS</p>  
       <div class="poetry-box antique-parchment dynamic-shadow" style="pointer-events: auto;">  
+          <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>  
           <div class="fragment-item"><span class="drop-cap-antique mini-cap">"</span><p class="poem-playfair" id="combo-quote-1">The hardest goodbyes are the ones that happen quietly.</p></div>  
           <div class="box-star">────── ✦ ──────</div>  
           <div class="fragment-item"><span class="drop-cap-antique mini-cap">"</span><p class="poem-playfair" id="combo-quote-2">Some people become memories before they leave.</p></div>  
@@ -237,20 +256,21 @@
 
     <section id="page-about" class="page">  
       <div class="top-deco">✧ ─ ❦ ─ ✧</div>  
-      <h2 class="page1-heading moon-glow">LIBRARY PASS & CHAMBER</h2>  
+      <h2 class="page1-heading moon-glow">AUTHOR'S CHAMBER</h2>  
       <p class="poem-subtitle">THE SANCTUM OF SOHAM JADHAO</p>  
 
       <div class="author-grid">  
-        <!-- SIMPLE PASSPORT CARD (No Membership / No Create Again Button) -->
-        <div class="author-card antique-parchment dynamic-shadow simple-pass-card">  
+        <div class="author-card antique-parchment dynamic-shadow">  
           <div class="gothic-window"><div class="moon-visual"></div><div class="moonlight-beam"></div></div>  
           <div class="avatar-placeholder" style="position: relative; z-index: 2;"><span>🖋️</span></div>  
-          <h3 class="author-name pass-visitor-name" id="pass-display-name">Soham Jadhao</h3>  
-          <p class="author-quote" style="color: var(--gold); font-family:'Cinzel', serif; font-size: 12px; letter-spacing: 2px;">LIBRARY PASS</p>  
+          <h3 class="author-name">Soham Jadhao</h3>  
+          <p class="author-quote" style="color: var(--parchment-text);">"A wanderer of words and a seeker of absolute silence."</p>  
             
-          <div class="chamber-stat" style="color: var(--parchment-text); opacity: 0.9; margin-top: 15px;"><strong>🆔 Visitor ID:</strong> <span id="pass-visitor-id">CR-2026-0000001</span></div>  
-          <div class="chamber-stat" style="color: var(--parchment-text); opacity: 0.8;"><strong>📅 Issued:</strong> Nov 07, 2026</div>  
-          <div class="chamber-stat" style="color: var(--parchment-text); opacity: 0.8;"><strong>🌌 Access:</strong> Unlimited Wanderer</div>  
+          <div class="chamber-stat" style="color: var(--parchment-text); opacity: 0.8;"><strong>📚 Current Reading:</strong> Notes from Underground</div>  
+          <div class="chamber-stat" style="color: var(--parchment-text); opacity: 0.8;"><strong>🕯️ Writing Ritual:</strong> Midnight, Lo-fi beats, complete isolation.</div>  
+          <div class="chamber-stat" style="color: var(--parchment-text); opacity: 0.8;"><strong>🌌 What Inspires Me:</strong> The cosmos, untold stories, and unsaid emotions.</div>  
+            
+          <div id="author-scripting-status" class="currently-writing mt-20" style="color: var(--parchment-text); border-left-color: var(--gold);"></div>  
         </div>  
 
         <div class="author-details-card antique-parchment dynamic-shadow">  
@@ -275,6 +295,6 @@
     <div class="footer-sub">The Midnight Library • ©copyright • All rights reserved • 2026 • Fluid & AntiLag • Completely created by Soham Madan Jadhao</div>  
   </footer>    
 
-  <script src="script.js?v=4"></script>  
+  <script src="script.js?v=3"></script>  
 </body>  
 </html>
