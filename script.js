@@ -1329,5 +1329,58 @@ window.addEventListener('load', () => {
         showToast("⚠️ CONNECTION LOST ! Either connect or No more Wondering");
     });
 });
+/* ======================================================
+   ⤢ FULLSCREEN READING MODE
+   ====================================================== */
+function initFullscreenMode() {
+    const root = document.documentElement;
+    const toggleBtn = document.getElementById("fullscreen-toggle");
+    const exitBtn = document.getElementById("fs-exit");
+    if (!toggleBtn || !exitBtn) return;
 
+    const nativeOn = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+    const uiOn = () => document.body.classList.contains("fs-mode");
+    let hideTimer;
+
+    function revealExit() {
+        if (!uiOn()) return;
+        exitBtn.classList.add("show");
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => exitBtn.classList.remove("show"), 2500);
+    }
+
+    function setUI(on) {
+        document.body.classList.toggle("fs-mode", on);
+        toggleBtn.setAttribute("aria-checked", String(on));
+        if (on) revealExit(); else exitBtn.classList.remove("show");
+    }
+
+    async function enter() {
+        setUI(true);
+        try {
+            if (root.requestFullscreen) await root.requestFullscreen({ navigationUI: "hide" });
+            else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen();
+        } catch (e) { /* iPhone: sirf UI-mode chalega */ }
+    }
+
+    async function leave() {
+        setUI(false);
+        try {
+            if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen();
+            else if (document.webkitFullscreenElement && document.webkitExitFullscreen) document.webkitExitFullscreen();
+        } catch (e) {}
+    }
+
+    toggleBtn.addEventListener("click", () => (uiOn() ? leave() : enter()));
+    exitBtn.addEventListener("click", leave);
+
+    // Esc / back gesture se native fullscreen band ho to UI bhi normal ho jaye
+    const onFsChange = () => { if (!nativeOn() && uiOn()) setUI(false); };
+    document.addEventListener("fullscreenchange", onFsChange);
+    document.addEventListener("webkitfullscreenchange", onFsChange);
+
+    // screen tap par exit switch thodi der dikhe
+    document.addEventListener("click", revealExit, { passive: true });
+}
+initFullscreenMode();
 });
