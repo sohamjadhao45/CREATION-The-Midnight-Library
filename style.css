@@ -671,3 +671,12 @@ body.fs-mode .direct-js-built .poem-subtitle{
   font-family:'Cormorant Garamond',serif; font-style:italic; letter-spacing:2px; opacity:.85;
 }
 body.fs-mode .direct-js-built .royal-poem-text{ font-size:clamp(19px,4.6vw,28px); }
+/* floating Zen button (fullscreen) */
+#fs-zen{ position:fixed; top:calc(env(safe-area-inset-top,0px) + 12px); right:88px; z-index:99999;
+  display:none; padding:6px 12px; background:rgba(0,0,0,.35); color:var(--gold);
+  border:1px solid rgba(191,164,111,.35); border-radius:999px;
+  font-family:'Cinzel',serif; font-size:11px; letter-spacing:1px; cursor:pointer;
+  opacity:0; pointer-events:none; backdrop-filter:blur(6px); transition:opacity .4s ease; }
+[data-theme="light"] #fs-zen{ background:rgba(244,235,208,.65); }
+body.fs-mode #fs-zen{ display:block; }
+body.fs-mode #fs-zen.show{ opacity:1; pointer-events:auto; }
