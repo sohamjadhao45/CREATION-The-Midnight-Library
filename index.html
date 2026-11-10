@@ -5,9 +5,10 @@
   <meta name="google-site-verification" content="Vx8IsdG1wGlLCqoyxPfwXWCTIMZLISZcwHQ3GueazV4" />
   <title>CREATION — The Midnight Library</title>  
   <meta property="og:site_name" content="CREATION">
-  <link rel="stylesheet" href="style.css"> 
+  <link rel="stylesheet" href="style.css?v=4"> 
   <link rel="manifest" href="manifest.json">
- <script src="page-flip.js"></script>
+  <link rel="preload" as="image" href="intro-poster.jpg">
+  <script src="page-flip.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <link rel="shortcut icon" href="favicon.png" type="image/png">
@@ -32,8 +33,6 @@
   <div id="reading-progress"></div>  
   <canvas id="rain-canvas"></canvas>
   <div id="toast-container"></div>  
-  
-  <button id="exit-focus-btn" class="exit-focus-btn" title="Exit Focus Mode">⨉ Exit Focus</button>    
 
   <div id="bookmarks-drawer" class="drawer">  
     <div class="drawer-header">  
@@ -42,16 +41,6 @@
     </div>  
     <div id="bookmarks-list" class="drawer-content">  
       <p style="opacity: 0.5; font-style: italic;">Your soul hasn't saved any verses yet...</p>  
-    </div>  
-  </div>    
-
-  <div id="favourites-drawer" class="drawer">  
-    <div class="drawer-header">  
-      <h3>My Favourites ❤️</h3>  
-      <button id="close-fav-drawer" class="btn-icon">⨉</button>  
-    </div>  
-    <div id="favourites-list" class="drawer-content">  
-      <p style="opacity: 0.5; font-style: italic;">No verses have resonated with you yet...</p>  
     </div>  
   </div>    
 
@@ -83,6 +72,23 @@
   </div>
 
   <div id="intro-screen">  
+
+    <!-- 🎬 Cinematic opening: smooth looping library scene -->
+    <div class="intro-bg" aria-hidden="true">
+      <video id="intro-video" autoplay muted loop playsinline preload="auto" poster="intro-poster.jpg" disablepictureinpicture>
+        <source src="intro-library.webm" type="video/webm">
+        <source src="intro-library.mp4" type="video/mp4">
+      </video>
+      <div class="intro-vignette"></div>
+      <div class="intro-dim"></div>
+    </div>
+
+    <div class="intro-cine" aria-hidden="true">
+      <div class="intro-cine-title">CREATION</div>
+      <div class="intro-cine-sub">T H E &nbsp; M I D N I G H T &nbsp; L I B R A R Y</div>
+    </div>
+    <p id="intro-skip">tap to continue</p>
+
     <div class="intro-content antique-parchment dynamic-shadow">  
       <div class="top-deco">✧ ─ ❦ ─ ✧</div>  
       <p class="intro-subtitle-top">The Abandoned Story About...</p>  
@@ -119,24 +125,23 @@
       <span class="moon-phase interactive-moon" id="moon-phase" title="Click me 3 times...">🌙 Waxing Gibbous</span>  
     </div>  
     <div class="header-right">  
-     <button id="fullscreen-toggle" class="btn-icon" role="switch" aria-checked="false" title="Fullscreen Reading">
-  <span>⤢ Full</span>
-  <span class="fs-track"><span class="fs-knob"></span></span>
-</button>
+      <button id="fullscreen-toggle" class="btn-icon" role="switch" aria-checked="false" title="Fullscreen Reading">
+        <span>⤢ Full</span>
+        <span class="fs-track"><span class="fs-knob"></span></span>
+      </button>
       <button id="zen-mode-toggle" class="btn-icon" title="Zen Auto Scroll">📜 Zen Mode</button>  
-      <button id="open-fav-btn" class="btn-icon" title="View Favourites">❤️ Favs</button>  
-      <button id="rain-toggle" class="btn-icon" title="Summon the Rain">🌧️ Rain</button>  
       <button id="open-bookmarks-btn" class="btn-icon" title="View Saved Poems">🔖 Archives</button>  
-      <button id="reading-mode-toggle" class="btn-icon" title="Focus Mode">📖 Focus</button>  
       <button id="theme-toggle" class="btn-icon" title="Switch Theme">🌙 Night</button> 
       <button id="open-feedback-btn" class="btn-icon" title="View the Guestbook">🖋️ Feedback</button>
     </div>  
   </header>    
 
   <nav class="library-nav" id="library-nav"></nav>    
-<button id="fs-exit" role="switch" aria-checked="true" aria-label="Exit fullscreen">
-  <span class="fs-track"><span class="fs-knob"></span></span>
-</button>
+
+  <button id="fs-exit" role="switch" aria-checked="true" aria-label="Exit fullscreen">
+    <span class="fs-track"><span class="fs-knob"></span></span>
+  </button>
+
   <main class="content" id="main-content">  
     <section id="page1" class="page active">  
       <div class="top-deco">✧✦✧ ──✦──✦── ✧✦✧</div>  
@@ -295,6 +300,6 @@
     <div class="footer-sub">The Midnight Library • ©copyright • All rights reserved • 2026 • Fluid & AntiLag • Completely created by Soham Madan Jadhao</div>  
   </footer>    
 
-  <script src="script.js?v=3"></script>  
+  <script src="script.js?v=4"></script>  
 </body>  
 </html>
