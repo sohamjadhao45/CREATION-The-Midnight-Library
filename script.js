@@ -712,7 +712,7 @@ function initCosmicNavigation() {
 
         // header buttons (Full / Zen / Archives / Night / Feedback), the exit switch and the
         // Wishmaker button never navigate by their label text
-        if (targetBtn.closest(".library-header") || targetBtn.closest("#fs-exit") || targetBtn.id === "permanent-wishmaker-btn") return;  
+        if (targetBtn.closest(".library-header") || targetBtn.closest("#fs-exit") || targetBtn.id === "permanent-wishmaker-btn") return;  || targetBtn.id === "fs-zen"
 
         let targetPageId = targetBtn.getAttribute("data-target");  
         let btnText = targetBtn.textContent.toUpperCase();  
@@ -1086,7 +1086,7 @@ function initZenMode() {
     let zenBtn = findSafeElement("zen-mode-toggle", "ZEN MODE");  
     if (!zenBtn) return;  
     let zenScrollId;   
-
+function syncFsZen(t) { const b = document.getElementById("fs-zen"); if (b) b.innerHTML = t; }
     function smoothScroll() {  
         if (!globalState.zenActive) return;  
         window.scrollBy(0, 0.6);   
@@ -1099,6 +1099,7 @@ function initZenMode() {
     function startZen() {  
         globalState.zenActive = true;  
         zenBtn.innerHTML = "🛑 Stop Zen";  
+       syncFsZen("🛑 Stop");
         showToast("🧘 Zen Mode Active...");  
         zenScrollId = requestAnimationFrame(smoothScroll);  
     }  
@@ -1118,7 +1119,7 @@ function initZenMode() {
     window.stopZenModeGlobally = function() { if (globalState.zenActive) stopZen(true); };  
     window.addEventListener("wheel", () => { if (globalState.zenActive) stopZen(true); });  
     window.addEventListener("touchstart", (e) => {  
-        if (globalState.zenActive && !zenBtn.contains(e.target)) { stopZen(true); showToast("🖐️ Manual interaction detected."); }  
+      if (globalState.zenActive && !zenBtn.contains(e.target) && !e.target.closest("#fs-zen")) { stopZen(true); showToast("🖐️ Manual interaction detected."); }  
     }, { passive: true });  
 }  
 
