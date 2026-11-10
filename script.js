@@ -1341,6 +1341,7 @@ function initFullscreenMode() {
     const root = document.documentElement;
     const toggleBtn = document.getElementById("fullscreen-toggle");
     const exitBtn = document.getElementById("fs-exit");
+   const zenFs = document.getElementById("fs-zen");
     if (!toggleBtn || !exitBtn) return;
 
     const nativeOn = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
@@ -1348,17 +1349,22 @@ function initFullscreenMode() {
     let hideTimer;
 
     function revealExit() {
-        if (!uiOn()) return;
-        exitBtn.classList.add("show");
-        clearTimeout(hideTimer);
-        hideTimer = setTimeout(() => exitBtn.classList.remove("show"), 2500);
-    }
+    if (!uiOn()) return;
+    exitBtn.classList.add("show");
+    if (zenFs) zenFs.classList.add("show");
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+        exitBtn.classList.remove("show");
+        if (zenFs) zenFs.classList.remove("show");
+    }, 2500);
+}
 
-    function setUI(on) {
-        document.body.classList.toggle("fs-mode", on);
-        toggleBtn.setAttribute("aria-checked", String(on));
-        if (on) revealExit(); else exitBtn.classList.remove("show");
-    }
+function setUI(on) {
+    document.body.classList.toggle("fs-mode", on);
+    toggleBtn.setAttribute("aria-checked", String(on));
+    if (on) revealExit();
+    else { exitBtn.classList.remove("show"); if (zenFs) zenFs.classList.remove("show"); }
+}
 
     async function enter() {
         setUI(true);
@@ -1378,7 +1384,10 @@ function initFullscreenMode() {
 
     toggleBtn.addEventListener("click", () => (uiOn() ? leave() : enter()));
     exitBtn.addEventListener("click", leave);
-
+if (zenFs) zenFs.addEventListener("click", () => {
+    const z = document.getElementById("zen-mode-toggle");
+    if (z) z.click();
+});
     // Esc / back gesture closes native fullscreen → bring the normal UI back too
     const onFsChange = () => { if (!nativeOn() && uiOn()) setUI(false); };
     document.addEventListener("fullscreenchange", onFsChange);
