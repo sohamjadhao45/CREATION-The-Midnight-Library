@@ -109,6 +109,8 @@ const audioAmbient = findSafeElement("audio-ambient");
 // =====================================================================  
 // 🚀 INITIALIZATION SEQUENCE  
 // =====================================================================  
+initIntroCinematic();
+initFullscreenMode();
 initPassport();                    
 initTouchRipple();  
 initClockAndAtmosphere();  
@@ -118,7 +120,6 @@ initScrollProgressBar();
 initSecretKeyboardVault();   
 initLedger();  
 initBookmarksDrawer();   
-initFavouritesDrawer();   
 initTimeCapsule();   
 init1111Wish();  
 initZenMode();  
@@ -139,6 +140,45 @@ fetch('poem.json')
     .catch(error => {  
         console.error("Critical Error inside Library Fetch: ", error);  
     });  
+
+/* ======================================================
+   🎬 CINEMATIC OPENING (video → title → passport card)
+   ====================================================== */
+function initIntroCinematic() {
+    const intro = document.getElementById("intro-screen");
+    if (!intro) return;
+    const video = document.getElementById("intro-video");
+    const reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+    let revealed = false;
+    let timer = null;
+    let started = false;
+
+    function reveal() {
+        if (revealed) return;
+        revealed = true;
+        clearTimeout(timer);
+        intro.classList.add("show-card");
+    }
+
+    // card appears ~5s after the film actually starts playing (or 2.5s after load as a fallback)
+    function startClock() {
+        if (started) return;
+        started = true;
+        timer = setTimeout(reveal, reduceMotion ? 400 : 5200);
+    }
+
+    if (video) {
+        if (reduceMotion) { try { video.pause(); } catch (e) {} }
+        video.addEventListener("playing", startClock, { once: true });
+        const p = video.play && video.play();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+    }
+    setTimeout(startClock, 2500);
+
+    // tap anywhere on the opening = skip to the card
+    intro.addEventListener("click", () => { if (!revealed) reveal(); });
+}
 
 function initTouchRipple() {   
     document.body.addEventListener('click', (e) => {   
@@ -173,7 +213,7 @@ function initPassport() {
             globalState.visitorName = name;  
               
             const greeting = findSafeElement("vault-greeting");  
-            if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${name}</span>... welcome to the Secret Vault.`;  
+            if(greeting) greeting.innerHTML = `Ah, <span style="color:var(--gold);">${escapeHTML(name)}</span>... welcome to the Secret Vault.`;  
 
             const letterTitle = findSafeElement("reader-letter-title");  
             if(letterTitle) letterTitle.innerText = `A LETTER TO ${name.toUpperCase()}`;  
@@ -193,7 +233,15 @@ function initPassport() {
             }
 
             const introScreen = findSafeElement("intro-screen");  
-            if(introScreen) introScreen.classList.add("fade-out");  
+            if(introScreen) {
+                introScreen.classList.add("fade-out");
+                // stop the opening film + remove the layer once it has faded (saves battery)
+                setTimeout(() => {
+                    const v = document.getElementById("intro-video");
+                    if (v) { try { v.pause(); } catch (e) {} }
+                    introScreen.style.display = "none";
+                }, 1400);
+            }
               
             // 🎶 Play Ambient Audio Smoothly on entry
             if(audioAmbient && !globalState.isAudioPlaying) {  
@@ -264,7 +312,6 @@ function buildLibrarySystem() {
             <p class="poem-date">${poem.dateText}</p>  
             <span class="poem-greatvibes sign-animate">${poem.signature}</span>  
             <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">  
-                <button class="resonate-btn btn-utility" data-poem="${cleanTitle}">⭐ RESONATED WITH ME</button>  
                 <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>  
             </div>  
           </div>  
@@ -434,19 +481,17 @@ function initLedger() {
     });  
 }  
 
+/* 🌧️ Rain (secret: type "rain" on the keyboard) */
 function toggleRain() {  
     globalState.rainActive = !globalState.rainActive;   
     const rCanvas = findSafeElement("rain-canvas");  
-    const rainToggleBtn = findSafeElement("rain-toggle");  
     if(globalState.rainActive) {   
         if(rCanvas) rCanvas.classList.add("raining");   
-        if(rainToggleBtn) rainToggleBtn.innerHTML = "🌧️ Stop Rain";  
         startRainVisuals();   
         showToast("🌧️ The sky begins to weep...");   
         if(audioRain) { audioRain.volume = 0.5; audioRain.play().catch(()=>{}); }  
     } else {   
         if(rCanvas) rCanvas.classList.remove("raining");   
-        if(rainToggleBtn) rainToggleBtn.innerHTML = "🌧️ Rain";  
         showToast("🌤️ The storm has passed.");   
         if(audioRain) { audioRain.pause(); }  
     }  
@@ -594,15 +639,6 @@ function initClockAndAtmosphere() {
       
     const themeBtn = findSafeElement("theme-toggle", "NIGHT");  
     if(themeBtn) { themeBtn.addEventListener("click", () => { const nextTheme = globalState.activeTheme === "dark" ? "light" : "dark"; document.documentElement.setAttribute("data-theme", nextTheme); themeBtn.innerText = nextTheme === "dark" ? "🌙 Night" : "☀️ Day"; globalState.activeTheme = nextTheme; }); }  
-      
-    const rainToggleBtn = findSafeElement("rain-toggle", "RAIN");   
-    if(rainToggleBtn) rainToggleBtn.addEventListener("click", toggleRain);  
-      
-    const focusBtn = findSafeElement("reading-mode-toggle", "FOCUS");   
-    const exitFocusBtn = findSafeElement("exit-focus-btn", "NORMAL");  
-    function toggleFocus() { document.body.classList.toggle("reading-mode"); if(focusBtn) focusBtn.innerText = document.body.classList.contains("reading-mode") ? "👁️ Normal" : "📖 Focus"; }  
-    if(focusBtn) focusBtn.addEventListener("click", toggleFocus);   
-    if(exitFocusBtn) exitFocusBtn.addEventListener("click", toggleFocus);  
 }  
 
 function startRainVisuals() {  
@@ -673,6 +709,10 @@ function initCosmicNavigation() {
     document.addEventListener("click", (e) => {  
         let targetBtn = e.target.closest("[data-target]") || e.target.closest(".trigger-nav") || e.target.closest(".nav-link") || e.target.closest(".star-node") || e.target.closest("button");  
         if (!targetBtn) return;  
+
+        // header buttons (Full / Zen / Archives / Night / Feedback), the exit switch and the
+        // Wishmaker button never navigate by their label text
+        if (targetBtn.closest(".library-header") || targetBtn.closest("#fs-exit") || targetBtn.id === "permanent-wishmaker-btn") return;  
 
         let targetPageId = targetBtn.getAttribute("data-target");  
         let btnText = targetBtn.textContent.toUpperCase();  
@@ -784,13 +824,13 @@ function initSwipeTurning() {
     if (window.__swipeTurningReady) return;
     window.__swipeTurningReady = true;
 
-    const BLOCK = 'input, textarea, select, [contenteditable], #dynamic-bookshelf, .book-spine, .star-node, .whisper-word, .modal, .feedback-modal-content, .drawer, #bookmarks-drawer, #favourites-drawer';
+    const BLOCK = 'input, textarea, select, [contenteditable], #dynamic-bookshelf, .book-spine, .star-node, .whisper-word, .modal, .feedback-modal-content, .drawer, #bookmarks-drawer';
     let sw = null;
 
     function overlayOpen() {
         const intro = document.getElementById("intro-screen");
         if (intro && !intro.classList.contains("fade-out") && getComputedStyle(intro).display !== "none") return true;
-        return ["feedback-modal", "wish-modal", "wishmaker-room-modal", "bookmarks-drawer", "favourites-drawer"].some(id => {
+        return ["feedback-modal", "wish-modal", "wishmaker-room-modal", "bookmarks-drawer"].some(id => {
             const el = document.getElementById(id);
             return el && (el.classList.contains("open") || (el.style.display && el.style.display !== "none"));
         });
@@ -1002,34 +1042,6 @@ function initBookmarksDrawer() {
     if(closeBtn) closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });  
 }  
 
-function initFavouritesDrawer() {  
-    const drawer = findSafeElement("favourites-drawer");  
-    const openBtn = findSafeElement("open-fav-btn");  
-    const closeBtn = findSafeElement("close-fav-drawer");   
-    const list = findSafeElement("favourites-list");  
-    if(!drawer || !openBtn) return;  
-
-    function renderFavs() {  
-        let favs = JSON.parse(localStorage.getItem('midnightFavs') || '[]');   
-        if(list) {  
-            list.innerHTML = "";  
-            if (favs.length === 0) {   
-                list.innerHTML = `<p style="opacity: 0.5; font-style: italic; padding:10px;">No verses have resonated with you yet...</p>`;   
-            } else {   
-                favs.forEach(fv => { list.innerHTML += `<div class="bookmark-item" style="padding:8px; border-bottom:1px solid rgba(191,164,111,0.1);">❤️ ${escapeHTML(fv)}</div>`; });   
-            }  
-        }  
-    }  
-
-    openBtn.addEventListener("click", (e) => {  
-        e.preventDefault();  
-        renderFavs();   
-        drawer.classList.add("open");   
-    });   
-
-    if (closeBtn) closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });  
-}  
-
 function initLibraryFeatures() {  
     const footerQuote = findSafeElement("quote-rotator");   
     if(footerQuote) footerQuote.innerText = quoteDatabase[Math.floor(Math.random() * quoteDatabase.length)];  
@@ -1058,14 +1070,6 @@ function initLibraryFeatures() {
                 bookmarks.push(poemId); localStorage.setItem('midnightBookmarks', JSON.stringify(bookmarks)); showToast("🔖 Verse saved to your soul.");   
             } else { showToast("✨ Verse already remembered."); }  
             e.target.innerText = "❤️ Saved";  
-        }  
-
-        if(e.target && e.target.classList.contains('resonate-btn')) {  
-            const poemTitle = e.target.getAttribute('data-poem'); let favs = JSON.parse(localStorage.getItem('midnightFavs') || '[]');  
-            if (!favs.includes(poemTitle)) {   
-                favs.push(poemTitle); localStorage.setItem('midnightFavs', JSON.stringify(favs));   
-                showToast("❤️ Added to your Favourites.");   
-            } else { showToast("✨ Already in your Favourites."); }  
         }  
     });  
 }  
@@ -1329,6 +1333,7 @@ window.addEventListener('load', () => {
         showToast("⚠️ CONNECTION LOST ! Either connect or No more Wondering");
     });
 });
+
 /* ======================================================
    ⤢ FULLSCREEN READING MODE
    ====================================================== */
@@ -1360,7 +1365,7 @@ function initFullscreenMode() {
         try {
             if (root.requestFullscreen) await root.requestFullscreen({ navigationUI: "hide" });
             else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen();
-        } catch (e) { /* iPhone: sirf UI-mode chalega */ }
+        } catch (e) { /* iPhone: only the UI mode applies */ }
     }
 
     async function leave() {
@@ -1374,13 +1379,14 @@ function initFullscreenMode() {
     toggleBtn.addEventListener("click", () => (uiOn() ? leave() : enter()));
     exitBtn.addEventListener("click", leave);
 
-    // Esc / back gesture se native fullscreen band ho to UI bhi normal ho jaye
+    // Esc / back gesture closes native fullscreen → bring the normal UI back too
     const onFsChange = () => { if (!nativeOn() && uiOn()) setUI(false); };
     document.addEventListener("fullscreenchange", onFsChange);
     document.addEventListener("webkitfullscreenchange", onFsChange);
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape" && uiOn()) leave(); });
 
-    // screen tap par exit switch thodi der dikhe
+    // tap on the screen = exit switch shows for a moment
     document.addEventListener("click", revealExit, { passive: true });
 }
-initFullscreenMode();
+
 });
