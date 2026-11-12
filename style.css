@@ -618,7 +618,13 @@ button:not(.nav-link):not(.side-link):not(.pass-close):hover { transform: transl
 }
 .side-nav.open { transform: none; visibility: visible; transition-delay: 0s; }
 
-.side-emblem { display: block; width: 74px; height: 88px; margin: 6px auto 14px; color: var(--sn-gold); filter: drop-shadow(0 0 10px rgba(191,164,111,0.35)); flex-shrink: 0; }
+.side-emblem {
+    display: block; width: 96px; height: 96px; object-fit: contain;
+    margin: 6px auto 14px; flex-shrink: 0;
+    border-radius: 22%;
+    mix-blend-mode: screen; /* logo ka black background gayab ho jayega */
+    filter: drop-shadow(0 0 10px rgba(191,164,111,0.35));
+}
 .side-title { font-family: 'Cinzel', serif; font-weight: 400; text-align: center; color: var(--sn-gold); margin-bottom: 26px; line-height: 1.5; text-transform: uppercase; }
 .side-title span { display: block; font-size: 17px; letter-spacing: 5px; padding-left: 5px; }
 .side-title small { display: block; font-size: 11px; letter-spacing: 3px; margin-top: 2px; opacity: 0.9; }
@@ -681,7 +687,11 @@ button:not(.nav-link):not(.side-link):not(.pass-close):hover { transform: transl
     box-shadow: 0 0 28px rgba(212,181,117,0.25), inset 0 0 18px rgba(0,0,0,0.7);
 }
 .pass-emblem-ring::after { content: ""; position: absolute; inset: -9px; border-radius: 50%; border: 1px solid rgba(212,181,117,0.28); pointer-events: none; }
-.pass-emblem { width: 52px; height: 62px; color: var(--pg); }
+.pass-emblem {
+    width: 80px; height: 80px; object-fit: contain;
+    border-radius: 22%;
+    mix-blend-mode: screen;
+}
 
 .pass-brand { font-family: 'Cinzel', serif; font-size: 25px; letter-spacing: 7px; padding-left: 7px; color: var(--pg); text-shadow: 0 0 18px rgba(212,181,117,0.4); }
 .pass-brand-sub { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 4px; margin-top: 6px; opacity: 0.8; }
