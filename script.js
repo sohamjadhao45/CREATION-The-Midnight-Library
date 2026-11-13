@@ -870,27 +870,10 @@ function initUltimateUniverseBackground() {
     requestAnimationFrame(processRenderLoop);
 }
 
+
 function bindWaxSeals(page) {
     if (!page) return;
-    const sealWrap = page.querySelector(".wax-seal-wrapper");
-    if (!sealWrap) { initTypewriterEngine(); return; }
-
-    if (sealWrap.classList.contains("broken") || sealWrap.dataset.isBroken === "true") {
-        sealWrap.classList.add("broken"); initTypewriterEngine(); return;
-    }
-
-    const sealBtn = sealWrap.querySelector(".wax-seal");
-    // bind only once, so revisiting a page can never stack duplicate listeners
-    if (sealBtn && !sealWrap.dataset.bound) {
-        sealWrap.dataset.bound = "1";
-        sealBtn.addEventListener('click', () => {
-            sealWrap.dataset.isBroken = "true";
-            sealWrap.classList.add("broken");
-            showToast("🔓 The seal is broken.");
-            setTimeout(initTypewriterEngine, 800);
-        });
-    }
-    showToast("👆 Break the wax seal to view verse...");
+    initTypewriterEngine();   // seal nahi hai, seedha poem type hoga
 }
 
 /* ======================================================
