@@ -808,3 +808,13 @@ body.fs-mode .direct-js-built .royal-poem-text{ font-size:clamp(19px,4.6vw,28px)
 [data-theme="light"] #fs-zen{ background:rgba(244,235,208,.65); }
 body.fs-mode #fs-zen{ display:block; }
 body.fs-mode #fs-zen.show{ opacity:1; pointer-events:auto; }
+/* 🌐 TRANSLATE */
+.lang-panel { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-height: 0; opacity: 0; overflow: hidden; margin-top: 0; position: relative; z-index: 5; transition: max-height .5s cubic-bezier(.25,1,.5,1), opacity .4s ease, margin-top .4s ease; }
+.lang-panel.open { max-height: 200px; opacity: 1; margin-top: 16px; }
+button.lang-chip { padding: 6px 14px !important; font-family: 'Cinzel', serif; font-size: 11px !important; letter-spacing: 1px !important; color: var(--gold); background: transparent; border: 1px solid var(--parchment-border); border-radius: 999px !important; cursor: pointer; transition: all .3s; }
+button.lang-chip:hover { border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
+button.lang-chip.active { background: var(--gold); color: #050507; border-color: var(--gold); }
+
+.translated-box { display: none; position: relative; z-index: 2; margin-top: 18px; padding: 16px 14px; border-top: 1px dashed var(--parchment-border); font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(16px, 2vw, 20px); line-height: 1.9; white-space: pre-line; color: var(--parchment-text); text-align: center; }
+.translated-box.show { display: block; animation: fadeIn .6s ease-out; }
+.tr-loading { color: var(--gold); opacity: .7; }
