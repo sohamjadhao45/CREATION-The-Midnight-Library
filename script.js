@@ -156,6 +156,7 @@ initMysticLedger();
 initThoughtButton();
 initSideNav();
 initLibraryPass();
+initTranslateEngine();
 
 fetch('poem.json')
     .then(response => {
@@ -381,9 +382,22 @@ function buildLibrarySystem() {
             <p class="royal-poem-text typewriter-poem" data-lines="${escapeHTML(safeText)}"></p><br>
             <p class="poem-date">${poem.dateText}</p>
             <span class="poem-greatvibes sign-animate">${poem.signature}</span>
-            <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
-                <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
-            </div>
+            <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+    <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
+    <button class="translate-btn btn-utility" data-poem-index="${i}" aria-expanded="false">🌐 TRANSLATE</button>
+</div>
+<div class="lang-panel">
+    <button class="lang-chip" data-lang="orig">Original</button>
+    <button class="lang-chip" data-lang="hi">हिन्दी</button>
+    <button class="lang-chip" data-lang="mr">मराठी</button>
+    <button class="lang-chip" data-lang="ur">اردو</button>
+    <button class="lang-chip" data-lang="es">Español</button>
+    <button class="lang-chip" data-lang="fr">Français</button>
+    <button class="lang-chip" data-lang="de">Deutsch</button>
+    <button class="lang-chip" data-lang="ja">日本語</button>
+    <button class="lang-chip" data-lang="ar">العربية</button>
+</div>
+<div class="translated-box" aria-live="polite"></div>
           </div>
           <div class="button-row" style="margin-top: 15px;">
             <button class="btn-utility download-poem-btn" data-poem-index="${i}">📸 Save As A Memory</button>
@@ -441,7 +455,59 @@ function buildLibrarySystem() {
     }
     if (authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter ${UPCOMING_CHAPTER.chapterNum}: ${UPCOMING_CHAPTER.title}`;
 }
+function initTranslateEngine() {
+    const cache = {};
+    document.body.addEventListener("click", async (e) => {
+        const tBtn = e.target.closest && e.target.closest(".translate-btn");
+        if (tBtn) {
+            const panel = tBtn.closest(".poetry-box").querySelector(".lang-panel");
+            const open = panel.classList.toggle("open");
+            tBtn.setAttribute("aria-expanded", String(open));
+            return;
+        }
 
+        const chip = e.target.closest && e.target.closest(".lang-chip");
+        if (!chip) return;
+        const box = chip.closest(".poetry-box");
+        const out = box.querySelector(".translated-box");
+        const idx = box.querySelector(".translate-btn").getAttribute("data-poem-index");
+        const poem = POEM_DATABASE[idx];
+        const lang = chip.getAttribute("data-lang");
+        if (!poem) return;
+
+        box.querySelectorAll(".lang-chip").forEach(c => c.classList.toggle("active", c === chip));
+
+        if (lang === "orig") { out.classList.remove("show"); out.textContent = ""; return; }
+
+        out.dir = (lang === "ur" || lang === "ar") ? "rtl" : "ltr";
+        out.classList.add("show");
+
+        // 1) poem.json ki apni translation
+        if (poem.translations && poem.translations[lang]) {
+            out.textContent = poem.translations[lang];
+            return;
+        }
+
+        // 2) backup: Google (sirf agar kisi poem me translation na ho)
+        const key = idx + "|" + lang;
+        if (cache[key]) { out.textContent = cache[key]; return; }
+        out.innerHTML = `<em class="tr-loading">Translating the whispers...</em>`;
+        try {
+            const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="
+                + lang + "&dt=t&q=" + encodeURIComponent(poem.text);
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            const data = await res.json();
+            cache[key] = data[0].map(seg => seg[0]).join("");
+            out.textContent = cache[key];
+        } catch (err) {
+            console.error("Translate failed:", err);
+            out.textContent = "";
+            out.classList.remove("show");
+            showToast("🌐 Translation failed. Check your connection.");
+        }
+    });
+}
 function initThoughtButton() {
     const thoughtBtn = findSafeElement("reveal-thought-btn", "THOUGHT");
     const thoughtDisplay = findSafeElement("midnight-thought-display");
@@ -952,7 +1018,7 @@ function initSwipeTurning() {
     if (window.__swipeTurningReady) return;
     window.__swipeTurningReady = true;
 
-    const BLOCK = 'input, textarea, select, [contenteditable], #dynamic-bookshelf, .book-spine, .star-node, .whisper-word, .modal, .feedback-modal-content, .drawer, #bookmarks-drawer, .side-nav, .side-backdrop, .pass-modal';
+    const BLOCK = 'input, textarea, select, [contenteditable], #dynamic-bookshelf, .book-spine, .star-node, .whisper-word, .modal, .feedback-modal-content, .drawer, #bookmarks-drawer, .side-nav, .side-backdrop, .pass-modal, .lang-panel, .translated-box';
     let sw = null;
 
     function overlayOpen() {
