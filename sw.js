@@ -1,4 +1,4 @@
-const CACHE_NAME = 'midnight-library-v2';
+const CACHE_NAME = 'midnight-library-v7';
 const ASSETS = [
   './',
   './index.html',
