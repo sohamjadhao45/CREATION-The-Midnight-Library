@@ -22,7 +22,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="https://sohamjadhao45.github.io/favicon.png">
   <link rel="apple-touch-icon" href="https://sohamjadhao45.github.io/favicon.png">
 
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
   <link rel="manifest" href="manifest.json">
   <link rel="preload" as="image" href="intro-poster.jpg">
   <script src="page-flip.js"></script>
@@ -89,6 +89,27 @@
     </div>
   </div>
 
+  <!-- 🌐 Translate pop-up -->
+  <div id="translate-modal" class="modal tr-modal" role="dialog" aria-modal="true" aria-label="Translate verse" style="display:none;">
+    <div class="modal-content antique-parchment dynamic-shadow tr-card">
+      <h3 class="moon-glow tr-title">🌐 Translate Verse</h3>
+      <p class="tr-poem-name" id="tr-poem-name"></p>
+      <div class="lang-panel-modal">
+        <button type="button" class="lang-chip" data-lang="orig">Original</button>
+        <button type="button" class="lang-chip" data-lang="hi">हिन्दी</button>
+        <button type="button" class="lang-chip" data-lang="mr">मराठी</button>
+        <button type="button" class="lang-chip" data-lang="ur">اردو</button>
+        <button type="button" class="lang-chip" data-lang="es">Español</button>
+        <button type="button" class="lang-chip" data-lang="fr">Français</button>
+        <button type="button" class="lang-chip" data-lang="de">Deutsch</button>
+        <button type="button" class="lang-chip" data-lang="ja">日本語</button>
+        <button type="button" class="lang-chip" data-lang="ar">العربية</button>
+      </div>
+      <div id="tr-output" class="tr-output" aria-live="polite"><em class="tr-hint">Choose a language to read the verse...</em></div>
+      <button type="button" id="tr-close" class="btn-outline tr-close-btn">Close</button>
+    </div>
+  </div>
+
   <div id="intro-screen">
 
     <!-- 🎬 Cinematic opening: smooth looping library scene -->
@@ -150,7 +171,6 @@
         <span class="fs-track"><span class="fs-knob"></span></span>
       </button>
       <button id="zen-mode-toggle" class="btn-icon" title="Zen Auto Scroll">📜 Zen Mode</button>
-      <button id="open-bookmarks-btn" class="btn-icon" title="View Saved Poems">🔖 Archives</button>
       <button id="theme-toggle" class="btn-icon" title="Switch Theme">🌙 Night</button>
       <button id="open-feedback-btn" class="btn-icon" title="View the Guestbook">🖋️ Feedback</button>
     </div>
@@ -177,7 +197,9 @@
   <button id="fs-exit" role="switch" aria-checked="true" aria-label="Exit fullscreen">
     <span class="fs-track"><span class="fs-knob"></span></span>
   </button>
-<button id="fs-zen" aria-label="Zen auto scroll">📜 Zen</button>
+  <button id="fs-zen" aria-label="Zen auto scroll">📜 Zen</button>
+  <button id="fs-translate" aria-label="Translate verse">🌐 Translate</button>
+
   <main class="content" id="main-content">
     <section id="page1" class="page active">
       <div class="top-deco">✧✦✧ ──✦── ✧✦✧</div>
@@ -314,7 +336,7 @@
         </div>
 
         <div class="author-details-card antique-parchment dynamic-shadow">
-          
+
           <h4 id="reader-letter-title" style="color: var(--gold); letter-spacing: 2px; margin-bottom: 15px;">A LETTER TO THE READER</h4>
           <p class="royal-poem-text" style="text-align: left; font-size: 16px;">
             Hello, I'm Soham Madan Jadhao, the creator of this little corner of the internet. This space was built to collect thoughts, stories, emotions, and ideas that often go unnoticed in the rush of everyday life. Here, words are not merely written; they are felt, explored, and given a home.<br><br>
@@ -355,6 +377,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>
