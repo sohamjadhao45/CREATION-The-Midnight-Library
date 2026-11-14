@@ -378,26 +378,13 @@ function buildLibrarySystem() {
             <button class="bookmark-btn btn-utility" data-poem="${escapeHTML(poem.spineLabel)}" style="border: none; background: transparent; padding: 0 !important; cursor: pointer; color: var(--gold);">🔖 Bookmark</button>
           </div>
           <div class="poetry-box antique-parchment dynamic-shadow" id="card-${pageId}">
-            <div class="wax-seal-wrapper"><div class="wax-seal"><div class="seal-ring"></div><span class="seal-letter">SJ</span></div></div>
             <p class="royal-poem-text typewriter-poem" data-lines="${escapeHTML(safeText)}"></p><br>
             <p class="poem-date">${poem.dateText}</p>
             <span class="poem-greatvibes sign-animate">${poem.signature}</span>
             <div class="poem-interactions" style="margin-top:20px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-    <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
-    <button class="translate-btn btn-utility" data-poem-index="${i}" aria-expanded="false">🌐 TRANSLATE</button>
-</div>
-<div class="lang-panel">
-    <button class="lang-chip" data-lang="orig">Original</button>
-    <button class="lang-chip" data-lang="hi">हिन्दी</button>
-    <button class="lang-chip" data-lang="mr">मराठी</button>
-    <button class="lang-chip" data-lang="ur">اردو</button>
-    <button class="lang-chip" data-lang="es">Español</button>
-    <button class="lang-chip" data-lang="fr">Français</button>
-    <button class="lang-chip" data-lang="de">Deutsch</button>
-    <button class="lang-chip" data-lang="ja">日本語</button>
-    <button class="lang-chip" data-lang="ar">العربية</button>
-</div>
-<div class="translated-box" aria-live="polite"></div>
+              <button class="listen-btn btn-utility" data-poem-index="${i}">🎙️ LISTEN TO VERSE</button>
+              <button class="translate-btn btn-utility" data-poem-index="${i}">🌐 TRANSLATE</button>
+            </div>
           </div>
           <div class="button-row" style="margin-top: 15px;">
             <button class="btn-utility download-poem-btn" data-poem-index="${i}">📸 Save As A Memory</button>
@@ -455,32 +442,55 @@ function buildLibrarySystem() {
     }
     if (authorScripting) authorScripting.innerHTML = `<span class="pulse-dot"></span><strong>Currently Scripting:</strong> Chapter ${UPCOMING_CHAPTER.chapterNum}: ${UPCOMING_CHAPTER.title}`;
 }
+
+/* ======================================================
+   🌐 TRANSLATE POP-UP (works in normal + fullscreen mode)
+   ====================================================== */
 function initTranslateEngine() {
+    const modal = document.getElementById("translate-modal");
+    if (!modal) return;
+    const out = document.getElementById("tr-output");
+    const nameEl = document.getElementById("tr-poem-name");
+    const closeBtn = document.getElementById("tr-close");
+    const chips = modal.querySelectorAll(".lang-chip");
     const cache = {};
-    document.body.addEventListener("click", async (e) => {
-        const tBtn = e.target.closest && e.target.closest(".translate-btn");
-        if (tBtn) {
-            const panel = tBtn.closest(".poetry-box").querySelector(".lang-panel");
-            const open = panel.classList.toggle("open");
-            tBtn.setAttribute("aria-expanded", String(open));
-            return;
-        }
+    let curIdx = null;
+    let reqId = 0;   // ignores slow answers from a language the reader has already left
 
-        const chip = e.target.closest && e.target.closest(".lang-chip");
-        if (!chip) return;
-        const box = chip.closest(".poetry-box");
-        const out = box.querySelector(".translated-box");
-        const idx = box.querySelector(".translate-btn").getAttribute("data-poem-index");
+    function setHint() {
+        out.dir = "ltr";
+        out.innerHTML = `<em class="tr-hint">Choose a language to read the verse...</em>`;
+    }
+
+    function openModal(idx) {
         const poem = POEM_DATABASE[idx];
-        const lang = chip.getAttribute("data-lang");
+        if (!poem) { showToast("🌐 Open a poem first."); return; }
+        curIdx = idx;
+        reqId++;
+        nameEl.textContent = String(poem.title).replace(/<br\s*\/?>/gi, " ");
+        chips.forEach(c => c.classList.remove("active"));
+        setHint();
+        modal.style.display = "flex";
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+        reqId++;
+    }
+
+    window.openTranslateModal = openModal;
+    window.closeTranslateModal = closeModal;
+
+    async function showLang(lang) {
+        const poem = POEM_DATABASE[curIdx];
         if (!poem) return;
+        const myReq = ++reqId;
 
-        box.querySelectorAll(".lang-chip").forEach(c => c.classList.toggle("active", c === chip));
-
-        if (lang === "orig") { out.classList.remove("show"); out.textContent = ""; return; }
-
+        chips.forEach(c => c.classList.toggle("active", c.getAttribute("data-lang") === lang));
         out.dir = (lang === "ur" || lang === "ar") ? "rtl" : "ltr";
-        out.classList.add("show");
+        out.scrollTop = 0;
+
+        if (lang === "orig") { out.textContent = poem.text; return; }
 
         // 1) poem.json ki apni translation
         if (poem.translations && poem.translations[lang]) {
@@ -489,7 +499,7 @@ function initTranslateEngine() {
         }
 
         // 2) backup: Google (sirf agar kisi poem me translation na ho)
-        const key = idx + "|" + lang;
+        const key = curIdx + "|" + lang;
         if (cache[key]) { out.textContent = cache[key]; return; }
         out.innerHTML = `<em class="tr-loading">Translating the whispers...</em>`;
         try {
@@ -498,16 +508,45 @@ function initTranslateEngine() {
             const res = await fetch(url);
             if (!res.ok) throw new Error("HTTP " + res.status);
             const data = await res.json();
-            cache[key] = data[0].map(seg => seg[0]).join("");
-            out.textContent = cache[key];
+            const translated = data[0].map(seg => seg[0]).join("");
+            cache[key] = translated;
+            if (myReq !== reqId) return;
+            out.textContent = translated;
         } catch (err) {
             console.error("Translate failed:", err);
-            out.textContent = "";
-            out.classList.remove("show");
+            if (myReq !== reqId) return;
+            setHint();
+            chips.forEach(c => c.classList.remove("active"));
             showToast("🌐 Translation failed. Check your connection.");
         }
+    }
+
+    // open from the poem page button
+    document.body.addEventListener("click", (e) => {
+        const tBtn = e.target.closest && e.target.closest(".translate-btn");
+        if (tBtn) openModal(tBtn.getAttribute("data-poem-index"));
     });
+
+    // open from the floating fullscreen button
+    const fsBtn = document.getElementById("fs-translate");
+    if (fsBtn) {
+        fsBtn.addEventListener("click", () => {
+            const page = document.querySelector(".page.direct-js-built.active");
+            if (!page) { showToast("🌐 Open a poem first."); return; }
+            openModal(page.getAttribute("data-poem-index"));
+        });
+    }
+
+    // language chips + backdrop tap
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) { closeModal(); return; }
+        const chip = e.target.closest && e.target.closest(".lang-chip");
+        if (chip) showLang(chip.getAttribute("data-lang"));
+    });
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.style.display === "flex") closeModal(); });
 }
+
 function initThoughtButton() {
     const thoughtBtn = findSafeElement("reveal-thought-btn", "THOUGHT");
     const thoughtDisplay = findSafeElement("midnight-thought-display");
@@ -775,7 +814,8 @@ function applyWishmakerBranding() {
         greeting.innerHTML = `Swagat hai <span style="color:var(--gold); font-family:'Cinzel',serif; font-weight:bold;">The Wishmaker</span> ka! Yeh aakash aur rahasya ab aapke hain.`;
     }
 
-    const passportHeader = document.querySelector(".intro-subtitle") || document.querySelector(".poem-subtitle");
+    // the line above the title on the entrance card (no longer touches the Mystery Vault subtitle)
+    const passportHeader = document.querySelector(".intro-subtitle-top");
     if (passportHeader) {
         passportHeader.innerText = "✦ Authorized Access: The Wishmaker ✦";
     }
@@ -870,10 +910,10 @@ function initUltimateUniverseBackground() {
     requestAnimationFrame(processRenderLoop);
 }
 
-
-function bindWaxSeals(page) {
+/* ✍️ A poem page has just opened: its verse starts typing straight away (no wax seal anymore) */
+function startPoemTyping(page) {
     if (!page) return;
-    initTypewriterEngine();   // seal nahi hai, seedha poem type hoga
+    initTypewriterEngine();
 }
 
 /* ======================================================
@@ -889,10 +929,10 @@ function initCosmicNavigation() {
         const targetBtn = e.target.closest("[data-target], .trigger-nav, .nav-link, .star-node, #btn-explore");
         if (!targetBtn) return;
 
-        // header buttons, fullscreen switches, the side menu, the pass card, the Wishmaker button
-        // and the save-as-image button never navigate
-        if (targetBtn.closest(".library-header") || targetBtn.closest("#fs-exit") || targetBtn.closest("#fs-zen")
-            || targetBtn.closest("#side-nav") || targetBtn.closest("#pass-modal")
+        // header buttons, fullscreen switches, the side menu, the pass card, the Wishmaker button,
+        // the translate pop-up and the save-as-image button never navigate
+        if (targetBtn.closest(".library-header") || targetBtn.closest("#fs-exit") || targetBtn.closest("#fs-zen") || targetBtn.closest("#fs-translate")
+            || targetBtn.closest("#side-nav") || targetBtn.closest("#pass-modal") || targetBtn.closest("#translate-modal")
             || targetBtn.id === "permanent-wishmaker-btn" || targetBtn.classList.contains("download-poem-btn")) return;
 
         let targetPageId = targetBtn.getAttribute("data-target");
@@ -923,6 +963,7 @@ function initCosmicNavigation() {
 
         if (window.stopZenModeGlobally) window.stopZenModeGlobally();
         if (window.stopAudioSpeechGlobally) window.stopAudioSpeechGlobally();
+        if (window.closeTranslateModal) window.closeTranslateModal();
 
         globalState.vortexActive = true;
         document.body.style.overflowY = 'hidden';
@@ -958,7 +999,7 @@ function initCosmicNavigation() {
             if (vaultPage && targetPageId !== "page-secret") vaultPage.classList.remove("active");
             globalState.vortexActive = false;
             document.body.style.overflowY = 'auto';
-            bindWaxSeals(destinationPage);
+            startPoemTyping(destinationPage);
         };
 
         try {
@@ -1001,13 +1042,13 @@ function initSwipeTurning() {
     if (window.__swipeTurningReady) return;
     window.__swipeTurningReady = true;
 
-    const BLOCK = 'input, textarea, select, [contenteditable], #dynamic-bookshelf, .book-spine, .star-node, .whisper-word, .modal, .feedback-modal-content, .drawer, #bookmarks-drawer, .side-nav, .side-backdrop, .pass-modal, .lang-panel, .translated-box';
+    const BLOCK = 'input, textarea, select, [contenteditable], #dynamic-bookshelf, .book-spine, .star-node, .whisper-word, .modal, .feedback-modal-content, .drawer, #bookmarks-drawer, .side-nav, .side-backdrop, .pass-modal, .tr-modal';
     let sw = null;
 
     function overlayOpen() {
         const intro = document.getElementById("intro-screen");
         if (intro && !intro.classList.contains("fade-out") && getComputedStyle(intro).display !== "none") return true;
-        return ["feedback-modal", "wish-modal", "wishmaker-room-modal", "bookmarks-drawer", "side-nav", "pass-modal"].some(id => {
+        return ["feedback-modal", "wish-modal", "wishmaker-room-modal", "translate-modal", "bookmarks-drawer", "side-nav", "pass-modal"].some(id => {
             const el = document.getElementById(id);
             return el && (el.classList.contains("open") || (el.style.display && el.style.display !== "none"));
         });
@@ -1238,12 +1279,12 @@ document.body.addEventListener('click', async function(e) {
     }
 });
 
+/* 🔖 Saved archives drawer (opened from the side menu, the header button is gone) */
 function initBookmarksDrawer() {
     const drawer = findSafeElement("bookmarks-drawer");
-    const openBtn = findSafeElement("open-bookmarks-btn");
     const closeBtn = findSafeElement("close-drawer");
     const list = findSafeElement("bookmarks-list");
-    if (!drawer || !openBtn) return;
+    if (!drawer) return;
 
     function renderBookmarks() {
         let bookmarks = [];
@@ -1257,7 +1298,8 @@ function initBookmarksDrawer() {
             }
         }
     }
-    openBtn.addEventListener("click", (e) => { e.preventDefault(); renderBookmarks(); drawer.classList.add("open"); });
+
+    window.openBookmarksDrawer = () => { renderBookmarks(); drawer.classList.add("open"); };
     if (closeBtn) closeBtn.addEventListener("click", () => { drawer.classList.remove("open"); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") drawer.classList.remove("open"); });
 }
@@ -1541,7 +1583,7 @@ function initSideNav() {
 
     function runAction(action) {
         if (action === "pass") openPass();
-        else if (action === "archives") { const b = document.getElementById("open-bookmarks-btn"); if (b) b.click(); }
+        else if (action === "archives") { if (typeof window.openBookmarksDrawer === "function") window.openBookmarksDrawer(); }
         else if (action === "whispers") { const b = document.getElementById("open-feedback-btn"); if (b) b.click(); }
         else if (action === "chamber") goTo("page-about");
         else if (action === "home") goTo("page1");
@@ -1732,20 +1774,21 @@ function initFullscreenMode() {
     const toggleBtn = document.getElementById("fullscreen-toggle");
     const exitBtn = document.getElementById("fs-exit");
     const zenFs = document.getElementById("fs-zen");
+    const trFs = document.getElementById("fs-translate");
     if (!toggleBtn || !exitBtn) return;
 
     const nativeOn = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
     const uiOn = () => document.body.classList.contains("fs-mode");
     let hideTimer;
 
+    function floaters() { return [exitBtn, zenFs, trFs].filter(Boolean); }
+
     function revealExit() {
         if (!uiOn()) return;
-        exitBtn.classList.add("show");
-        if (zenFs) zenFs.classList.add("show");
+        floaters().forEach(b => b.classList.add("show"));
         clearTimeout(hideTimer);
         hideTimer = setTimeout(() => {
-            exitBtn.classList.remove("show");
-            if (zenFs) zenFs.classList.remove("show");
+            floaters().forEach(b => b.classList.remove("show"));
         }, 2500);
     }
 
@@ -1753,7 +1796,7 @@ function initFullscreenMode() {
         document.body.classList.toggle("fs-mode", on);
         toggleBtn.setAttribute("aria-checked", String(on));
         if (on) revealExit();
-        else { exitBtn.classList.remove("show"); if (zenFs) zenFs.classList.remove("show"); }
+        else floaters().forEach(b => b.classList.remove("show"));
     }
 
     async function enter() {
@@ -1782,9 +1825,14 @@ function initFullscreenMode() {
     const onFsChange = () => { if (!nativeOn() && uiOn()) setUI(false); };
     document.addEventListener("fullscreenchange", onFsChange);
     document.addEventListener("webkitfullscreenchange", onFsChange);
-    window.addEventListener("keydown", (e) => { if (e.key === "Escape" && uiOn()) leave(); });
+    window.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape" || !uiOn()) return;
+        const tm = document.getElementById("translate-modal");
+        if (tm && tm.style.display === "flex") return;   // Esc only closes the pop-up first
+        leave();
+    });
 
-    // tap on the screen = exit switch shows for a moment
+    // tap on the screen = floating buttons show for a moment
     document.addEventListener("click", revealExit, { passive: true });
 }
 
